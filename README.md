@@ -13,4 +13,4 @@ Different inference algorithms are implemented:
 
 ## Documentation
 
-Please note, that the code in this repository is still experimental. An early-stage documentation including installation instructions and notes on how to get started is available at [http://www.mackelab.org/delfi/](http://www.mackelab.org/delfi/).
+Please note that the code in this repository is still experimental. An early-stage documentation including [installation instructions](http://www.mackelab.org/delfi/installation.html) and a [guide on how to get started](http://www.mackelab.org/delfi/notebooks/quickstart.html) is available at [http://www.mackelab.org/delfi/](http://www.mackelab.org/delfi/).
