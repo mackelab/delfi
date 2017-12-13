@@ -11,7 +11,7 @@ dtype = theano.config.floatX
 
 class SNPE(BaseInference):
     def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
-                 convert_to_T=3, reg_lambda=0.01, seed=None, verbose=True,
+                 convert_to_T=3, reg_lambda=0.01, prior_mixin=0, seed=None, verbose=True,
                  **kwargs):
         """Sequential neural posterior estimation (SNPE)
 
@@ -33,6 +33,10 @@ class SNPE(BaseInference):
             the number specifies the degrees of freedom. None for no conversion
         reg_lambda : float
             Precision parameter for weight regularizer if svi is True
+        prior_mixin : float
+            Percentage of the prior mixed into the proposal prior. While training,
+            an additional prior_mixin * N samples will be drawn from the actual prior
+            in each round.
         seed : int or None
             If provided, random number generator will be seeded
         verbose : bool
@@ -55,13 +59,15 @@ class SNPE(BaseInference):
         super().__init__(generator, prior_norm=prior_norm,
                          pilot_samples=pilot_samples, seed=seed,
                          verbose=verbose, **kwargs)
-        self.obs = obs
+        self.obs = np.asarray(obs)
         self.reg_lambda = reg_lambda
         self.round = 0
         self.convert_to_T = convert_to_T
 
         # placeholder for importance weights
         self.network.iws = tt.vector('iws', dtype=dtype)
+
+        self.prior_mixin = 0 if prior_mixin is None else prior_mixin
 
     def loss(self, N, round_cl=1):
         """Loss function for training
@@ -166,9 +172,11 @@ class SNPE(BaseInference):
             else:
                 n_train_round = n_train
 
+
             # draw training data (z-transformed params and stats)
             verbose = '(round {}) '.format(self.round) if self.verbose else False
-            trn_data = self.gen(n_train_round, verbose=verbose)
+
+            trn_data = self.gen(n_train_round, prior_mixin=self.prior_mixin, verbose=verbose)
             n_train_round = trn_data[0].shape[0]
 
             # precompute importance weights
@@ -177,10 +185,10 @@ class SNPE(BaseInference):
                 params = self.params_std * trn_data[0] + self.params_mean
                 p_prior = self.generator.prior.eval(params, log=False)
                 p_proposal = self.generator.proposal.eval(params, log=False)
-                iws *= p_prior / p_proposal
-
+                iws *= p_prior / (self.prior_mixin * p_prior + (1 - self.prior_mixin) * p_proposal)
+                
             # normalize weights
-            iws = (iws/np.sum(iws))*n_train_round
+            iws /= np.mean(iws)
 
             trn_data = (trn_data[0], trn_data[1], iws)
             trn_inputs = [self.network.params, self.network.stats,
