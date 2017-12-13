@@ -6,16 +6,22 @@ from delfi.utils.progress import no_tqdm, progressbar
 
 from delfi.generator.Default import Default
 
-
 import multiprocessing as mp
+import psutil
 
 class Worker(mp.Process):
-    def __init__(self, conn, model, summary, seed=None):
+    def __init__(self, n, queue, conn, model, summary, seed=None, verbose=False):
         super().__init__()
+        self.n = n
+        self.queue = queue
+        self.verbose = verbose
         self.conn = conn
         self.model = model
         self.summary = summary
         self.rng = np.random.RandomState(seed=seed)
+
+    def update(self, i):
+        self.queue.put(i)
 
     def run(self):
         self.log("Starting worker")
@@ -34,13 +40,12 @@ class Worker(mp.Process):
 
             # run forward model for all params, each n_reps times
             self.log("Received data of size {}".format(len(params_batch)))
-            self.log("Data: {}".format(params_batch))
-            result = self.model.gen(params_batch)
+            result = self.model.gen(params_batch, pbar=self)
 
             stats, params = self.process_batch(params_batch, result)
 
             self.log("Sending data")
-            self.conn.send((stats, params))
+            self.queue.put((stats, params))
             self.log("Done")
 
     def process_batch(self, params_batch, result):
@@ -68,10 +73,11 @@ class Worker(mp.Process):
         return ret_stats, ret_params
     
     def log(self, msg):
-        print("Worker: {}".format(msg))
+        if self.verbose:
+            print("Worker {}: {}".format(self.n, msg))
 
 class MPGenerator(Default):
-    def __init__(self, models, prior, summary, seed=None):
+    def __init__(self, models, prior, summary, seed=None, verbose=False):
         """Generator
 
         Parameters
@@ -91,8 +97,10 @@ class MPGenerator(Default):
             than samples drawn from prior when `gen` is called.
         """
         super().__init__(model=None, prior=prior, summary=summary, seed=None)
+        self.verbose = verbose
         pipes = [ mp.Pipe(duplex=True) for m in models ]
-        self.workers = [ Worker(p[1], m, summary, seed=self.rng.randint(low=0,high=2**31)) for p, m in zip(pipes, models) ]
+        self.queue = mp.Queue()
+        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], summary, seed=self.rng.randint(low=0,high=2**31), verbose=verbose) for i in range(len(models)) ]
         self.pipes = [ p[0] for p in pipes ]
 
         self.log("Starting workers")
@@ -156,6 +164,7 @@ class MPGenerator(Default):
         done = False
         with pbar:
             while not done:
+                active_list = []
                 for w, p in zip(self.workers, self.pipes):
                     try:
                         params_batch = next(minibatches)
@@ -163,18 +172,26 @@ class MPGenerator(Default):
                         done = True
                         break
 
+                    active_list.append((w,p))
                     self.log("Dispatching to worker (len = {})".format(len(params_batch)))
                     p.send(params_batch)
                     self.log("Done")
 
-                for w, p in zip(self.workers, self.pipes):
+                n_remaining = len(active_list)
+                while n_remaining > 0:
                     self.log("Listening to worker")
-                    stats, params = p.recv()
-                    self.log("Done")
-                    pbar.update(len(params))
-
-                    final_stats += stats
-                    final_params += params
+                    msg = self.queue.get()
+                    if type(msg) == int:
+                        self.log("Received int")
+                        pbar.update(msg)
+                    elif type(msg) == tuple:
+                        self.log("Received results")
+                        stats, params = msg 
+                        final_stats += stats
+                        final_params += params
+                        n_remaining -= 1
+                    else:
+                        self.log("Warning: Received unknown message of type {}".format(type(msg)))
 
         # TODO: for n_reps > 1 duplicate params; reshape stats array
 
@@ -188,7 +205,8 @@ class MPGenerator(Default):
         return params, stats
 
     def log(self, msg):
-        print("Parent: {}".format(msg))
+        if self.verbose:
+            print("Parent: {}".format(msg))
     def __del__(self):
         self.log("Closing")
         for w, p in zip(self.workers, self.pipes):

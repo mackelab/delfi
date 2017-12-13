@@ -122,8 +122,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         with pbar:
             for params_batch in self.iterate_minibatches(params, minibatch):
                 # run forward model for all params, each n_reps times
-                result = self.model.gen(params_batch, n_reps=n_reps)
-                pbar.update(len(params_batch))
+                result = self.model.gen(params_batch, n_reps=n_reps, pbar=pbar)
 
                 stats, params = self.process_batch(params_batch, result)
                 final_params += params
