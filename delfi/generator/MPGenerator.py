@@ -7,7 +7,6 @@ from delfi.utils.progress import no_tqdm, progressbar
 from delfi.generator.Default import Default
 
 import multiprocessing as mp
-import psutil
 
 class Worker(mp.Process):
     def __init__(self, n, queue, conn, model, summary, seed=None, verbose=False):
