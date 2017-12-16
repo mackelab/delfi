@@ -60,6 +60,10 @@ class SNPE(BaseInference):
                          pilot_samples=pilot_samples, seed=seed,
                          verbose=verbose, **kwargs)
         self.obs = np.asarray(obs)
+        
+        if np.any(np.isnan(self.obs)):
+            raise ValueError("Observed data contains NaNs")
+
         self.reg_lambda = reg_lambda
         self.round = 0
         self.convert_to_T = convert_to_T
