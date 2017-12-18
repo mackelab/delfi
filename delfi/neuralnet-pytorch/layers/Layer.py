@@ -21,7 +21,7 @@ class Layer(nn.Module):
         self.params = collections.OrderedDict()
 
     def add_param(self, init, shape, name, **kwargs):
-        s = 0.1
+        s = 0.3
         temp = np.random.normal(scale=s, size=shape)
         data = nn.Parameter(dtype(temp))
         param = { 'data' : data,'init' : init, 'shape' : shape, 'name' : name, **kwargs }
@@ -44,12 +44,11 @@ class FlattenLayer(Layer):
         ret = inp.view(*args)
         return ret
 
-class InputLayer(Layer):
-    def __init__(self, incoming, input_var, **kwargs):
+class ReshapeLayer(Layer):
+    def __init__(self, incoming, output_shape, **kwargs):
         super().__init__(incoming, **kwargs)
-        self.input_var = input_var
-        self.output_shape = self.input_shape
+        self.output_shape = output_shape
 
-    
     def forward(self, inp):
-        return inp
+        ret = inp.view(*self.output_shape)
+        return ret

@@ -33,7 +33,6 @@ class MixtureWeightsLayer(FullyConnectedLayer):
     def forward(self, inp, **kwargs):
         """Returns matrix with shape (batch, n_units)"""
         if self.n_units > 1:
-            print(inp)
             return super().forward(inp, **kwargs)
         else:
             return torch.ones((inp.shape[0], 1)).type(dtype)

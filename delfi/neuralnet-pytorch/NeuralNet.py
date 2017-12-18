@@ -8,7 +8,7 @@ from torch.autograd import Variable
 
 import numpy as np
 
-from delfi.neuralnet.layers.Layer import Layer, FlattenLayer
+from delfi.neuralnet.layers.Layer import Layer, FlattenLayer, ReshapeLayer
 from delfi.utils.odict import first, last, nth
 
 dtype = torch.DoubleTensor
@@ -19,7 +19,7 @@ def MyLogSumExp(x, axis):
 
 class NeuralNet(nn.Module):
     def __init__(self, n_inputs, n_outputs, n_components=1, svi=False,
-                 n_hiddens=[10, 10], seed=None):
+                 n_hiddens=[10, 10], n_rnn=None, impute_missing=True, seed=None):
         """Initialize a mixture density network with custom layers
 
         Parameters
@@ -36,9 +36,17 @@ class NeuralNet(nn.Module):
             If provided, random number generator will be seeded
         """
         super().__init__()
+        self.impute_missing = impute_missing
         self.n_components = n_components
         self.n_hiddens = n_hiddens
         self.n_outputs = n_outputs
+
+        if n_rnn is None:
+            self.n_rnn = 0
+        else:
+            self.n_rnn = n_rnn
+        if self.n_rnn > 0 and len(self.n_filters) > 0:
+            raise NotImplementedError
 
         self.seed = seed
         if seed is not None:
@@ -60,8 +68,22 @@ class NeuralNet(nn.Module):
         self.layer = collections.OrderedDict()
 
         # learn replacement values
-        self.layer['missing'] = dl.ReplaceMissingLayer((None, *self.n_inputs))
+        if self.impute_missing:
+            self.layer['missing'] = dl.ImputeMissingLayer(last(self.layer),
+                                                          n_inputs=self.n_inputs)
+        else:
+            self.layer['missing'] = dl.ReplaceMissingLayer(last(self.layer),
+                                                           n_inputs=self.n_inputs)
 
+        # recurrent neural net
+        # expects shape (batch, sequence_length, num_inputs)
+        if self.n_rnn > 0:
+            if len(self.n_inputs) == 1:
+                rs = (-1, *self.n_inputs, 1)
+                self.layer['rnn_reshape'] = ReshapeLayer(last(self.layer), rs)
+
+            self.layer['rnn'] = ll.GRULayer(last(self.layer), n_rnn,
+                                            only_return_final=True)
         # flatten
         self.layer['flatten'] = FlattenLayer(
             incoming=last(self.layer),
@@ -90,11 +112,11 @@ class NeuralNet(nn.Module):
             self.add_module(ln, self.layer[ln])
 
         self.svi=False
-        self.lprobs = []
-        self.params = []
-        self.stats = []
+        self.lprobs = Variable(dtype([]))
+        self.params = Variable(dtype([]))
+        self.stats = Variable(dtype([]))
+        self.iws = Variable(dtype([]))
         self.aps = {}
-        print(list(self.parameters()))
 
     def eval_comps(self, stats):
         """Evaluate the parameters of all mixture components at given inputs
@@ -110,7 +132,11 @@ class NeuralNet(nn.Module):
         -------
         mixing coefficients, means and scale matrices
         """
-        x = Variable(dtype(stats.flatten().astype('double')).view(*stats.shape))
+        if type(stats) == np.ndarray:
+            x = Variable(dtype(stats.flatten().astype(dtype)).view(*stats.shape))
+        else:
+            x = stats
+
         for l in self.layer:
             x = self.layer[l](x)
             if self.layer[l] == self.last_hidden:
@@ -121,7 +147,19 @@ class NeuralNet(nn.Module):
         prec_data = self.layer['mixture_precisions'](x)
         Us, ldetUs = prec_data['Us'], prec_data['ldetUs']
     
-        return a, ms, Us, ldetUs
+        if type(stats) == np.ndarray:
+            a = a.data.numpy()
+            ms = [ m.data.numpy() for m in ms ]
+            Us = [ U.data.numpy() for U in Us ]
+            ldetUs = [ ldetU.data.numpy() for ldetU in ldetUs ]
+
+        ret = {
+            **{'a': a},
+            **{'m' + str(i): ms[i] for i in range(self.n_components)},
+            **{'U' + str(i): Us[i] for i in range(self.n_components)},
+            **{'ldetU' + str(i): ldetUs[i] for i in range(self.n_components)}}
+
+        return ret
 
     def eval_lprobs(self, params, stats):
         """Evaluate log probabilities for given input-output pairs.
@@ -137,18 +175,13 @@ class NeuralNet(nn.Module):
         -------
         log probabilities : log p(params|stats)
         """
-        params = Variable(dtype(params.flatten().astype('double')).view(*params.shape))
-        a, ms, Us, ldetUs = self.eval_comps(stats)
-        comps = {
-            **{'a': a},
-            **{'m' + str(i): ms[i] for i in range(self.n_components)},
-            **{'U' + str(i): Us[i] for i in range(self.n_components)}}
+        comps = self.eval_comps(stats)
 
-        for k in comps:
-            print("{} : {}".format(k, comps[k][0]))
+        a = comps['a']
+        ms = [ comps['m{}'.format(i)] for i in range(self.n_components) ]
+        Us = [ comps['U{}'.format(i)] for i in range(self.n_components) ]
+        ldetUs = [ comps['ldetU{}'.format(i)] for i in range(self.n_components) ]
 
-        m = ms[0]
-        U = Us[0]
         lprobs_comps = [-0.5 * torch.sum(torch.sum((params - m).unsqueeze
             (1) * U, dim=2)**2, dim=1) + ldetU
             for m, U, ldetU in zip(ms, Us, ldetUs)]
@@ -156,27 +189,26 @@ class NeuralNet(nn.Module):
         lprobs = MyLogSumExp(torch.stack(lprobs_comps, dim=1) + torch.log(a) \
                        - (0.5 * self.n_outputs * np.log(2 * np.pi)), axis=1).squeeze()
 
+        return lprobs
+
+    def get_loss(self):
+        return self.iws * self.lprobs
+
+    def forward(self, inp):
+        params = Variable(dtype(inp[0].astype('double')))
+        stats = Variable(dtype(inp[1].astype('double')))
+        iws = Variable(dtype(inp[2].astype('double')))
+        lprobs = self.eval_lprobs(params, stats)
+        ret = torch.sum(lprobs * iws)
+
         self.lprobs = lprobs
         self.stats = stats
         self.params= params
-           
-        print("lprobs: {}".format(lprobs))
+        self.iws = iws
 
-        return lprobs
-
-    def forward(self, inp):
-        params = inp[0]
-        stats = inp[1]
-        iws = Variable(dtype(inp[2]))
-        iws = Variable(torch.ones(iws.size()).type(dtype))
-        lprobs = self.eval_lprobs(params, stats)
-        print(iws)
-        print(lprobs * iws)
-        ret = torch.sum(lprobs * iws)
-        print("RETURNED: {}".format(ret))
         return ret
 
-    def get_mog(self, stats):
+    def get_mog(self, stats, deterministic=True):
         """Return the conditional MoG at location x
 
         Parameters

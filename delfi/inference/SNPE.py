@@ -1,13 +1,8 @@
 import numpy as np
-import theano
-import theano.tensor as tt
 
 from delfi.inference.BaseInference import BaseInference
 from delfi.neuralnet.Trainer import Trainer
 from delfi.neuralnet.loss.regularizer import svi_kl_init, svi_kl_zero
-
-dtype = theano.config.floatX
-
 
 class SNPE(BaseInference):
     def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
@@ -68,9 +63,6 @@ class SNPE(BaseInference):
         self.round = 0
         self.convert_to_T = convert_to_T
 
-        # placeholder for importance weights
-        self.network.iws = tt.vector('iws', dtype=dtype)
-
         self.prior_mixin = 0 if prior_mixin is None else prior_mixin
 
     def loss(self, N, round_cl=1):
@@ -81,7 +73,7 @@ class SNPE(BaseInference):
         N : int
             Number of training samples
         """
-        loss = -tt.mean(self.network.iws * self.network.lprobs)
+        loss = -self.network.get_loss()
 
         # adding nodes to dict s.t. they can be monitored during training
         self.observables['loss.lprobs'] = self.network.lprobs
@@ -195,12 +187,10 @@ class SNPE(BaseInference):
             iws /= np.mean(iws)
 
             trn_data = (trn_data[0], trn_data[1], iws)
-            trn_inputs = [self.network.params, self.network.stats,
-                          self.network.iws]
 
             t = Trainer(self.network,
                         self.loss(N=n_train_round, round_cl=round_cl),
-                        trn_data=trn_data, trn_inputs=trn_inputs,
+                        trn_data=trn_data, 
                         seed=self.gen_newseed(),
                         monitor=self.monitor_dict_from_names(monitor),
                         **kwargs)

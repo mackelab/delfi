@@ -16,7 +16,7 @@ from delfi.utils.progress import no_tqdm, progressbar
 dtype = torch.DoubleTensor
 
 class Trainer:
-    def __init__(self, network, loss, trn_data, trn_inputs,
+    def __init__(self, network, loss, trn_data, 
                  step=optim.Adam, lr=0.001, lr_decay=1.0, max_norm=0.1,
                  monitor=None, seed=None):
         """Construct and configure the trainer
@@ -53,7 +53,6 @@ class Trainer:
         self.network = network
         self.loss = loss
         self.trn_data = trn_data
-        self.trn_inputs = trn_inputs
         
         self.seed = seed
         if seed is not None:
@@ -96,7 +95,7 @@ class Trainer:
     def make_update(self, trn_batch):
         self.optim.zero_grad()
         loss = self.network(trn_batch)
-        loss.backward()
+        torch.sum(-loss).backward()
         self.optim.step()
         return loss
 
@@ -174,8 +173,9 @@ class Trainer:
                     for name, value in zip(self.trn_outputs_names, outputs):
                         trn_outputs[name].append(value)
 
-                    trn_loss = trn_outputs['loss'][-1]
-                    diff = self.loss - trn_loss
+                    trn_loss = trn_outputs['loss'][-1].data.numpy()
+                    if np.isfinite(self.loss):
+                        diff = self.loss - trn_loss
                     self.loss = trn_loss
 
                     # check for convergence
