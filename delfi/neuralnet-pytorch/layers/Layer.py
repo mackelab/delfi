@@ -1,11 +1,15 @@
 import collections
 import torch
 import torch.nn as nn
+from torch.autograd import Variable
+
+import numpy as np
 
 dtype = torch.DoubleTensor
 
 class Layer(nn.Module):
     def __init__(self, incoming, **kwargs):
+        super().__init__()
         if isinstance(incoming, tuple):
             self.input_shape = incoming
             self.input_layer = None
@@ -16,22 +20,29 @@ class Layer(nn.Module):
         self.kwargs = kwargs
         self.params = collections.OrderedDict()
 
-    def add_param(self, init, shape, name='', **kwargs):
-        param = { 'init' : init, 'shape' : shape, 'name' : name, **kwargs }
-        self.params.add(param)
+    def add_param(self, init, shape, name, **kwargs):
+        s = 0.1
+        temp = np.random.normal(scale=s, size=shape)
+        data = nn.Parameter(dtype(temp))
+        param = { 'data' : data,'init' : init, 'shape' : shape, 'name' : name, **kwargs }
+        self.params[name] =param
+        self.register_parameter(name, data)
+        return data
 
     def forward(self, inp, **kwargs):
         raise NotImplementedError
 
 class FlattenLayer(Layer):
     def __init__(self, incoming, outdim, **kwargs):
-        super().__init__(incoming, kwargs)
+        super().__init__(incoming, **kwargs)
         self.outdim = outdim
         to_flatten = self.input_shape[self.outdim - 1:]
-        self.output_shape = self.input_shape[:self.outdim - 1] + (np.prod(to_flatten.shape),)
+        self.output_shape = self.input_shape[:self.outdim - 1] + (np.prod(to_flatten),)
 
     def forward(self, inp):
-        raise NotImplementedError("Todo")
+        args = [ inp.shape[0] ] + [ int(x) for x in self.output_shape[1:]]
+        ret = inp.view(*args)
+        return ret
 
 class InputLayer(Layer):
     def __init__(self, incoming, input_var, **kwargs):

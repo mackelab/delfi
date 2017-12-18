@@ -6,7 +6,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from delfi.neuralnet.Layer import Layer
+import numpy as np
+
+from delfi.neuralnet.layers.Layer import Layer
+
+
+from delfi.utils.progress import no_tqdm, progressbar
 
 dtype = torch.DoubleTensor
 
@@ -57,9 +62,9 @@ class Trainer:
             self.rng = np.random.RandomState()
 
         # gradients
-        grads = tt.grad(self.loss, self.network.aps)
-        if max_norm is not None:
-            grads = lu.total_norm_constraint(grads, max_norm=max_norm)
+#         grads = tt.grad(self.loss, self.network.aps)
+#         if max_norm is not None:
+#             grads = lu.total_norm_constraint(grads, max_norm=max_norm)
 
         # updates
         self.lr = lr
@@ -79,20 +84,21 @@ class Trainer:
             self.trn_outputs_nodes += monitor_nodes
 
         # function for single update
-        self.make_update = theano.function(
-            inputs=self.trn_inputs,
-            outputs=self.trn_outputs_nodes,
-            updates=self.updates
-        )
+#         self.make_update = theano.function(
+#             inputs=self.trn_inputs,
+#             outputs=self.trn_outputs_nodes,
+#             updates=self.updates
+#         )
 
         # initialize variables
         self.loss = float('inf')
 
     def make_update(self, trn_batch):
         self.optim.zero_grad()
-        loss = self.net.lprob(trn_batch)
+        loss = self.network(trn_batch)
         loss.backward()
         self.optim.step()
+        return loss
 
     def train(self,
               epochs=250,
@@ -132,7 +138,7 @@ class Trainer:
         if minibatch > self.n_trn_data:
             minibatch = self.n_trn_data
         
-        self.optim = optim.Adam(lr=lr)
+        self.optim = optim.Adam(self.network.parameters(), lr=self.lr)
 
         # placeholders for outputs
         trn_outputs = {}
@@ -163,7 +169,7 @@ class Trainer:
                                                      seed=self.gen_newseed()):
                     trn_batch = tuple(trn_batch)
 
-                    outputs = self.make_update(*trn_batch)
+                    outputs = self.make_update(trn_batch)
 
                     for name, value in zip(self.trn_outputs_names, outputs):
                         trn_outputs[name].append(value)
@@ -203,7 +209,7 @@ def iterate_minibatches(trn_data, minibatch=10, seed=None):
     Parameters
     ----------
     trn_data : tuple of arrays
-        Training daa
+        Training data
     minibatch : int
         Size of batches
     seed : None or int

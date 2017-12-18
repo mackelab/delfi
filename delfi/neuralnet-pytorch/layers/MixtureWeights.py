@@ -8,7 +8,7 @@ dtype = torch.DoubleTensor
 
 class MixtureWeightsLayer(FullyConnectedLayer):
     def __init__(self, incoming, n_units, 
-                 mW_init=linit.HeNormal(), mb_init=linit.Constant([0.]),
+                 mW_init=None, mb_init=None,
                  actfun=F.softmax, **kwargs):
         """Mixture weights layer with optional weight uncertainty
 
@@ -27,12 +27,13 @@ class MixtureWeightsLayer(FullyConnectedLayer):
                 mb_init=mb_init,
                 actfun=actfun,
                 **kwargs)
+        else:
+            super().__init__(incoming, 1, actfun=actfun, **kwargs)
 
     def forward(self, inp, **kwargs):
         """Returns matrix with shape (batch, n_units)"""
         if self.n_units > 1:
-            return super(MixtureWeightsLayer, self).forward(
-                inp,
-                **kwargs)
+            print(inp)
+            return super().forward(inp, **kwargs)
         else:
-            return torch.ones((inp.shape[0], self.n_units)).dtype(dtype)
+            return torch.ones((inp.shape[0], 1)).type(dtype)

@@ -4,16 +4,20 @@ import delfi.neuralnet.layers as dl
 
 import torch
 import torch.nn as nn
+from torch.autograd import Variable
 
-from delfi.neuralnet.Layer import Layer
+import numpy as np
+
+from delfi.neuralnet.layers.Layer import Layer, FlattenLayer
+from delfi.utils.odict import first, last, nth
 
 dtype = torch.DoubleTensor
 
-def MyLogSumExp(x, axis=None):
-    x_max = torch.max(x, dim=axis, keepdims=True)
-    return torch.log(torch.sum(torch.exp(x - x_max), dim=axis, keepdims=True)) + x_max
+def MyLogSumExp(x, axis):
+    x_max = torch.max(x, dim=axis, keepdim=True)[0]
+    return torch.log(torch.sum(torch.exp(x - x_max), dim=axis, keepdim=True)) + x_max
 
-class NeuralNet(object):
+class NeuralNet(nn.Module):
     def __init__(self, n_inputs, n_outputs, n_components=1, svi=False,
                  n_hiddens=[10, 10], seed=None):
         """Initialize a mixture density network with custom layers
@@ -31,6 +35,7 @@ class NeuralNet(object):
         seed : int or None
             If provided, random number generator will be seeded
         """
+        super().__init__()
         self.n_components = n_components
         self.n_hiddens = n_hiddens
         self.n_outputs = n_outputs
@@ -72,14 +77,24 @@ class NeuralNet(object):
 
         # mixture layers
         self.layer['mixture_weights'] = dl.MixtureWeightsLayer(
-            last_hidden, n_units=n_components, actfun=torch.softmax,
+            self.last_hidden, n_units=n_components, actfun=torch.nn.functional.softmax,
             name='weights')
         self.layer['mixture_means'] = dl.MixtureMeansLayer(
-            last_hidden, n_components=n_components, n_dim=n_outputs,
+            self.last_hidden, n_components=n_components, n_dim=n_outputs,
             name='means')
         self.layer['mixture_precisions'] = dl.MixturePrecisionsLayer(
-            last_hidden, n_components=n_components, n_dim=n_outputs,
+            self.last_hidden, n_components=n_components, n_dim=n_outputs,
             name='precisions')
+
+        for ln in self.layer:
+            self.add_module(ln, self.layer[ln])
+
+        self.svi=False
+        self.lprobs = []
+        self.params = []
+        self.stats = []
+        self.aps = {}
+        print(list(self.parameters()))
 
     def eval_comps(self, stats):
         """Evaluate the parameters of all mixture components at given inputs
@@ -95,15 +110,16 @@ class NeuralNet(object):
         -------
         mixing coefficients, means and scale matrices
         """
-        x = stats
-        for l in self.layers:
-            x = l(x)
-            if l == self.last_hidden:
+        x = Variable(dtype(stats.flatten().astype('double')).view(*stats.shape))
+        for l in self.layer:
+            x = self.layer[l](x)
+            if self.layer[l] == self.last_hidden:
                 break
 
         a = self.layer['mixture_weights'](x)
         ms = self.layer['mixture_means'](x)
-        Us, ldetUs = self.layer['mixture_precisions'](x)
+        prec_data = self.layer['mixture_precisions'](x)
+        Us, ldetUs = prec_data['Us'], prec_data['ldetUs']
     
         return a, ms, Us, ldetUs
 
@@ -121,20 +137,44 @@ class NeuralNet(object):
         -------
         log probabilities : log p(params|stats)
         """
+        params = Variable(dtype(params.flatten().astype('double')).view(*params.shape))
         a, ms, Us, ldetUs = self.eval_comps(stats)
         comps = {
             **{'a': a},
             **{'m' + str(i): ms[i] for i in range(self.n_components)},
             **{'U' + str(i): Us[i] for i in range(self.n_components)}}
 
-        lprobs_comps = [-0.5 * torch.sum(torch.sum((self.params - m).unsqueeze
+        for k in comps:
+            print("{} : {}".format(k, comps[k][0]))
+
+        m = ms[0]
+        U = Us[0]
+        lprobs_comps = [-0.5 * torch.sum(torch.sum((params - m).unsqueeze
             (1) * U, dim=2)**2, dim=1) + ldetU
             for m, U, ldetU in zip(ms, Us, ldetUs)]
 
-        lprobs = MyLogSumExp(torch.stack(lprobs_comps, dim=1) + torch.log(a, dim=1) \
-                       - (0.5 * self.n_outputs * np.log(2 * np.pi))).squeeze()
+        lprobs = MyLogSumExp(torch.stack(lprobs_comps, dim=1) + torch.log(a) \
+                       - (0.5 * self.n_outputs * np.log(2 * np.pi)), axis=1).squeeze()
+
+        self.lprobs = lprobs
+        self.stats = stats
+        self.params= params
+           
+        print("lprobs: {}".format(lprobs))
 
         return lprobs
+
+    def forward(self, inp):
+        params = inp[0]
+        stats = inp[1]
+        iws = Variable(dtype(inp[2]))
+        iws = Variable(torch.ones(iws.size()).type(dtype))
+        lprobs = self.eval_lprobs(params, stats)
+        print(iws)
+        print(lprobs * iws)
+        ret = torch.sum(lprobs * iws)
+        print("RETURNED: {}".format(ret))
+        return ret
 
     def get_mog(self, stats):
         """Return the conditional MoG at location x

@@ -1,5 +1,8 @@
 import torch
 import torch.nn as nn
+from torch.autograd import Variable
+
+import numpy as np
 
 from delfi.neuralnet.layers.Layer import Layer
 
@@ -10,8 +13,8 @@ class MixturePrecisionsLayer(Layer):
                  incoming,
                  n_components,
                  n_dim,
-                 mWs_init=linit.HeNormal(),
-                 mbs_init=linit.Constant([0.]),
+                 mWs_init=None,
+                 mbs_init=None,
                  **kwargs):
         """Fully connected layer for mixture precisions, optional weight uncertainty
 
@@ -62,13 +65,13 @@ class MixturePrecisionsLayer(Layer):
             ldetUs : list of length n_components with (batch, n_dim, n_dim)
                 Log determinants of precisions
         """
-        triu_mask = np.triu(np.ones([self.n_dim, self.n_dim], dtype=dtype), 1)
-        diag_mask = np.eye(self.n_dim, dtype=dtype)
-        offdiag_mask = np.ones(self.n_dim, dtype=dtype) - \
-            np.eye(self.n_dim, dtype=dtype)
+        triu_mask = Variable(torch.triu(torch.ones(self.n_dim, self.n_dim).type(dtype), 1))
+        diag_mask = Variable(torch.eye(self.n_dim).type(dtype))
+        offdiag_mask = Variable(torch.ones(self.n_dim).type(dtype) - \
+            torch.eye(self.n_dim).type(dtype))
 
-            zas_reshaped = [(torch.mm(
-                inp, mW).view + mb).view((-1, self.n_dim, self.n_dim)) for mW, mb in zip(self.mWs, self.mbs)]
+        zas_reshaped = [(torch.mm(
+                inp, mW) + mb).view((-1, self.n_dim, self.n_dim)) for mW, mb in zip(self.mWs, self.mbs)]
 
         Us = [
             triu_mask *

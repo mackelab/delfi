@@ -8,6 +8,7 @@ dtype = torch.DoubleTensor
 
 class FullyConnectedLayer(Layer):
     def __init__(self, incoming, n_units,
+                 mW_init=None, mb_init=None,
                  actfun=F.tanh, **kwargs):
         """Fully connected layer with optional weight uncertainty
 
