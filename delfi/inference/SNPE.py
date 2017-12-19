@@ -1,4 +1,5 @@
 import numpy as np
+import pdb
 
 from delfi.inference.BaseInference import BaseInference
 from delfi.neuralnet.Trainer import Trainer
@@ -73,7 +74,7 @@ class SNPE(BaseInference):
         N : int
             Number of training samples
         """
-        loss = -self.network.get_loss()
+        loss = self.network.get_loss()
 
         # adding nodes to dict s.t. they can be monitored during training
         self.observables['loss.lprobs'] = self.network.lprobs
@@ -187,10 +188,12 @@ class SNPE(BaseInference):
             iws /= np.mean(iws)
 
             trn_data = (trn_data[0], trn_data[1], iws)
+            trn_inputs = [self.network.params, self.network.stats, self.network.iws]
 
             t = Trainer(self.network,
                         self.loss(N=n_train_round, round_cl=round_cl),
                         trn_data=trn_data, 
+                        trn_inputs=trn_inputs,
                         seed=self.gen_newseed(),
                         monitor=self.monitor_dict_from_names(monitor),
                         **kwargs)

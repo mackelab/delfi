@@ -51,6 +51,7 @@ class NeuralNet(object):
         self.n_outputs = n_outputs
         self.svi = svi
 
+        self.iws = tt.vector('iws', dtype=dtype)
         if n_rnn is None:
             self.n_rnn = 0
         else:
@@ -331,3 +332,6 @@ class NeuralNet(object):
                 'n_rnn': self.n_rnn,
                 'seed': self.seed,
                 'svi': self.svi}
+
+    def get_loss(self):
+        return -tt.mean(self.iws * self.lprobs)

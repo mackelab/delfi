@@ -3,17 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from delfi.neuralnet.layers.FullyConnected import FullyConnectedLayer
-from delfi.neuralnet.layers.Layer import *
 
 dtype = torch.DoubleTensor
 
 class MixtureWeightsLayer(FullyConnectedLayer):
     def __init__(self, incoming, n_units, 
-                 svi=True,
-                 mWs_init=HeNormal(),
-                 mbs_init=Constant([0.]),
-                 sWs_init=Constant([-5.]),
-                 sbs_init=Constant([-5.]),
+                 mW_init=None, mb_init=None,
                  actfun=F.softmax, **kwargs):
         """Mixture weights layer with optional weight uncertainty
 
@@ -28,19 +23,17 @@ class MixtureWeightsLayer(FullyConnectedLayer):
             super(MixtureWeightsLayer, self).__init__(
                 incoming,
                 n_units,
-                svi=svi,
-                mWs_init=mWs_init,
-                mbs_init=mbs_init,
-                sWs_init=sWs_init,
-                sbs_init=sbs_init,
+                mW_init=mW_init,
+                mb_init=mb_init,
                 actfun=actfun,
                 **kwargs)
         else:
             super().__init__(incoming, 1, actfun=actfun, **kwargs)
 
-    def forward(self, inp, deterministic=False, **kwargs):
+    def forward(self, inp, **kwargs):
         """Returns matrix with shape (batch, n_units)"""
         if self.n_units > 1:
-            return super().forward(inp, deterministic=deterministic, **kwargs)
+            print(inp)
+            return super().forward(inp, **kwargs)
         else:
             return torch.ones((inp.shape[0], 1)).type(dtype)

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from delfi.neuralnet.layers.Layer import *
+from delfi.neuralnet.layers.Layer import Layer
 
 dtype = torch.DoubleTensor
 
@@ -11,11 +11,8 @@ class MixtureMeansLayer(Layer):
                  incoming,
                  n_components,
                  n_dim,
-                 svi=True,
-                 mWs_init=HeNormal(),
-                 mbs_init=Constant([0.]),
-                 sWs_init=Constant([-5.]),
-                 sbs_init=Constant([-5.]),
+                 mWs_init=None,
+                 mbs_init=None,
                  **kwargs):
         """Fully connected layer for mixture means, optional weight uncertainty
 
@@ -45,7 +42,6 @@ class MixtureMeansLayer(Layer):
         super(MixtureMeansLayer, self).__init__(incoming, **kwargs)
         self.n_components = n_components
         self.n_dim = n_dim
-        self.svi = svi
 
         self.mWs = [self.add_param(mWs_init,
                                    (self.input_shape[1], self.n_dim),
@@ -56,19 +52,6 @@ class MixtureMeansLayer(Layer):
                                    name='mb' + str(c), mp=True, bp=True)
                     for c in range(n_components)]
 
-        if self.svi:
-            if seed == None:
-                seed = np.random.rand(1, 2147462579)
-            self._srng = torch.manual_seed(seed)
-            self.sWs = [self.add_param(sWs_init,
-                                       (self.input_shape[1], self.n_dim),
-                                       name='sW' + str(c), sp=True, wp=True)
-                        for c in range(n_components)]
-            self.sbs = [self.add_param(sbs_init,
-                                       (self.n_dim,),
-                                       name='sb' + str(c), sp=True, bp=True)
-                        for c in range(n_components)]
-
     def forward(self, inp, **kwargs):
         """Compute outputs
 
@@ -76,29 +59,10 @@ class MixtureMeansLayer(Layer):
         -------
         list of length n_components with (batch, n_dim)
         """
-        if not self.svi or deterministic:
-            return [
-                torch.mm(
-                    inp,
-                    mW) + mb for mW,
-                mb in zip(
-                    self.mWs,
-                    self.mbs)]
-        else:
-            uas = [
-                self._srng.normal(
-                    (inp.shape[0],
-                     self.n_dim)).type(type) for i in range(
-                    self.n_components)]
-            mas = [
-                torch.mm(
-                    inp,
-                    mWm) +
-                mbm for mWm,
-                mbm in zip(
-                    self.mWs,
-                    self.mbs)]
-            sas = [torch.mm(inp**2, torch.exp(2 * sW)) + torch.exp(2 * sb)
-                   for sW, sb in zip(self.sWs, self.sbs)]
-            zas = [torch.sqrt(sa) * ua + ma for sa, ua, ma in zip(sas, uas, mas)]
-            return zas
+        return [
+            torch.mm(
+                inp,
+                mW) + mb for mW,
+            mb in zip(
+                self.mWs,
+                self.mbs)]

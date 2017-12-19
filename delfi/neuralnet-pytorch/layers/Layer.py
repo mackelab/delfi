@@ -20,10 +20,10 @@ class Layer(nn.Module):
         self.kwargs = kwargs
         self.params = collections.OrderedDict()
 
-    def add_param(self, init, shape, name, **kwargs):
-        s = 0.3
-        temp = np.random.normal(scale=s, size=shape)
-        data = nn.Parameter(dtype(temp))
+    def add_param(self, spec, shape, name, **kwargs):
+        shape = tuple([ int(x) for x in shape ])
+        init = spec(shape)
+        data = nn.Parameter(dtype(init))
         param = { 'data' : data,'init' : init, 'shape' : shape, 'name' : name, **kwargs }
         self.params[name] =param
         self.register_parameter(name, data)
@@ -52,3 +52,48 @@ class ReshapeLayer(Layer):
     def forward(self, inp):
         ret = inp.view(*self.output_shape)
         return ret
+
+
+class Initialiser:
+    def __call__(self, shape):
+        return self.sample(shape)
+
+class Normal(Initialiser):
+    def __init__(self, mean=0.0, std=0.01):
+        self.mean = mean
+        self.std = std
+
+    def sample(self, shape):
+        ms = torch.zeros(*shape).type(dtype) + self.mean
+        return torch.normal(ms, self.std).type(dtype)
+
+class He(Initialiser):
+    def __init__(self, initialiser, gain=1.0, c01b=False):
+        self.initialiser = initialiser
+        self.gain = gain
+        self.c01b = c01b
+
+    def sample(self, shape):
+        if self.c01b:
+            raise NotImplementedError
+        else:
+            if len(shape) == 2:
+                fan_in = shape[0]
+            elif len(shape) > 2:
+                fan_in = np.prod(shape[1:])
+            else:
+                raise RuntimeError("This initializer only works with shapes of length >= 2")
+
+        std = self.gain * np.sqrt(1.0/fan_in)
+        return self.initialiser(std=std).sample(shape)
+
+class HeNormal(He):
+    def __init__(self, gain=1.0, c01b=False):
+        super().__init__(Normal, gain, c01b)
+
+class Constant(Initialiser):
+    def __init__(self, val):
+        self.val = val
+
+    def sample(self, shape):
+        return torch.ones(*shape).type(dtype)
