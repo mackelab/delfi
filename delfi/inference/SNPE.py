@@ -1,5 +1,4 @@
 import numpy as np
-import pdb
 
 from delfi.inference.BaseInference import BaseInference
 from delfi.neuralnet.Trainer import Trainer
