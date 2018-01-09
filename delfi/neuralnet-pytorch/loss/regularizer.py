@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 #import theano
 #import theano.tensor as tt
 
@@ -136,11 +137,11 @@ def svi_kl_zero(mps, sps, wdecay):
 
     imvs = {}
 
-    n_params = sum([mp.get_value().size for mp in mps])
+    n_params = sum([torch.numel(mp) for mp in mps])
 
-    L1 = 0.5 * wdecay * (sum([tt.sum(mp**2) for mp in mps]) +
-                         sum([tt.sum(tt.exp(sp * 2)) for sp in sps]))
-    L2 = sum([tt.sum(sp) for sp in sps])
+    L1 = 0.5 * wdecay * (sum([torch.sum(mp**2) for mp in mps]) +
+                         sum([torch.sum(torch.exp(sp * 2)) for sp in sps]))
+    L2 = sum([torch.sum(sp) for sp in sps])
     Lc = 0.5 * n_params * (1.0 + np.log(wdecay))
 
     L = L1 - L2 - Lc

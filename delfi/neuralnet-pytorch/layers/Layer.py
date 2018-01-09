@@ -29,6 +29,25 @@ class Layer(nn.Module):
         self.register_parameter(name, data)
         return data
 
+    def get_params(self, **tags):
+        ret = []
+
+        for k in self.params:
+            add = True
+            for t in tags:
+                if tags[t] and ((not t in self.params[k]) or not self.params[k][t]):
+                    add=False
+                    break
+                elif not tags[t] and ((t in self.params[k]) and self.params[k][t]):   
+                    add=False
+                    break
+
+            if add:
+                ret.append(self.params[k]['data'])
+
+        return ret
+         
+
     def forward(self, inp, **kwargs):
         raise NotImplementedError
 

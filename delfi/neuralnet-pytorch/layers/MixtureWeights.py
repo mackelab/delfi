@@ -14,7 +14,9 @@ class MixtureWeightsLayer(FullyConnectedLayer):
                  mbs_init=Constant([0.]),
                  sWs_init=Constant([-5.]),
                  sbs_init=Constant([-5.]),
-                 actfun=F.softmax, **kwargs):
+                 actfun=F.softmax,
+                 seed=None,
+                 **kwargs):
         """Mixture weights layer with optional weight uncertainty
 
         If n_units > 1, this becomes a fully-connected layer. Else, no

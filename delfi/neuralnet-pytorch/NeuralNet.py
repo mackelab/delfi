@@ -150,6 +150,19 @@ class NeuralNet(nn.Module):
         self.stats = Variable(dtype([]))
         self.iws = Variable(dtype([]))
         self.aps = {}
+        
+        last_mog = [self.layer['mixture_weights'],
+                    self.layer['mixture_means'],
+                    self.layer['mixture_precisions']]
+
+        self.aps = get_params(last_mog)
+        self.mps = get_params(last_mog, mp=True) 
+        self.sps = get_params(last_mog, sp=True)
+
+        self.mps_wp = get_params(last_mog, mp=True, wp=True)
+        self.sps_wp = get_params(last_mog, sp=True, wp=True)
+        self.mps_bp = get_params(last_mog, mp=True, bp=True)
+        self.sps_bp = get_params(last_mog, sp=True, bp=True)
 
     def eval_comps(self, stats):
         """Evaluate the parameters of all mixture components at given inputs
@@ -226,7 +239,7 @@ class NeuralNet(nn.Module):
 
     def get_loss(self):
         if len(self.iws.size()) == 0:
-            return []
+            return Variable(dtype([0]))
 
         return -torch.mm(self.iws, self.lprobs)
 
@@ -281,3 +294,6 @@ class NeuralNet(nn.Module):
                 'n_rnn': self.n_rnn,
                 'seed': self.seed,
                 'svi': self.svi}
+
+def get_params(layers, **kwargs):
+    return [ x for l in layers for x in l.get_params(**kwargs) ]

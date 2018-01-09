@@ -17,7 +17,7 @@ from delfi.utils.progress import no_tqdm, progressbar
 dtype = torch.DoubleTensor
 
 class Trainer:
-    def __init__(self, network, loss, trn_data, 
+    def __init__(self, network, loss, trn_data, trn_inputs=None,
                  step=optim.Adam, lr=0.001, lr_decay=1.0, max_norm=0.1,
                  monitor=None, seed=None):
         """Construct and configure the trainer
@@ -97,8 +97,7 @@ class Trainer:
         self.optim.zero_grad()
         loss = self.network(trn_batch)
         cost = -torch.sum(loss)
-        pdb.set_trace()
-        torch.sum(-loss).backward()
+        cost.backward()
         self.optim.step()
         return loss
 

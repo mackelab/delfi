@@ -202,6 +202,12 @@ class SNPE(BaseInference):
 
             trn_datasets.append(trn_data)
 
-            posteriors.append(self.predict(self.obs))
+            try:
+                new_posterior = self.predict(self.obs)
+            except np.linalg.LinAlgError:
+                print("Cannot predict posterior after round {} due to NaNs".format(r))
+                break
+
+            posteriors.append(new_posterior)
 
         return logs, trn_datasets, posteriors

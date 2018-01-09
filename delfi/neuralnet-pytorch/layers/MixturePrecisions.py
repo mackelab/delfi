@@ -18,6 +18,7 @@ class MixturePrecisionsLayer(Layer):
                  mbs_init=Constant([0.]),
                  sWs_init=Constant([-5.]),
                  sbs_init=Constant([-5.]),
+                 seed=None,
                  **kwargs):
         """Fully connected layer for mixture precisions, optional weight uncertainty
 
@@ -59,15 +60,13 @@ class MixturePrecisionsLayer(Layer):
                     for c in range(n_components)]
 
         if self.svi:
-            if seed == None:
-                seed = np.random.rand(1, 2147462579)
-            self._srng = torch.manual_seed(seed)
+            self._srng = np.random.RandomState(seed)
             self.sWs = [self.add_param(sWs_init,
-                                       (self.inp_shape[1], self.n_dim),
+                                       (self.input_shape[1], self.n_dim ** 2),
                                        name='sW' + str(c), sp=True, wp=True)
                         for c in range(n_components)]
             self.sbs = [self.add_param(sbs_init,
-                                       (self.n_dim,),
+                                       (self.n_dim ** 2,),
                                        name='sb' + str(c), sp=True, bp=True)
                         for c in range(n_components)]
 
@@ -92,9 +91,9 @@ class MixturePrecisionsLayer(Layer):
                             inp, mW) + mb).view((-1, self.n_dim, self.n_dim)) for mW, mb in zip(self.mWs, self.mbs)]
         else:
             uas = [
-                self._srng.normal(
-                    (input.shape[0],
-                     self.n_dim**2)).type(dtype) for i in range(
+                Variable(dtype(self._srng.normal(
+                    size=(inp.shape[0],
+                     self.n_dim**2)))) for i in range(
                     self.n_components)]
             mas = [
                 torch.mm(

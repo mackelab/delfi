@@ -1,7 +1,9 @@
 from delfi.distribution.Discrete import Discrete
 from delfi.distribution.Gaussian import Gaussian
 from delfi.distribution.StudentsT import StudentsT
-from delfi.distribution.Uniform import Uniform
+from delfi.distribution.Uniform import Uniform, LogUniform
+
+from delfi.distribution.MixedDistribution import MixedDistribution
 
 from delfi.distribution.mixture.EllipsoidalMixture import MoE
 from delfi.distribution.mixture.GaussianMixture import MoG

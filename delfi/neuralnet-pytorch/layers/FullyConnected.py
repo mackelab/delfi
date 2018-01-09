@@ -39,8 +39,8 @@ class FullyConnectedLayer(Layer):
 
         if self.svi:
             if seed == None:
-                seed = np.random.rand(1, 2147462579)
-            self._srng = torch.manual_seed(seed)
+                seed = np.random.randint(1, 2147462579)
+            self._srng = np.random.RandomState(seed)
             self.sW = self.add_param(sWs_init,
                                      (self.input_shape[1], self.n_units),
                                      name='sW', sp=True, wp=True)
@@ -55,5 +55,5 @@ class FullyConnectedLayer(Layer):
             return self.actfun(ma)
         else:
             sa = torch.mm(inp**2, torch.exp(2 * self.sW)) + torch.exp(2 * self.sb)
-            ua = self._srng.normal((inp.shape[0], self.n_units)).type_as(dtype)
+            ua = Variable(dtype(self._srng.normal(size=(inp.shape[0], self.n_units))))
             return self.actfun(torch.sqrt(sa) * ua + ma)

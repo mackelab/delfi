@@ -16,6 +16,7 @@ class MixtureMeansLayer(Layer):
                  mbs_init=Constant([0.]),
                  sWs_init=Constant([-5.]),
                  sbs_init=Constant([-5.]),
+                 seed=None,
                  **kwargs):
         """Fully connected layer for mixture means, optional weight uncertainty
 
@@ -58,8 +59,8 @@ class MixtureMeansLayer(Layer):
 
         if self.svi:
             if seed == None:
-                seed = np.random.rand(1, 2147462579)
-            self._srng = torch.manual_seed(seed)
+                seed = np.random.randint(1, 2147462579)
+            self._srng = np.random.RandomState(seed)
             self.sWs = [self.add_param(sWs_init,
                                        (self.input_shape[1], self.n_dim),
                                        name='sW' + str(c), sp=True, wp=True)
@@ -69,7 +70,7 @@ class MixtureMeansLayer(Layer):
                                        name='sb' + str(c), sp=True, bp=True)
                         for c in range(n_components)]
 
-    def forward(self, inp, **kwargs):
+    def forward(self, inp, deterministic=False, **kwargs):
         """Compute outputs
 
         Returns
@@ -86,9 +87,9 @@ class MixtureMeansLayer(Layer):
                     self.mbs)]
         else:
             uas = [
-                self._srng.normal(
+                Variable(dtype(self._srng.normal(size=\
                     (inp.shape[0],
-                     self.n_dim)).type(type) for i in range(
+                     self.n_dim)))) for i in range(
                     self.n_components)]
             mas = [
                 torch.mm(
