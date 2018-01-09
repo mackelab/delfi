@@ -33,9 +33,9 @@ class BaseSimulator(metaclass=ABCMetaDoc):
             List of parameter vectors, each of which will be simulated
         n_reps : int
             If greater than 1, generate multiple samples given param
-        verbose : bool or str
-            If False, will not display progress bars. If a string is passed,
-            it will be appended to the description of the progress bar.
+        pbar : tqdm.tqdm or None
+            If None, will do nothing. Otherwise it will call pbar.update(1)
+            after each sample.
 
         Returns
         -------

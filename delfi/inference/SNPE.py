@@ -185,7 +185,7 @@ class SNPE(BaseInference):
                 iws *= p_prior / (self.prior_mixin * p_prior + (1 - self.prior_mixin) * p_proposal)
                 
             # normalize weights
-            iws /= np.mean(iws)
+            iws = (iws/np.sum(iws))*n_train_round
 
             trn_data = (trn_data[0], trn_data[1], iws)
             trn_inputs = [self.network.params, self.network.stats, 
