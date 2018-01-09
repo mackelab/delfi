@@ -86,7 +86,7 @@ class BaseInference(metaclass=ABCMetaDoc):
     def run(self):
         pass
 
-    def gen(self, n_samples, n_reps=1, verbose=None):
+    def gen(self, n_samples, n_reps=1, prior_mixin=0, verbose=None):
         """Generate from generator and z-transform
 
         Parameters
@@ -99,7 +99,7 @@ class BaseInference(metaclass=ABCMetaDoc):
             If None is passed, will default to self.verbose
         """
         verbose = self.verbose if verbose is None else verbose
-        params, stats = self.generator.gen(n_samples, verbose=verbose)
+        params, stats = self.generator.gen(n_samples, prior_mixin=prior_mixin, verbose=verbose)
 
         # z-transform params and stats
         params = (params - self.params_mean) / self.params_std

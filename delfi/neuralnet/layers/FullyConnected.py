@@ -14,7 +14,7 @@ class FullyConnectedLayer(lasagne.layers.Layer):
     def __init__(self, incoming, n_units, svi=True,
                  mW_init=linit.HeNormal(), mb_init=linit.Constant([0.]),
                  sW_init=linit.Constant([-5.]), sb_init=linit.Constant([-5.]),
-                 actfun=lnl.tanh, **kwargs):
+                 actfun=lnl.tanh, seed=None, **kwargs):
         """Fully connected layer with optional weight uncertainty
 
         Parameters
