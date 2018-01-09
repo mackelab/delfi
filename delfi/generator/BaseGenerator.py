@@ -6,7 +6,7 @@ from delfi.utils.progress import no_tqdm, progressbar
 
 
 class BaseGenerator(metaclass=ABCMetaDoc):
-    def __init__(self, model, prior, summary):
+    def __init__(self, model, prior, summary, seed=None):
         """Generator
 
         Parameters
@@ -30,7 +30,55 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         self.summary = summary
         self.proposal = None
 
-    def gen(self, n_samples, n_reps=1, skip_feedback=False, verbose=True):
+        self.rng = np.random.RandomState(seed=seed)
+
+    def draw_params(self, n_samples, skip_feedback=False, prior_mixin=0, verbose=True):
+        if not verbose:
+            pbar = no_tqdm()
+        else:
+            pbar = progressbar(total=n_samples)
+            desc = 'Draw parameters '
+            if type(verbose) == str:
+                desc += verbose
+            pbar.set_description(desc)
+
+        # collect valid parameter vectors from the prior
+        params = []  # list of parameter vectors
+        with pbar:
+            i = 0
+            while i < n_samples:
+                # sample parameter
+                if self.proposal is None or self.rng.random_sample() < prior_mixin:
+                    proposed_param = self.prior.gen(n_samples=1)  # dim params,
+                else:
+                    proposed_param = self.proposal.gen(n_samples=1)
+
+                # check if parameter vector is valid
+                response = self._feedback_proposed_param(proposed_param)
+                if response == 'accept' or skip_feedback:
+                    # add valid param vector to list
+                    params.append(proposed_param.reshape(-1))
+                    i += 1
+                    pbar.update(1)
+                elif response == 'resample':
+                    # continue without increment on i or updating the bar
+                    continue
+                else:
+                    raise ValueError('response not supported')
+
+            return params
+
+    def iterate_minibatches(self, params, minibatch=50):
+        n_samples = len(params)
+
+        for i in range(0, n_samples - minibatch+1, minibatch):
+            yield params[i:i + minibatch]
+
+        rem_i = n_samples - (n_samples % minibatch)
+        if rem_i != n_samples:
+            yield params[rem_i:]    
+
+    def gen(self, n_samples, n_reps=1, skip_feedback=False, prior_mixin=0, minibatch=50, keep_data=True, verbose=True):
         """Draw parameters and run forward model
 
         Parameters
@@ -54,46 +102,52 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         """
         assert n_reps == 1, 'n_reps > 1 is not yet supported'
 
+        params = self.draw_params(n_samples=n_samples,
+                                  skip_feedback=skip_feedback, 
+                                  prior_mixin=prior_mixin,
+                                  verbose = verbose)
+
+        # Run forward model for params (in batches)
         if not verbose:
             pbar = no_tqdm()
         else:
-            pbar = progressbar(total=n_samples)
-            desc = 'Draw parameters '
+            pbar = progressbar(total=len(params))
+            desc = 'Run simulations '
             if type(verbose) == str:
                 desc += verbose
             pbar.set_description(desc)
 
-        # collect valid parameter vectors from the prior
-        params = []  # list of parameter vectors
+        final_params = []
+        final_stats = []  # list of summary stats
         with pbar:
-            i = 0
-            while i < n_samples:
-                # sample parameter
-                if self.proposal is None:
-                    proposed_param = self.prior.gen(n_samples=1)  # dim params,
-                else:
-                    proposed_param = self.proposal.gen(n_samples=1)
+            for params_batch in self.iterate_minibatches(params, minibatch):
+                # run forward model for all params, each n_reps times
+                result = self.model.gen(params_batch, n_reps=n_reps, pbar=pbar)
 
-                # check if parameter vector is valid
-                response = self._feedback_proposed_param(proposed_param)
-                if response == 'accept' or skip_feedback:
-                    # add valid param vector to list
-                    params.append(proposed_param.reshape(-1))
-                    i += 1
-                    pbar.update(1)
-                elif response == 'resample':
-                    # continue without increment on i or updating the bar
-                    continue
-                else:
-                    raise ValueError('response not supported')
+                stats, params = self.process_batch(params_batch, result)
+                final_params += params
+                final_stats += stats
 
-        # run forward model for all params, each n_reps times
-        result = self.model.gen(params, n_reps=n_reps, verbose=verbose)
+        # TODO: for n_reps > 1 duplicate params; reshape stats array
+
+        # n_samples x n_reps x dim theta
+        params = np.array(final_params)
+
+        # n_samples x n_reps x dim summary stats
+        stats = np.array(final_stats)
+        stats = stats.squeeze(axis=1)
+
+        return params, stats
+
+    def process_batch(self, params_batch, result):
+        ret_stats = []
+        ret_params = []
 
         # for every datum in data, check validity
         params_data_valid = []  # list of params with valid data
         data_valid = []  # list of lists containing n_reps dicts with data
-        for param, datum in zip(params, result):
+
+        for param, datum in zip(params_batch, result):
             # check validity
             response = self._feedback_forward_model(datum)
             if response == 'accept' or skip_feedback:
@@ -106,8 +160,6 @@ class BaseGenerator(metaclass=ABCMetaDoc):
                 raise ValueError('response not supported')
 
         # for every data in data, calculate summary stats
-        final_params = []
-        final_stats = []  # list of summary stats
         for param, datum in zip(params_data_valid, data_valid):
             # calculate summary statistics
             sum_stats = self.summary.calc(datum)  # n_reps x dim stats
@@ -115,24 +167,15 @@ class BaseGenerator(metaclass=ABCMetaDoc):
             # check validity
             response = self._feedback_summary_stats(sum_stats)
             if response == 'accept' or skip_feedback:
-                final_stats.append(sum_stats)
+                ret_stats.append(sum_stats)
                 # if sum stats is accepted, accept the param as well
-                final_params.append(param)
+                ret_params.append(param)
             elif response == 'discard':
                 continue
             else:
                 raise ValueError('response not supported')
 
-        # TODO: for n_reps > 1 duplicate params; reshape stats array
-
-        # n_samples x n_reps x dim theta
-        params = np.array(final_params)
-
-        # n_samples x n_reps x dim summary stats
-        stats = np.array(final_stats)
-        stats = stats.squeeze(axis=1)
-
-        return params, stats
+        return ret_stats, ret_params
 
     @abc.abstractmethod
     def _feedback_proposed_param(self, param):
