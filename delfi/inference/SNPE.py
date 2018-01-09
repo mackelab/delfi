@@ -188,12 +188,12 @@ class SNPE(BaseInference):
             iws /= np.mean(iws)
 
             trn_data = (trn_data[0], trn_data[1], iws)
-            trn_inputs = [self.network.params, self.network.stats, self.network.iws]
+            trn_inputs = [self.network.params, self.network.stats, 
+                          self.network.iws]
 
             t = Trainer(self.network,
                         self.loss(N=n_train_round, round_cl=round_cl),
-                        trn_data=trn_data, 
-                        trn_inputs=trn_inputs,
+                        trn_data=trn_data, trn_inputs=trn_inputs,
                         seed=self.gen_newseed(),
                         monitor=self.monitor_dict_from_names(monitor),
                         **kwargs)
@@ -205,6 +205,7 @@ class SNPE(BaseInference):
             try:
                 new_posterior = self.predict(self.obs)
             except np.linalg.LinAlgError:
+                posteriors.append(None)
                 print("Cannot predict posterior after round {} due to NaNs".format(r))
                 break
 

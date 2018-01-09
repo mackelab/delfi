@@ -227,6 +227,8 @@ class NeuralNet(object):
         # theano functions
         self.compile_funs()
 
+        self.iws = tt.vector('iws', dtype=dtype)
+
     def compile_funs(self):
         """Compiles theano functions"""
         self._f_eval_comps = theano.function(
