@@ -55,3 +55,17 @@ class Uniform(BaseDistribution):
         # See BaseDistribution.py for docstring
         ms = self.rng.rand(n_samples, self.ndim) * (self.upper - self.lower) + self.lower
         return ms
+ 
+class LogUniform(BaseDistribution):
+    def __init__(self, lower, upper, seed=None):
+        self.lower = np.log(np.atleast_1d(lower))
+        self.upper = np.log(np.atleast_1d(upper))
+
+        assert self.lower.ndim == self.upper.ndim
+
+        super().__init__(ndim=len(self.lower), seed=seed)
+
+    def gen(self, n_samples=1):
+        # See BaseDistribution.py for docstring
+        ms = self.rng.rand(n_samples, self.ndim) * (self.upper - self.lower) + self.lower
+        return np.exp(ms)
