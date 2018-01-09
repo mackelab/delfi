@@ -59,6 +59,10 @@ class CDELFI(BaseInference):
 
         self.n_components = n_components
         self.obs = obs
+    
+        if np.any(np.isnan(self.obs)):
+            raise ValueError("Observed data contains NaNs")
+
         self.reg_lambda = reg_lambda
 
     def loss(self, N):

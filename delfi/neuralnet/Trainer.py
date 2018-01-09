@@ -116,7 +116,7 @@ class Trainer:
         -------
         dict : containing loss values and possibly additional keys
         """
-        maxiter = int(self.n_trn_data * epochs / minibatch)
+        maxiter = int(self.n_trn_data / minibatch + 0.5) * epochs 
 
         # initialize variables
         iter = 0
@@ -212,7 +212,14 @@ def iterate_minibatches(trn_data, minibatch=10, seed=None):
     rng = np.random.RandomState(seed=seed)
     rng.shuffle(indices)
 
+    start_idx = 0
+
     for start_idx in range(0, n_samples-minibatch+1, minibatch):
         excerpt = indices[start_idx:start_idx + minibatch]
 
+        yield (trn_data[k][excerpt] for k in range(len(trn_data)))
+
+    rem_i = n_samples - (n_samples % minibatch)
+    if rem_i != n_samples:
+        excerpt = indices[rem_i:]
         yield (trn_data[k][excerpt] for k in range(len(trn_data)))

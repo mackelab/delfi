@@ -24,7 +24,7 @@ class BaseSimulator(metaclass=ABCMetaDoc):
         self.rng = np.random.RandomState(seed=seed)
         self.seed = seed
 
-    def gen(self, params_list, n_reps=1, verbose=True):
+    def gen(self, params_list, n_reps=1, pbar=None):
         """Forward model for simulator for list of parameters
 
         Parameters
@@ -33,9 +33,9 @@ class BaseSimulator(metaclass=ABCMetaDoc):
             List of parameter vectors, each of which will be simulated
         n_reps : int
             If greater than 1, generate multiple samples given param
-        verbose : bool or str
-            If False, will not display progress bars. If a string is passed,
-            it will be appended to the description of the progress bar.
+        pbar : tqdm.tqdm or None
+            If None, will do nothing. Otherwise it will call pbar.update(1)
+            after each sample.
 
         Returns
         -------
@@ -44,25 +44,16 @@ class BaseSimulator(metaclass=ABCMetaDoc):
             repetitions. Each dictionary must contain a key data that contains
             the results of the forward run. Additional entries can be present.
         """
-        if not verbose:
-            pbar = no_tqdm()
-        else:
-            pbar = progressbar(total=len(params_list))
-            desc = 'Run simulations '
-            if type(verbose) == str:
-                desc += verbose
-            pbar.set_description(desc)
-
-        with pbar:
-            data_list = []
-            for param in params_list:
-                rep_list = []
-                for r in range(n_reps):
-                    rep_list.append(self.gen_single(param))
-                data_list.append(rep_list)
+        data_list = []
+        for param in params_list:
+            rep_list = []
+            for r in range(n_reps):
+                rep_list.append(self.gen_single(param))
+            data_list.append(rep_list)
+            if pbar is not None:
                 pbar.update(1)
 
-            return data_list
+        return data_list
 
     @abc.abstractmethod
     def gen_single(self, params):
