@@ -3,7 +3,19 @@ import numpy as np
 from .BaseDistribution import BaseDistribution
 
 class MixedDistribution(BaseDistribution):
+   """ Mixed distribution (not to be confused with mixture distributions)
+
+    This class defines a concatenation of a list of distributions. It supports eval() (without the ii option) and gen().
+
+    Parameters
+    ----------
+    dists : array of distributions
+        Array of distributions
+    seed : int or None
+        If provided, random number generator will be seeded
+    """
     def __init__(self, dists, seed=None):
+  
         dists = [ d for d in dists if d.ndim > 0 ]
         self.dimlist = [ d.ndim for d in dists ]
         super().__init__(ndim=np.sum(self.dimlist), seed=seed)

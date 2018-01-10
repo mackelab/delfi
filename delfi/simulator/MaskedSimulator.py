@@ -8,6 +8,23 @@ from delfi.simulator import BaseSimulator
 
 class MaskedSimulator(BaseSimulator):
     def __init__(self, sim, mask, obs, seed=None):
+        """ Simulator with masked parameters
+
+        This is a wrapper around BaseSimulator which imputes
+        fixed values for specified parameters, reducing the 
+        dimensionality of the problem.
+
+        Parameters
+        ----------
+        sim : BaseSimulator
+            The original simulator
+        mask : 1d array 
+            Boolean array determining the values to be imputed. False corresponds to imputed entries.
+        obs : 1d array
+            Array of parameters from which to impute the values
+        seed : int or None
+            See BaseSimulator
+        """
         assert len(mask) == sim.dim_param, "Mask for simulator has incorrect length"
 
         super().__init__(dim_param=np.count_nonzero(mask), seed=seed)
