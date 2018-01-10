@@ -1,12 +1,11 @@
 import abc
+import multiprocessing as mp
 import numpy as np
 
+from delfi.generator.Default import Default
 from delfi.utils.meta import ABCMetaDoc
 from delfi.utils.progress import no_tqdm, progressbar
 
-from delfi.generator.Default import Default
-
-import multiprocessing as mp
 
 class Worker(mp.Process):
     def __init__(self, n, queue, conn, model, summary, seed=None, verbose=False):
@@ -74,6 +73,7 @@ class Worker(mp.Process):
     def log(self, msg):
         if self.verbose:
             print("Worker {}: {}".format(self.n, msg))
+
 
 class MPGenerator(Default):
     def __init__(self, models, prior, summary, seed=None, verbose=False):
