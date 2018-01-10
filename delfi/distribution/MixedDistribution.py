@@ -3,7 +3,7 @@ import numpy as np
 from .BaseDistribution import BaseDistribution
 
 class MixedDistribution(BaseDistribution):
-   """ Mixed distribution (not to be confused with mixture distributions)
+    """ Mixed distribution (not to be confused with mixture distributions)
 
     This class defines a concatenation of a list of distributions. It supports eval() (without the ii option) and gen().
 
