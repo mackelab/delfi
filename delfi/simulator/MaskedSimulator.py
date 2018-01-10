@@ -6,9 +6,10 @@ from delfi.utils.progress import no_tqdm, progressbar
 
 from delfi.simulator import BaseSimulator
 
+
 class MaskedSimulator(BaseSimulator):
     def __init__(self, sim, mask, obs, seed=None):
-        """ Simulator with masked parameters
+        """Simulator with masked parameters
 
         This is a wrapper around BaseSimulator which imputes
         fixed values for specified parameters, reducing the 
