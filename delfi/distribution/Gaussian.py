@@ -217,8 +217,11 @@ class Gaussian(BaseDistribution):
         else:
             m = self.m[ii]
             S = self.S[ii][:, ii]
-            lp = scipy.stats.multivariate_normal.logpdf(x, m, S)
-            lp = np.array([lp]) if x.shape[0] == 1 else lp
+            if np.linalg.matrix_rank(S)==len(S[:,0]):
+                lp = scipy.stats.multivariate_normal.logpdf(x, m, S, allow_singular=True)
+                lp = np.array([lp]) if x.shape[0] == 1 else lp
+            else:
+                raise ValueError('Rank deficiency in covariance matrix')
 
         res = lp if log else np.exp(lp)
         return res
