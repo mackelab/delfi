@@ -101,7 +101,8 @@ class SNPE(BaseInference):
         return loss
 
     def run(self, n_train=100, n_rounds=2, epochs=100, minibatch=50,
-            round_cl=1, stop_on_nan=False, monitor=None, **kwargs):
+            round_cl=1, stop_on_nan=False, proposal=None, 
+            monitor=None, **kwargs):
         """Run algorithm
 
         Parameters
@@ -125,6 +126,8 @@ class SNPE(BaseInference):
             Round after which to start continual learning
         stop_on_nan : bool
             If True, will halt if NaNs in the loss are encountered
+        proposal : Distribution of None
+            If given, will use this distribution as the starting proposal prior
         kwargs : additional keyword arguments
             Additional arguments for the Trainer instance
 
@@ -144,8 +147,10 @@ class SNPE(BaseInference):
         for r in range(n_rounds):
             self.round += 1
 
+            if r == 0 and proposal is not None:
+                self.generator.proposal = proposal
             # if round > 1, set new proposal distribution before sampling
-            if self.round > 1:
+            elif self.round > 1:
                 # posterior becomes new proposal prior
                 proposal = self.predict(self.obs)  # see super
 
