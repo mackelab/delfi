@@ -116,7 +116,6 @@ class Trainer:
         -------
         dict : containing loss values and possibly additional keys
         """
-        maxiter = int(self.n_trn_data / minibatch + 0.5) * epochs 
 
         # initialize variables
         iter = 0
@@ -125,7 +124,9 @@ class Trainer:
         minibatch = self.n_trn_data if minibatch is None else minibatch
         if minibatch > self.n_trn_data:
             minibatch = self.n_trn_data
-        
+
+        maxiter = int(self.n_trn_data / minibatch + 0.5) * epochs 
+            
         # placeholders for outputs
         trn_outputs = {}
         for key in self.trn_outputs_names:
