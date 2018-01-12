@@ -147,7 +147,7 @@ class SNPE(BaseInference):
         for r in range(n_rounds):
             self.round += 1
 
-            if proposal is not None:
+            if r == 0 and proposal is not None:
                 self.generator.proposal = proposal
             # if round > 1, set new proposal distribution before sampling
             elif self.round > 1:
