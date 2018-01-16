@@ -51,8 +51,7 @@ class Worker(mp.Process):
             self.log("Done")
 
     def send_pickle(self):
-        data = pickle.dumps(self.model)
-        self.queue.put((self.n, data))
+        self.queue.put((self.n, self.model))
 
     def process_batch(self, params_batch, result):
         ret_stats = []
@@ -232,7 +231,7 @@ class MPGenerator(Default):
         self.log("Restoring MPGenerator")
 
         self.__dict__.update(state[0])
-        models = [ pickle.loads(s) for s in state[1] ]
+        models = state[1]
 
         pipes = [ mp.Pipe(duplex=True) for m in models ]
         self.queue = mp.Queue()
