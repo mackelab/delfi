@@ -1,7 +1,7 @@
 import abc
 import multiprocessing as mp
 import numpy as np
-import pickle
+import dill
 
 from delfi.generator.Default import Default
 from delfi.utils.meta import ABCMetaDoc
@@ -51,7 +51,8 @@ class Worker(mp.Process):
             self.log("Done")
 
     def send_pickle(self):
-        self.queue.put((self.n, self.model))
+        dump = dill.dumps(self.model)
+        self.queue.put((self.n, dump))
 
     def process_batch(self, params_batch, result):
         ret_stats = []
@@ -228,10 +229,10 @@ class MPGenerator(Default):
         return (ret, models)
 
     def __setstate__(self, state):
-        self.log("Restoring MPGenerator")
-
         self.__dict__.update(state[0])
+        self.log("Restoring MPGenerator")
         models = state[1]
+        models = [ dill.loads(m) for m in models ]
 
         pipes = [ mp.Pipe(duplex=True) for m in models ]
         self.queue = mp.Queue()
