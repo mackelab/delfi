@@ -50,7 +50,7 @@ class Uniform(BaseDistribution):
         p[np.prod(ind,axis=1)==0] = 0
 
         if log:
-            if ind.any() == True:
+            if ind.any() == False:
                 raise ValueError('log probability not defined outside of truncation')
             else:
                 return np.log(p)
