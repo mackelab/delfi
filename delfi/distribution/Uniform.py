@@ -44,9 +44,16 @@ class Uniform(BaseDistribution):
 
         p = 1/np.prod(self.upper[ii] - self.lower[ii])
         p = p*np.ones((N,))  # broadcasting
+        
+        # truncation of density
+        ind = (x > self.lower) & (x < self.upper)
+        p[np.prod(ind,axis=1)==0] = 0
 
         if log:
-            return np.log(p)
+            if ind.any() == False:
+                raise ValueError('log probability not defined outside of truncation')
+            else:
+                return np.log(p)
         else:
             return p
 
