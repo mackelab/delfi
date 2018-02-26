@@ -6,7 +6,7 @@ from delfi.neuralnet.loss.regularizer import svi_kl_init, svi_kl_zero
 
 class SNPE(BaseInference):
     def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
-                 convert_to_T=3, reg_lambda=0.01, prior_mixin=0, seed=None, verbose=True,
+                 convert_to_T=3, reg_lambda=0.01, prior_mixin=0, kernel=None, seed=None, verbose=True,
                  **kwargs):
         """Sequential neural posterior estimation (SNPE)
 
@@ -55,7 +55,7 @@ class SNPE(BaseInference):
                          pilot_samples=pilot_samples, seed=seed,
                          verbose=verbose, **kwargs)
         self.obs = np.asarray(obs)
-        
+
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
 
@@ -64,6 +64,8 @@ class SNPE(BaseInference):
         self.convert_to_T = convert_to_T
 
         self.prior_mixin = 0 if prior_mixin is None else prior_mixin
+
+        self.kernel = kernel
 
     def loss(self, N, round_cl=1):
         """Loss function for training
@@ -181,15 +183,19 @@ class SNPE(BaseInference):
             n_train_round = trn_data[0].shape[0]
 
             # precompute importance weights
-            iws = np.ones((n_train_round,))
             if self.generator.proposal is not None:
                 params = self.params_std * trn_data[0] + self.params_mean
                 p_prior = self.generator.prior.eval(params, log=False)
                 p_proposal = self.generator.proposal.eval(params, log=False)
-                iws *= p_prior / (self.prior_mixin * p_prior + (1 - self.prior_mixin) * p_proposal)
+                iws = p_prior / (self.prior_mixin * p_prior + (1 - self.prior_mixin) * p_proposal)
+            else:
+                iws = np.ones((n_train_round,))
                 
             # normalize weights
-            iws = (iws/np.sum(iws))*n_train_round
+            iws /= np.mean(iws)
+
+            if self.kernel is not None:
+                iws *= self.kernel.eval(trn_data[1].reshape(n_train_round, -1))
 
             trn_data = (trn_data[0], trn_data[1], iws)
             trn_inputs = [self.network.params, self.network.stats, 
