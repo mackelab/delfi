@@ -1,6 +1,7 @@
 import abc
 import multiprocessing as mp
 import numpy as np
+import dill
 
 from delfi.generator.Default import Default
 from delfi.utils.meta import ABCMetaDoc
@@ -8,7 +9,7 @@ from delfi.utils.progress import no_tqdm, progressbar
 
 
 class Worker(mp.Process):
-    def __init__(self, n, queue, conn, model, summary, seed=None, verbose=False):
+    def __init__(self, n, queue, conn, model, summary, verbose=False):
         super().__init__()
         self.n = n
         self.queue = queue
@@ -16,7 +17,6 @@ class Worker(mp.Process):
         self.conn = conn
         self.model = model
         self.summary = summary
-        self.rng = np.random.RandomState(seed=seed)
 
     def update(self, i):
         self.queue.put(i)
@@ -30,6 +30,10 @@ class Worker(mp.Process):
             except EOFError:
                 self.log("Leaving")
                 break
+
+            if params_batch == "pickle":
+                self.send_pickle()
+                continue
             
             if len(params_batch) == 0:
                 self.log("Skipping")
@@ -45,6 +49,10 @@ class Worker(mp.Process):
             self.log("Sending data")
             self.queue.put((stats, params))
             self.log("Done")
+
+    def send_pickle(self):
+        dump = dill.dumps(self.model)
+        self.queue.put((self.n, dump))
 
     def process_batch(self, params_batch, result):
         ret_stats = []
@@ -99,7 +107,7 @@ class MPGenerator(Default):
         self.verbose = verbose
         pipes = [ mp.Pipe(duplex=True) for m in models ]
         self.queue = mp.Queue()
-        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], summary, seed=self.rng.randint(low=0,high=2**31), verbose=verbose) for i in range(len(models)) ]
+        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], summary, verbose=verbose) for i in range(len(models)) ]
         self.pipes = [ p[0] for p in pipes ]
 
         self.log("Starting workers")
@@ -206,8 +214,40 @@ class MPGenerator(Default):
     def log(self, msg):
         if self.verbose:
             print("Parent: {}".format(msg))
+
+    def __getstate__(self):
+        for w, p in zip(self.workers, self.pipes):
+            p.send("pickle")
+
+        models = []
+        while len(models) < len(self.workers):
+            n, model = self.queue.get()
+            models.append(model)
+
+        ret = self.__dict__.copy()
+        del ret['workers'], ret['pipes'], ret['queue']
+        return (ret, models)
+
+    def __setstate__(self, state):
+        self.__dict__.update(state[0])
+        self.log("Restoring MPGenerator")
+        models = state[1]
+        models = [ dill.loads(m) for m in models ]
+
+        pipes = [ mp.Pipe(duplex=True) for m in models ]
+        self.queue = mp.Queue()
+        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], self.summary, verbose=self.verbose) for i in range(len(models)) ]
+        self.pipes = [ p[0] for p in pipes ]
+
+        self.log("Restarting workers")
+        for w in self.workers:
+            w.start()
+
+        self.log("Done")
+
     def __del__(self):
         self.log("Closing")
+        self.queue.close()
         for w, p in zip(self.workers, self.pipes):
             self.log("Closing pipe")
             p.close()
