@@ -36,7 +36,7 @@ class MixedDistribution(BaseDistribution):
         xsplit = np.split(x, np.cumsum(self.dimlist), axis=-1)
 
         assert [ d.ndim == xd.shape[-1] for d, xd in zip(self.dists, xsplit) ]
-        evallist = [ d.eval(xd) for d, x in zip(self.dists, xsplit) ]
+        evallist = [ d.eval(x) for d, x in zip(self.dists, xsplit) ]
         return np.prod(evallist, axis=0)
 
     def gen(self, n_samples=1):
