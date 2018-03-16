@@ -59,7 +59,7 @@ class CDELFI(BaseInference):
 
         self.n_components = n_components
         self.obs = obs
-    
+
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
 
@@ -76,8 +76,13 @@ class CDELFI(BaseInference):
         loss = -tt.mean(self.network.lprobs)
 
         if self.svi:
-            kl, imvs = svi_kl_zero(self.network.mps, self.network.sps,
-                                   self.reg_lambda)
+
+            if self.reg_lambda > 0:
+                kl, imvs = svi_kl_zero(self.network.mps, self.network.sps,
+                                       self.reg_lambda)
+            else:
+                kl, imvs = 0, {}
+
             loss = loss + 1 / N * kl
 
             # adding nodes to dict s.t. they can be monitored
@@ -139,6 +144,15 @@ class CDELFI(BaseInference):
             else:
                 n_train_round = n_train
 
+            if type(epochs) == list:
+                try:
+                    epochs_round = epochs[r-1]
+                except:
+                    epochs_round = epochs[-1]
+            else:
+                epochs_round = epochs
+
+
             # draw training data (z-transformed params and stats)
             verbose = '(round {}) '.format(r) if self.verbose else False
             trn_data = self.gen(n_train_round, verbose=verbose)
@@ -169,11 +183,16 @@ class CDELFI(BaseInference):
                         trn_data=trn_data, trn_inputs=trn_inputs,
                         monitor=self.monitor_dict_from_names(monitor),
                         seed=self.gen_newseed(), **kwargs)
-            logs.append(t.train(epochs=epochs, minibatch=minibatch,
+            logs.append(t.train(epochs=epochs_round, minibatch=minibatch,
                                 verbose=verbose))
             trn_datasets.append(trn_data)
 
-            posteriors.append(self.predict(self.obs))
+            try:
+                posteriors.append(self.predict(self.obs))
+            except:
+                posteriors.append(None)
+                print('analytic correction for proposal seemingly failed!')
+                break
 
         return logs, trn_datasets, posteriors
 
