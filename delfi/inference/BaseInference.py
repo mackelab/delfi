@@ -55,6 +55,7 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         self.network = NeuralNet(**kwargs)
         self.svi = self.network.svi
+        self.kwargs = kwargs        
 
         # parameters for z-transform of params
         if prior_norm:
@@ -85,7 +86,14 @@ class BaseInference(metaclass=ABCMetaDoc):
     @abc.abstractmethod
     def run(self):
         pass
+    
+    def reinit_network(self):
+        """Reinitializes the network instance (re-setting the weights!) 
 
+        """
+        self.network = NeuralNet(**self.kwargs)
+        self.svi = self.network.svi
+        
     def gen(self, n_samples, n_reps=1, prior_mixin=0, verbose=None):
         """Generate from generator and z-transform
 
