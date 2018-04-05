@@ -173,7 +173,12 @@ class CDELFI(BaseInference):
                                 verbose=verbose))
             trn_datasets.append(trn_data)
 
-            posteriors.append(self.predict(self.obs))
+            try:
+                posteriors.append(self.predict(self.obs))
+            except:
+                posteriors.append(None)
+                print('analytic correction for proposal seemingly failed!')
+                break
 
         return logs, trn_datasets, posteriors
 
