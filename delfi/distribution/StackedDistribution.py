@@ -5,7 +5,7 @@ from delfi.distribution.BaseDistribution import BaseDistribution
 
 class StackedDistribution(BaseDistribution):
     def __init__(self, ps, seed=None):
-        """Stacked multivariate distribution for flexible block distributions
+        """Stacked multivariate distribution for flexible distribution blocks
 
         Blockwise independent distribution with variable blocks described by
         distribution objects.

@@ -4,7 +4,7 @@ from delfi.distribution.BaseDistribution import BaseDistribution
 
 
 class Gamma(BaseDistribution):
-    def __init__(self, alpha=1., beta=1., seed=None):
+    def __init__(self, alpha=1., beta=1., offset=0., seed=None):
         """Univariate (!) Gamma distribution
 
         Parameters
@@ -25,6 +25,7 @@ class Gamma(BaseDistribution):
         assert np.all(beta > 0.), 'Should be greater than zero.'
         self.alpha = alpha
         self.beta = beta
+        self.offset = offset
         self._gamma = gamma(a=alpha, scale=1./beta)
 
     @property
@@ -40,7 +41,7 @@ class Gamma(BaseDistribution):
     @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
         # univariate distribution only, i.e. ii=[0] in any case
-        return self._gamma.logpdf(x) if log else self._gamma.pdf(x)
+        return self._gamma.logpdf(x-self.offset) if log else self._gamma.pdf(x-self.offset)
 
     @copy_ancestor_docstring
     def gen(self, n_samples=1, seed=None):
@@ -48,5 +49,5 @@ class Gamma(BaseDistribution):
         
         x = self.rng.gamma(shape=self.alpha, 
                            scale=1./self.beta, 
-                           size=(n_samples, self.ndim))
+                           size=(n_samples, self.ndim)) + self.offset
         return x

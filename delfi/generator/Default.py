@@ -15,6 +15,16 @@ class Default(BaseGenerator):
             if np.any(param < self.prior.lower) or \
                np.any(param > self.prior.upper):
                 return 'resample'
+        elif isinstance(self.prior, dd.StackedDistribution):
+            for p, ii in zip(self.prior.ps, self.prior.ndims):
+                if isinstance(p, dd.Uniform):
+                    if np.any(param[:,ii] < p.lower) or \
+                       np.any(param[:,ii] > p.upper):
+                        return 'resample' 
+
+                elif isinstance(p, dd.Gamma):
+                    if np.any(param[:,ii] < p.offset):
+                        return 'resample'
 
         return 'accept'
 
