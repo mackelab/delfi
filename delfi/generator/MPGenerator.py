@@ -3,7 +3,7 @@ import multiprocessing as mp
 import numpy as np
 import dill
 
-from delfi.generator.Default import Default
+from delfi.generator.Default import Default, BaseGenerator
 from delfi.utils.meta import ABCMetaDoc
 from delfi.utils.progress import no_tqdm, progressbar
 
@@ -34,7 +34,7 @@ class Worker(mp.Process):
             if params_batch == "pickle":
                 self.send_pickle()
                 continue
-            
+
             if len(params_batch) == 0:
                 self.log("Skipping")
                 self.conn.send(([], []))
@@ -71,19 +71,18 @@ class Worker(mp.Process):
             # calculate summary statistics
             sum_stats = self.summary.calc(datum)  # n_reps x dim stats
 
-            # check validity
+            # add to lists, check validity later
             ret_stats.append(sum_stats)
-            # if sum stats is accepted, accept the param as well
             ret_params.append(param)
 
         return ret_stats, ret_params
-    
+
     def log(self, msg):
         if self.verbose:
             print("Worker {}: {}".format(self.n, msg))
 
 
-class MPGenerator(Default):
+class MPGenerator(BaseGenerator):
     def __init__(self, models, prior, summary, seed=None, verbose=False):
         """Generator
 
@@ -105,10 +104,11 @@ class MPGenerator(Default):
         """
         super().__init__(model=None, prior=prior, summary=summary, seed=None)
         self.verbose = verbose
-        pipes = [ mp.Pipe(duplex=True) for m in models ]
+        pipes = [mp.Pipe(duplex=True) for m in models]
         self.queue = mp.Queue()
-        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], summary, verbose=verbose) for i in range(len(models)) ]
-        self.pipes = [ p[0] for p in pipes ]
+        self.workers = [Worker(i, self.queue, pipes[i][1], models[i], summary, verbose=verbose) for i in
+                        range(len(models))]
+        self.pipes = [p[0] for p in pipes]
 
         self.log("Starting workers")
         for w in self.workers:
@@ -119,12 +119,12 @@ class MPGenerator(Default):
     def iterate_minibatches(self, params, minibatch=50):
         n_samples = len(params)
 
-        for i in range(0, n_samples - minibatch+1, minibatch):
+        for i in range(0, n_samples - minibatch + 1, minibatch):
             yield params[i:i + minibatch]
 
         rem_i = n_samples - (n_samples % minibatch)
         if rem_i != n_samples:
-            yield params[rem_i:]    
+            yield params[rem_i:]
 
     def gen(self, n_samples, n_reps=1, skip_feedback=False, prior_mixin=0, minibatch=50, keep_data=True, verbose=True):
         """Draw parameters and run forward model
@@ -151,9 +151,9 @@ class MPGenerator(Default):
         assert n_reps == 1, 'n_reps > 1 is not yet supported'
 
         params = self.draw_params(n_samples=n_samples,
-                                  skip_feedback=skip_feedback, 
+                                  skip_feedback=skip_feedback,
                                   prior_mixin=prior_mixin,
-                                  verbose = verbose)
+                                  verbose=verbose)
 
         # Run forward model for params (in batches)
         if not verbose:
@@ -179,7 +179,7 @@ class MPGenerator(Default):
                         done = True
                         break
 
-                    active_list.append((w,p))
+                    active_list.append((w, p))
                     self.log("Dispatching to worker (len = {})".format(len(params_batch)))
                     p.send(params_batch)
                     self.log("Done")
@@ -193,7 +193,7 @@ class MPGenerator(Default):
                         pbar.update(msg)
                     elif type(msg) == tuple:
                         self.log("Received results")
-                        stats, params = msg 
+                        stats, params = msg
                         final_stats += stats
                         final_params += params
                         n_remaining -= 1
@@ -202,11 +202,26 @@ class MPGenerator(Default):
 
         # TODO: for n_reps > 1 duplicate params; reshape stats array
 
+        # check validity of stats
+        valid_stats = []
+        valid_params = []
+        for param, sum_stats in zip(final_params, final_stats):
+            # check validity
+            response = self._feedback_summary_stats(sum_stats)
+            if response == 'accept' or skip_feedback:
+                valid_stats.append(sum_stats)
+                # if sum stats is accepted, accept the param as well
+                valid_params.append(param)
+            elif response == 'discard':
+                continue
+            else:
+                raise ValueError('response not supported')
+
         # n_samples x n_reps x dim theta
-        params = np.array(final_params)
+        params = np.array(valid_params)
 
         # n_samples x n_reps x dim summary stats
-        stats = np.array(final_stats)
+        stats = np.array(valid_stats)
         stats = stats.squeeze(axis=1)
 
         return params, stats
@@ -232,12 +247,13 @@ class MPGenerator(Default):
         self.__dict__.update(state[0])
         self.log("Restoring MPGenerator")
         models = state[1]
-        models = [ dill.loads(m) for m in models ]
+        models = [dill.loads(m) for m in models]
 
-        pipes = [ mp.Pipe(duplex=True) for m in models ]
+        pipes = [mp.Pipe(duplex=True) for m in models]
         self.queue = mp.Queue()
-        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], self.summary, verbose=self.verbose) for i in range(len(models)) ]
-        self.pipes = [ p[0] for p in pipes ]
+        self.workers = [Worker(i, self.queue, pipes[i][1], models[i], self.summary, verbose=self.verbose) for i in
+                        range(len(models))]
+        self.pipes = [p[0] for p in pipes]
 
         self.log("Restarting workers")
         for w in self.workers:
