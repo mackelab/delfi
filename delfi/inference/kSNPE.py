@@ -215,9 +215,9 @@ class kSNPE(BaseInference):
                         inputs=[self.network.stats],
                         outputs=ll.get_output(hl))
 
-                    fstats = stat_features(trn_data[1]).reshape(n_train_round,-1)
+                    fstats = stat_features(trn_data[1].astype(dtype)).reshape(n_train_round,-1)
                     obs_z = (self.obs - self.stats_mean) / self.stats_std
-                    fobs_z = stat_features(obs_z).reshape(1,-1)
+                    fobs_z = stat_features(obs_z.astype(dtype)).reshape(1,-1)
 
                     cbkrnl, cbl = kernel_opt(
                         iws=iws.astype(np.float32), 
