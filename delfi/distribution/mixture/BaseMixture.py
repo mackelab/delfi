@@ -111,7 +111,8 @@ class BaseMixture(metaclass=ABCMetaDoc):
         total_del_a = np.sum(self.a[ii])
         del_count = ii.size
 
-        self.n_components -= del_count
+        self.ncomp -= del_count
         self.a = np.delete(self.a, ii)
         self.a += total_del_a / self.n_components
         self.xs = [x for i, x in enumerate(self.xs) if i not in ii]
+        
