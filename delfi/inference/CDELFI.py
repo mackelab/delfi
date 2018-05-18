@@ -182,7 +182,7 @@ class CDELFI(BaseInference):
 
         return logs, trn_datasets, posteriors
 
-    def predict(self, x):
+    def predict(self, x, threshold=0.05):
         """Predict posterior given x
 
         Parameters
@@ -197,6 +197,8 @@ class CDELFI(BaseInference):
             # mog is posterior given proposal prior
             mog = super(CDELFI, self).predict(x)  # via super
 
+            mog.prune_negligible_components(threshold=threshold)
+            
             # compute posterior given prior by analytical division step
             if 'Uniform' in str(type(self.generator.prior)):
                 posterior = mog / self.generator.proposal
