@@ -124,7 +124,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
                 # run forward model for all params, each n_reps times
                 result = self.model.gen(params_batch, n_reps=n_reps, pbar=pbar)
 
-                stats, params = self.process_batch(params_batch, result)
+                stats, params = self.process_batch(params_batch, result,skip_feedback=skip_feedback)
                 final_params += params
                 final_stats += stats
 
@@ -139,7 +139,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
 
         return params, stats
 
-    def process_batch(self, params_batch, result):
+    def process_batch(self, params_batch, result,skip_feedback=False):
         ret_stats = []
         ret_params = []
 
