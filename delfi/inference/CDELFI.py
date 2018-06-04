@@ -162,6 +162,28 @@ class CDELFI(BaseInference):
                     new_params[p] += 1.0e-6*self.rng.randn(*new_params[p].shape)
 
                 self.network.params_dict = new_params
+                
+                # get parameters of current network
+                old_params = self.network.params_dict.copy()
+
+                # create new network
+                network_spec = self.network.spec_dict.copy()
+                network_spec.update({'n_components': self.n_components})
+                self.network = NeuralNet(**network_spec)
+                new_params = self.network.params_dict
+
+                # set weights of new network
+                # weights of additional components are duplicates
+                for p in [s for s in new_params if 'means' in s or
+                          'precisions' in s]:
+                    old_params[p] = old_params[p[:-1] + '0'].copy()
+                    old_params[p] += 1.0e-6*self.rng.randn(*new_params[p].shape)
+
+                # assert mixture coefficients are initialized as uniform
+                old_params['weights.mW'] = 0. * new_params['weights.mW']
+                old_params['weights.mb'] = 0. * new_params['weights.mb']
+
+                self.network.params_dict = old_params                
 
             trn_inputs = [self.network.params, self.network.stats]
 
