@@ -129,7 +129,6 @@ class CDELFI(BaseInference):
                 # posterior becomes new proposal prior
                 posterior = self.predict(self.obs)
                 self.generator.proposal = posterior.project_to_gaussian()
-
             # number of training examples for this round
             if type(n_train) == list:
                 try:
@@ -145,24 +144,6 @@ class CDELFI(BaseInference):
 
             # algorithm 2 of Papamakarios and Murray
             if r == n_rounds and self.n_components > 1:
-                # get parameters of current network
-                old_params = self.network.params_dict.copy()
-
-                # create new network
-                network_spec = self.network.spec_dict.copy()
-                network_spec.update({'n_components': self.n_components})
-                self.network = NeuralNet(**network_spec)
-                new_params = self.network.params_dict
-
-                # set weights of new network
-                # weights of additional components are duplicates
-                for p in [s for s in new_params if 'means' in s or
-                          'precisions' in s]:
-                    new_params[p] = old_params[p[:-1] + '0']
-                    new_params[p] += 1.0e-6*self.rng.randn(*new_params[p].shape)
-
-                self.network.params_dict = new_params
-                
                 # get parameters of current network
                 old_params = self.network.params_dict.copy()
 
