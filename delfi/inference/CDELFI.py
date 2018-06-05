@@ -129,7 +129,6 @@ class CDELFI(BaseInference):
                 # posterior becomes new proposal prior
                 posterior = self.predict(self.obs)
                 self.generator.proposal = posterior.project_to_gaussian()
-
             # number of training examples for this round
             if type(n_train) == list:
                 try:
@@ -158,10 +157,14 @@ class CDELFI(BaseInference):
                 # weights of additional components are duplicates
                 for p in [s for s in new_params if 'means' in s or
                           'precisions' in s]:
-                    new_params[p] = old_params[p[:-1] + '0']
-                    new_params[p] += 1.0e-6*self.rng.randn(*new_params[p].shape)
+                    old_params[p] = old_params[p[:-1] + '0'].copy()
+                    old_params[p] += 1.0e-6*self.rng.randn(*new_params[p].shape)
 
-                self.network.params_dict = new_params
+                # assert mixture coefficients are initialized as uniform
+                old_params['weights.mW'] = 0. * new_params['weights.mW']
+                old_params['weights.mb'] = 0. * new_params['weights.mb']
+
+                self.network.params_dict = old_params                
 
             trn_inputs = [self.network.params, self.network.stats]
 
