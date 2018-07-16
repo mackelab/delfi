@@ -13,9 +13,8 @@ dtype = theano.config.floatX
 
 
 class kSNPE(BaseInference):
-    def __init__(self, generator, obs, prior_norm=False, 
-                 pilot_samples=100, convert_to_T=3, 
-                 reg_lambda=0.01, seed=None, verbose=True,
+    def __init__(self, generator, obs, convert_to_T=3,
+                 reg_lambda=0.01, prior_mixin=0.,
                  **kwargs):
         """Sequential neural posterior estimation (SNPE)
 
@@ -37,6 +36,10 @@ class kSNPE(BaseInference):
             the number specifies the degrees of freedom. None for no conversion
         reg_lambda : float
             Precision parameter for weight regularizer if svi is True
+        prior_mixin : float
+            Percentage of the prior mixed into the proposal prior. While training,
+            an additional prior_mixin * N samples will be drawn from the actual prior
+            in each round
         seed : int or None
             If provided, random number generator will be seeded
         verbose : bool
@@ -56,15 +59,15 @@ class kSNPE(BaseInference):
             Dictionary containing theano variables that can be monitored while
             training the neural network.
         """
-        super().__init__(generator, prior_norm=prior_norm,
-                         pilot_samples=pilot_samples, seed=seed,
-                         verbose=verbose, **kwargs)
 
         self.obs = obs
+        super().__init__(generator, **kwargs)
 
         self.reg_lambda = reg_lambda
         self.round = 0
         self.convert_to_T = convert_to_T
+
+        self.prior_mixin = 0. if prior_mixin is None else prior_mixin
 
         # placeholder for importance weights
         self.network.iws = tt.vector('iws', dtype=dtype)
@@ -167,6 +170,9 @@ class kSNPE(BaseInference):
 
                 self.generator.proposal = proposal
 
+            if self.round > 1:
+                self.reinit_network()
+
             # number of training examples for this round
             if type(n_train) == list:
                 try:
@@ -188,7 +194,7 @@ class kSNPE(BaseInference):
 
             # draw training data (z-transformed params and stats)
             verbose = '(round {}) '.format(self.round) if self.verbose else False
-            trn_data = self.gen(n_train_round, verbose=verbose)
+            trn_data = self.gen(n_train_round, prior_mixin=self.prior_mixin, verbose=verbose)
             n_train_round = trn_data[0].shape[0]
 
             # precompute importance weights
@@ -199,7 +205,7 @@ class kSNPE(BaseInference):
                 params = self.params_std * trn_data[0] + self.params_mean
                 p_prior = self.generator.prior.eval(params, log=False)
                 p_proposal = self.generator.proposal.eval(params, log=False)
-                iws *= p_prior / p_proposal
+                iws *= p_prior / (self.prior_mixin * p_prior + (1. - self.prior_mixin) * p_proposal)
 
                 # train calibration kernel (learns own normalization)
                 if not kernel_loss is None:
@@ -216,6 +222,7 @@ class kSNPE(BaseInference):
                         outputs=ll.get_output(hl))
 
                     fstats = stat_features(trn_data[1].astype(dtype)).reshape(n_train_round,-1)
+
                     obs_z = (self.obs - self.stats_mean) / self.stats_std
                     fobs_z = stat_features(obs_z.astype(dtype)).reshape(1,-1)
 
@@ -223,9 +230,9 @@ class kSNPE(BaseInference):
                         iws=iws.astype(np.float32), 
                         stats=fstats,
                         obs=fobs_z, 
-                        kernel_loss=kernel_loss, 
-                        epochs=epochs_cbk_round, 
-                        minibatch=minibatch_cbk, 
+                        kernel_loss=kernel_loss,
+                        epochs=epochs_cbk_round,
+                        minibatch=minibatch_cbk,
                         stop_on_nan=stop_on_nan,
                         seed=self.gen_newseed(), 
                         monitor=self.monitor_dict_from_names(monitor),
@@ -233,12 +240,16 @@ class kSNPE(BaseInference):
                     if verbose: 
                         print('done.')
 
+                    fstats = stat_features(trn_data[1].reshape(
+                                n_train_round,*self.network.n_inputs))[0].reshape(n_train_round,-1)
+                        
                     iws *= cbkrnl.eval(fstats)
 
             # normalize weights
             iws = (iws/np.sum(iws))*n_train_round
 
             trn_data = (trn_data[0], trn_data[1], iws)
+
             trn_inputs = [self.network.params, self.network.stats,
                           self.network.iws]
 
