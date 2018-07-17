@@ -1,7 +1,6 @@
 import abc
 import multiprocessing as mp
 import numpy as np
-import dill
 
 from delfi.generator.Default import Default
 from delfi.utils.meta import ABCMetaDoc
@@ -9,7 +8,7 @@ from delfi.utils.progress import no_tqdm, progressbar
 
 
 class Worker(mp.Process):
-    def __init__(self, n, queue, conn, model, summary, verbose=False):
+    def __init__(self, n, queue, conn, model, summary, seed=None, verbose=False):
         super().__init__()
         self.n = n
         self.queue = queue
@@ -17,6 +16,7 @@ class Worker(mp.Process):
         self.conn = conn
         self.model = model
         self.summary = summary
+        self.rng = np.random.RandomState(seed=seed)
 
     def update(self, i):
         self.queue.put(i)
@@ -30,11 +30,6 @@ class Worker(mp.Process):
             except EOFError:
                 self.log("Leaving")
                 break
-
-            if params_batch == "pickle":
-                self.send_pickle()
-                continue
-            
             if len(params_batch) == 0:
                 self.log("Skipping")
                 self.conn.send(([], []))
@@ -49,10 +44,6 @@ class Worker(mp.Process):
             self.log("Sending data")
             self.queue.put((stats, params))
             self.log("Done")
-
-    def send_pickle(self):
-        dump = dill.dumps(self.model)
-        self.queue.put((self.n, dump))
 
     def process_batch(self, params_batch, result):
         ret_stats = []
@@ -71,9 +62,7 @@ class Worker(mp.Process):
             # calculate summary statistics
             sum_stats = self.summary.calc(datum)  # n_reps x dim stats
 
-            # check validity
             ret_stats.append(sum_stats)
-            # if sum stats is accepted, accept the param as well
             ret_params.append(param)
 
         return ret_stats, ret_params
@@ -84,7 +73,7 @@ class Worker(mp.Process):
 
 
 class MPGenerator(Default):
-    def __init__(self, models, prior, summary, seed=None, verbose=False):
+    def __init__(self, models, prior, summary, rej=None, seed=None, verbose=False):
         """Generator
 
         Parameters
@@ -95,6 +84,8 @@ class MPGenerator(Default):
             Prior over parameters
         summary : SummaryStats instance
             Summary statistics
+        rej : Function
+            Rejection kernel
 
         Attributes
         ----------
@@ -104,10 +95,18 @@ class MPGenerator(Default):
             than samples drawn from prior when `gen` is called.
         """
         super().__init__(model=None, prior=prior, summary=summary, seed=None)
+        
+        if rej is None:
+            def rej(x):
+                return 1
+        self.rej = rej
         self.verbose = verbose
-        pipes = [ mp.Pipe(duplex=True) for m in models ]
+        self.models = models
+
+    def start_workers(self):
+        pipes = [ mp.Pipe(duplex=True) for m in self.models ]
         self.queue = mp.Queue()
-        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], summary, verbose=verbose) for i in range(len(models)) ]
+        self.workers = [ Worker(i, self.queue, pipes[i][1], self.models[i], self.summary, seed=self.rng.randint(low=0,high=2**31), verbose=self.verbose) for i in range(len(self.models)) ]
         self.pipes = [ p[0] for p in pipes ]
 
         self.log("Starting workers")
@@ -115,6 +114,26 @@ class MPGenerator(Default):
             w.start()
 
         self.log("Done")
+
+    def stop_workers(self):
+        if self.workers is None:
+            return
+
+        self.log("Closing")
+        for w, p in zip(self.workers, self.pipes):
+            self.log("Closing pipe")
+            p.close()
+
+        for w in self.workers:
+            self.log("Joining process")
+            w.join(timeout=1)
+            w.terminate()
+
+        self.queue.close()
+
+        self.workers = None
+        self.pipes = None
+        self.queue = None
 
     def iterate_minibatches(self, params, minibatch=50):
         n_samples = len(params)
@@ -124,9 +143,9 @@ class MPGenerator(Default):
 
         rem_i = n_samples - (n_samples % minibatch)
         if rem_i != n_samples:
-            yield params[rem_i:]    
+            yield params[rem_i:]
 
-    def gen(self, n_samples, n_reps=1, skip_feedback=False, prior_mixin=0, minibatch=50, keep_data=True, verbose=True):
+    def gen(self, n_samples, n_reps=1, skip_feedback=False, prior_mixin=0, verbose=True, **kwargs):
         """Draw parameters and run forward model
 
         Parameters
@@ -155,6 +174,9 @@ class MPGenerator(Default):
                                   prior_mixin=prior_mixin,
                                   verbose = verbose)
 
+        return self.run_model(params, skip_feedback=skip_feedback, verbose=verbose, **kwargs)
+
+    def run_model(self, params, minibatch=50, skip_feedback=False, keep_data=True, verbose=False):
         # Run forward model for params (in batches)
         if not verbose:
             pbar = no_tqdm()
@@ -165,6 +187,7 @@ class MPGenerator(Default):
                 desc += verbose
             pbar.set_description(desc)
 
+        self.start_workers()
         final_params = []
         final_stats = []  # list of summary stats
         minibatches = self.iterate_minibatches(params, minibatch)
@@ -193,12 +216,14 @@ class MPGenerator(Default):
                         pbar.update(msg)
                     elif type(msg) == tuple:
                         self.log("Received results")
-                        stats, params = msg 
+                        stats, params = self.filter_data(*msg, skip_feedback=skip_feedback)
                         final_stats += stats
                         final_params += params
                         n_remaining -= 1
                     else:
                         self.log("Warning: Received unknown message of type {}".format(type(msg)))
+
+        self.stop_workers()
 
         # TODO: for n_reps > 1 duplicate params; reshape stats array
 
@@ -211,48 +236,44 @@ class MPGenerator(Default):
 
         return params, stats
 
+    def filter_data(self, stats, params, skip_feedback=False):
+        if skip_feedback == True:
+            return stats, params
+
+        ret_stats = []
+        ret_params = []
+
+        for stat, param in zip(stats, params):
+            response = self._feedback_summary_stats(stat)
+            if response == 'accept':
+                ret_stats.append(stat)
+                ret_params.append(param)
+            elif response == 'discard':
+                continue
+            else:
+                raise ValueError('response not supported')
+        
+        return ret_stats, ret_params
+    
+    def _feedback_summary_stats(self, sum_stats):
+        """Feedback step after summary stats were computed
+        Parameters
+        ----------
+        sum_stats : np.array
+            Summary stats
+        Returns
+        -------
+        response : str
+            Supported responses are in ['accept', 'discard']
+        """
+        if self.rej(sum_stats):
+            return 'accept'
+        else: 
+            return 'discard'
+
     def log(self, msg):
         if self.verbose:
             print("Parent: {}".format(msg))
 
-    def __getstate__(self):
-        for w, p in zip(self.workers, self.pipes):
-            p.send("pickle")
-
-        models = []
-        while len(models) < len(self.workers):
-            n, model = self.queue.get()
-            models.append(model)
-
-        ret = self.__dict__.copy()
-        del ret['workers'], ret['pipes'], ret['queue']
-        return (ret, models)
-
-    def __setstate__(self, state):
-        self.__dict__.update(state[0])
-        self.log("Restoring MPGenerator")
-        models = state[1]
-        models = [ dill.loads(m) for m in models ]
-
-        pipes = [ mp.Pipe(duplex=True) for m in models ]
-        self.queue = mp.Queue()
-        self.workers = [ Worker(i, self.queue, pipes[i][1], models[i], self.summary, verbose=self.verbose) for i in range(len(models)) ]
-        self.pipes = [ p[0] for p in pipes ]
-
-        self.log("Restarting workers")
-        for w in self.workers:
-            w.start()
-
-        self.log("Done")
-
     def __del__(self):
-        self.log("Closing")
-        self.queue.close()
-        for w, p in zip(self.workers, self.pipes):
-            self.log("Closing pipe")
-            p.close()
-
-        for w in self.workers:
-            self.log("Joining process")
-            w.join(timeout=1)
-            w.terminate()
+        self.stop_workers()
