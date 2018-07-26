@@ -2,7 +2,7 @@ import theano.tensor as tt
 
 from delfi.inference.BaseInference import BaseInference
 from delfi.neuralnet.Trainer import Trainer
-from delfi.neuralnet.loss.regularizer import svi_kl_zero
+from delfi.neuralnet.loss.regularizer import svi_kl_init, svi_kl_zero
 
 
 class Basic(BaseInference):
@@ -50,8 +50,9 @@ class Basic(BaseInference):
                          verbose=verbose, **kwargs)
         self.obs = obs
         self.reg_lambda = reg_lambda
+        self.round = 0
 
-    def loss(self, N):
+    def loss(self, N, round_cl=1):
         """Loss function for training
 
         Parameters
@@ -62,25 +63,35 @@ class Basic(BaseInference):
         loss = -tt.mean(self.network.lprobs)
 
         if self.svi:
-            # keep weights close to zero-centered prior
-            kl, _ = svi_kl_zero(self.network.mps, self.network.sps,
-                                self.reg_lambda)
+
+            if self.round <= round_cl:
+                # weights close to zero-centered prior in the first round
+                if self.reg_lambda > 0:
+                    kl, imvs = svi_kl_zero(self.network.mps, self.network.sps,
+                                           self.reg_lambda)
+                else:
+                    kl, imvs = 0, {}
+            else:
+                # weights close to those of previous round
+                kl, imvs = svi_kl_init(self.network.mps, self.network.sps)
+
             loss = loss + 1/N * kl
 
         return loss
 
-    def run(self, n_train=100, epochs=100, minibatch=50, monitor=None,
-            **kwargs):
+    def run(self, n_train=100, n_rounds=2, epochs=100, minibatch=50,
+            round_cl=1, stop_on_nan=False, monitor=None, **kwargs):
         """Run algorithm
-
-        Generate training data using the generator. Set up the Trainer with a
-        neural net, a loss function and the generated training data. Train the
-        network with the specified training arguments.
 
         Parameters
         ----------
-        n_train : int
-            Number of training samples
+        n_train : int or list of ints
+            Number of data points drawn per round. If a list is passed, the
+            nth list element specifies the number of training examples in the
+            nth round. If there are fewer list elements than rounds, the last
+            list element is used.
+        n_rounds : int
+            Number of rounds
         epochs : int
             Number of epochs used for neural network training
         minibatch : int
@@ -89,27 +100,61 @@ class Basic(BaseInference):
             Names of variables to record during training along with the value
             of the loss function. The observables attribute contains all
             possible variables that can be monitored
+        round_cl : int
+            Round after which to start continual learning
+        stop_on_nan : bool
+            If True, will halt if NaNs in the loss are encountered
         kwargs : additional keyword arguments
             Additional arguments for the Trainer instance
 
         Returns
         -------
-        log: dict
-            dict containing the loss values as returned by Trainer.train()
-        trn_data : (params, stats)
-            training dataset, z-transformed
-        posterior : distribution or None
-            posterior for obs if obs is not None
+        logs : list of dicts
+            Dictionaries contain information logged while training the networks
+        trn_datasets : list of (params, stats)
+            training datasets, z-transformed
+        posteriors : list of distributions
+            posterior after each round
         """
-        trn_data = self.gen(n_train, verbose=self.verbose)  # z-transformed
-        trn_inputs = [self.network.params, self.network.stats]
+        logs = []
+        trn_datasets = []
+        posteriors = []
 
-        t = Trainer(self.network, self.loss(N=n_train),
-                    trn_data=trn_data, trn_inputs=trn_inputs,
-                    monitor=self.monitor_dict_from_names(monitor),
-                    seed=self.gen_newseed(), **kwargs)
-        log = t.train(epochs=epochs, minibatch=minibatch, verbose=self.verbose)
+        for r in range(n_rounds):
+            self.round += 1
 
-        posterior = self.predict(self.obs) if self.obs is not None else None
+            # number of training examples for this round
+            if type(n_train) == list:
+                try:
+                    n_train_round = n_train[self.round-1]
+                except:
+                    n_train_round = n_train[-1]
+            else:
+                n_train_round = n_train
 
-        return log, trn_data, posterior
+            # draw training data (z-transformed params and stats)
+            verbose = '(round {}) '.format(self.round) if self.verbose else False
+            trn_data = self.gen(n_train_round, verbose=verbose)
+            n_train_round = trn_data[0].shape[0]
+
+            trn_data = (trn_data[0], trn_data[1])
+            trn_inputs = [self.network.params, self.network.stats]
+
+            t = Trainer(self.network,
+                        self.loss(N=n_train_round, round_cl=round_cl),
+                        trn_data=trn_data, trn_inputs=trn_inputs,
+                        seed=self.gen_newseed(),
+                        monitor=self.monitor_dict_from_names(monitor),
+                        **kwargs)
+            logs.append(t.train(epochs=epochs, minibatch=minibatch,
+                                verbose=verbose, stop_on_nan=stop_on_nan))
+            trn_datasets.append(trn_data)
+
+            try:
+                posteriors.append(self.predict(self.obs))
+            except:
+                posteriors.append(None)
+                print('analytic correction for proposal seemingly failed!')
+                break
+
+        return logs, trn_datasets, posteriors
