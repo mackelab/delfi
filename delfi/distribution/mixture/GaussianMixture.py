@@ -47,7 +47,8 @@ class MoG(BaseMixture):
             super().__init__(
                 a=np.asarray(a),
                 ncomp=len(ms),
-                ndim=len(ms[0]),
+                ndim=np.asarray(
+                    ms[0]).ndim,
                 seed=seed)
 
             if Ps is not None:
