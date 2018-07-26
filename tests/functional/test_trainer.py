@@ -33,8 +33,8 @@ def test_trainer_updates():
     loss = -tt.mean(nn.lprobs)
 
     trn_inputs = [nn.params, nn.stats]
-    trn_data = g.gen(100)  # params, stats
-    trn_data = tuple(x.astype(dtype) for x in trn_data)
+    th, x, _ = g.gen(100)  # params, stats
+    trn_data = tuple(x.astype(dtype) for x in (th, x))
 
     t = Trainer(network=nn, loss=loss, trn_data=trn_data, trn_inputs=trn_inputs)
 

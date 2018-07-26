@@ -33,7 +33,7 @@ def test_snpe_inference(n_params=2, seed=42):
     g = dg.Default(model=m, prior=p, summary=s)
 
     # observation
-    _, obs = g.gen(1)
+    _, obs, _ = g.gen(1)
 
     # set up inference
     res = infer.SNPE(g, obs=obs)
