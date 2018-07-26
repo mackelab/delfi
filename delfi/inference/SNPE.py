@@ -5,8 +5,8 @@ from delfi.neuralnet.Trainer import Trainer
 from delfi.neuralnet.loss.regularizer import svi_kl_init, svi_kl_zero
 
 class SNPE(BaseInference):
-    def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
-                 convert_to_T=3, reg_lambda=0.01, prior_mixin=0, kernel=None, seed=None, verbose=True,
+    def __init__(self, generator, obs,
+                 convert_to_T=3, reg_lambda=0.01, prior_mixin=0, kernel=None,
                  **kwargs):
         """Sequential neural posterior estimation (SNPE)
 
@@ -51,9 +51,7 @@ class SNPE(BaseInference):
             Dictionary containing theano variables that can be monitored while
             training the neural network.
         """
-        super().__init__(generator, prior_norm=prior_norm,
-                         pilot_samples=pilot_samples, seed=seed,
-                         verbose=verbose, **kwargs)
+        super().__init__(generator, **kwargs)
         self.obs = np.asarray(obs)
 
         if np.any(np.isnan(self.obs)):
@@ -208,6 +206,7 @@ class SNPE(BaseInference):
                         monitor=self.monitor_dict_from_names(monitor),
                         **kwargs)
             logs.append(t.train(epochs=epochs, minibatch=minibatch,
+                                n_inputs=self.network.n_inputs,
                                 verbose=verbose, stop_on_nan=stop_on_nan))
 
             trn_datasets.append(trn_data)
