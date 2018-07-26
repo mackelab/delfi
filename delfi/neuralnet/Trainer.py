@@ -128,6 +128,9 @@ class Trainer:
         # initialize variables
         iter = 0
 
+        if n_inputs_hidden == 0 and n_inputs is None:
+            n_inputs = self.network.n_inputs
+
         # minibatch size
         minibatch = self.n_trn_data if minibatch is None else minibatch
         if minibatch > self.n_trn_data:
