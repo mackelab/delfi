@@ -60,8 +60,8 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         if 'n_inputs_hidden' in kwargs.keys() and kwargs['n_inputs_hidden']>0:
             assert 'n_inputs' in kwargs.keys()
-        #else:
-        #    kwargs.update({'n_inputs': stats.shape[1:]})   
+        else:
+            kwargs.update({'n_inputs': stats.shape[1:]})   
 
         self.network = NeuralNet(**kwargs)
         self.svi = self.network.svi
