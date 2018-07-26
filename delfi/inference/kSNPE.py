@@ -11,8 +11,19 @@ import lasagne.layers as ll
 
 dtype = theano.config.floatX
 
+def per_round(y):
 
-class kSNPE(BaseInference):
+    if type(y) == list:
+        try:
+            y_round = y[r-1]
+        except:
+            y_round = y[-1]
+    else:
+        y_round = y
+
+    return y_round
+
+class SNPE(BaseInference):
     def __init__(self, generator, obs, convert_to_T=3,
                  reg_lambda=0.01, prior_mixin=0.,
                  **kwargs):
@@ -107,9 +118,10 @@ class kSNPE(BaseInference):
 
         return loss
 
-    def run(self, n_train=100, n_rounds=2, epochs=100, minibatch=50,
+    def run(self, n_train=100, n_rounds=2, epochs=100, minibatch=50, clip_IW=None,
             round_cl=1, stop_on_nan=False, monitor=None, kernel_loss=None, 
-            epochs_cbk=None, cbk_feature_layer=0, minibatch_cbk=None, 
+            epochs_cbk=None, cbk_feature_layer=0, minibatch_cbk=None, reg_lambdas=None,
+            init_single_layer_net=False, naive_weights=False,
             **kwargs):
         """Run algorithm
 
@@ -152,6 +164,7 @@ class kSNPE(BaseInference):
 
         minibatch_cbk = minibatch if minibatch_cbk is None else minibatch_cbk
 
+        assert (clip_IW is None) or (clip_IW >= 0. and clip_IW <= 1.)
         for r in range(n_rounds):
             self.round += 1
 
@@ -174,21 +187,8 @@ class kSNPE(BaseInference):
                 self.reinit_network()
 
             # number of training examples for this round
-            if type(n_train) == list:
-                try:
-                    n_train_round = n_train[self.round-1]
-                except:
-                    n_train_round = n_train[-1]
-            else:
-                n_train_round = n_train
-
-            if type(epochs) == list:
-                try:
-                    epochs_round = epochs[self.round-1]
-                except:
-                    epochs_round = epochs[-1]
-            else:
-                epochs_round = epochs
+            epochs_round = per_round(epochs)
+            n_train_round = per_round(n_train)
 
             epochs_cbk_round = epochs_round if epochs_cbk is None else epochs_cbk
 
@@ -199,6 +199,9 @@ class kSNPE(BaseInference):
 
             # precompute importance weights
             iws = np.ones((n_train_round,))
+
+
+            print('sources: ', np.unique(trn_data[2]))
 
             cbkrnl, cbl = None, None
             if self.generator.proposal is not None:
@@ -215,19 +218,26 @@ class kSNPE(BaseInference):
                     ks = list(self.network.layer.keys())
                     #hiddens = np.where([i[:6]=='hidden' for i in ks])[0]
                     #cbk_feature_layer = hiddens[-1] # pick last hidden layer
+                    print('cbk_feature_layer ', ks[cbk_feature_layer])
                     hl = self.network.layer[ks[cbk_feature_layer]]
 
                     stat_features = theano.function(
                         inputs=[self.network.stats],
                         outputs=ll.get_output(hl))
 
-                    fstats = stat_features(trn_data[1].astype(dtype)).reshape(n_train_round,-1)
+                    idx_proposal = np.where(trn_data[2])[0]
+                    minibatch_cbk = np.min((minibatch_cbk, idx_proposal.size))
+
+                    fstats = stat_features(trn_data[1][idx_proposal,:].reshape(
+                                idx_proposal.size,*self.network.n_inputs))[0]
+
+                    fstats = fstats.reshape(idx_proposal.size, -1)
 
                     obs_z = (self.obs - self.stats_mean) / self.stats_std
-                    fobs_z = stat_features(obs_z.astype(dtype)).reshape(1,-1)
+                    fobs_z = stat_features(obs_z.reshape(1,*self.network.n_inputs))[0].reshape(1,-1)
 
                     cbkrnl, cbl = kernel_opt(
-                        iws=iws.astype(np.float32), 
+                        iws=iws[idx_proposal].astype(np.float32),
                         stats=fstats,
                         obs=fobs_z, 
                         kernel_loss=kernel_loss,
@@ -248,10 +258,28 @@ class kSNPE(BaseInference):
             # normalize weights
             iws = (iws/np.sum(iws))*n_train_round
 
+            if not clip_IW is None:
+                idx = np.argsort(iws)[int((1-clip_IW)*n_train_round):]
+                iws[idx] = 0.
+
+            if naive_weights:
+                iws = np.ones((n_train_round,))
+
             trn_data = (trn_data[0], trn_data[1], iws)
 
-            trn_inputs = [self.network.params, self.network.stats,
-                          self.network.iws]
+            if hasattr(self.network, 'extra_stats'):
+                trn_inputs = [self.network.params, self.network.stats, self.network.extra_stats,
+                              self.network.iws]
+            else:
+                trn_inputs = [self.network.params, self.network.stats, self.network.iws]
+
+            if init_single_layer_net:
+                print('initializing network from homoscedastic linear-affine fit')
+                self.init_single_layer_net(trn_data, self.obs)
+
+            if not reg_lambdas is None:
+                self.reg_lambda = reg_lambdas[self.round-1]
+                print('resetting regularization strength to ' + str(self.reg_lambda))
 
             t = Trainer(self.network,
                         self.loss(N=n_train_round, round_cl=round_cl),
@@ -260,7 +288,9 @@ class kSNPE(BaseInference):
                         monitor=self.monitor_dict_from_names(monitor),
                         **kwargs)
             logs.append(t.train(epochs=epochs_round, minibatch=minibatch,
-                                verbose=verbose, stop_on_nan=stop_on_nan))
+                                verbose=verbose, stop_on_nan=stop_on_nan,
+                                n_inputs=self.network.n_inputs,
+                                n_inputs_hidden=self.network.n_inputs_hidden))
 
             logs[-1]['cbkrnl'] = cbkrnl
             logs[-1]['cbk_loss'] = cbl
