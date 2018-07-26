@@ -6,8 +6,7 @@ from delfi.neuralnet.loss.regularizer import svi_kl_init, svi_kl_zero
 
 
 class Basic(BaseInference):
-    def __init__(self, generator, obs=None, prior_norm=False, pilot_samples=100,
-                 reg_lambda=0.01, seed=None, verbose=True, **kwargs):
+    def __init__(self, generator, obs=None, reg_lambda=0.01,  **kwargs):
         """Basic inference algorithm
 
         Uses samples from the prior for density estimation LFI. Network can be
@@ -45,9 +44,7 @@ class Basic(BaseInference):
             Dictionary containing theano variables that can be monitored while
             training the neural network.
         """
-        super().__init__(generator, prior_norm=prior_norm,
-                         pilot_samples=pilot_samples, seed=seed,
-                         verbose=verbose, **kwargs)
+        super().__init__(generator, **kwargs)
         self.obs = obs
         self.reg_lambda = reg_lambda
         self.round = 0
@@ -147,6 +144,7 @@ class Basic(BaseInference):
                         monitor=self.monitor_dict_from_names(monitor),
                         **kwargs)
             logs.append(t.train(epochs=epochs, minibatch=minibatch,
+                                n_inputs=self.network.n_inputs,
                                 verbose=verbose, stop_on_nan=stop_on_nan))
             trn_datasets.append(trn_data)
 
