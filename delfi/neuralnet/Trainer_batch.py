@@ -8,10 +8,10 @@ from delfi.utils.progress import no_tqdm, progressbar
 dtype = theano.config.floatX
 
 
-class Trainer:
+class Trainer_rebatch:
     def __init__(self, network, loss, trn_data, trn_inputs,
                  step=lu.adam, lr=0.001, lr_decay=1.0, max_norm=0.1,
-                 monitor=None, seed=None, **kwargs):
+                 monitor=None, seed=None):
         """Construct and configure the trainer
 
         The trainer takes as inputs a neural network, a loss function and
@@ -60,14 +60,10 @@ class Trainer:
             grads = lu.total_norm_constraint(grads, max_norm=max_norm)
 
         # updates
-        if 'lr' in kwargs.keys():
-            self.lr = kwargs['lr']
-            kwargs.pop('lr')
-        else:
-            self.lr = lr
+        self.lr = lr
         self.lr_decay = lr_decay
         self.lr_op = theano.shared(np.array(self.lr, dtype=dtype))
-        self.updates = step(grads, self.network.aps, learning_rate=self.lr_op, **kwargs)
+        self.updates = step(grads, self.network.aps, learning_rate=self.lr_op)
 
         # check trn_data
         n_trn_data_list = set([x.shape[0] for x in trn_data])
@@ -81,8 +77,6 @@ class Trainer:
             monitor_names, monitor_nodes = zip(*monitor.items())
             self.trn_outputs_names += monitor_names
             self.trn_outputs_nodes += monitor_nodes
-
-        print(self.trn_inputs)
 
         # function for single update
         self.make_update = theano.function(
@@ -100,9 +94,7 @@ class Trainer:
               monitor_every=None,
               stop_on_nan=False,
               tol=None,
-              verbose=False,
-              n_inputs=None,
-              n_inputs_hidden=0):
+              verbose=False):
         """Trains the model
 
         Parameters
@@ -128,9 +120,6 @@ class Trainer:
         # initialize variables
         iter = 0
 
-        if n_inputs_hidden == 0 and n_inputs is None:
-            n_inputs = self.network.n_inputs
-
         # minibatch size
         minibatch = self.n_trn_data if minibatch is None else minibatch
         if minibatch > self.n_trn_data:
@@ -155,41 +144,6 @@ class Trainer:
                 desc += verbose
             pbar.set_description(desc)
 
-
-        if not n_inputs is None and n_inputs_hidden > 0:
-            def split_stats(trn_batch):
-   
-                if len(trn_batch)==3:
-                    th,x,iws = trn_batch
-                    trn_batch = (th, 
-                                 x[:,:-n_inputs_hidden].reshape(-1,*n_inputs),
-                                 x[:,-n_inputs_hidden:],
-                                 iws)
-
-                elif len(trn_batch)==2:
-                    th,x = trn_batch
-                    trn_batch = (th, 
-                                 x[:,:-n_inputs_hidden].reshape(-1,*n_inputs), 
-                                 x[:,-n_inputs_hidden:])
-
-                return trn_batch
-        else:
-            def split_stats(trn_batch):
-
-                if len(trn_batch)==3:
-                    th,x,iws = trn_batch
-                    trn_batch = (th, 
-                                 x.reshape(-1,*n_inputs),
-                                 iws)
-
-                elif len(trn_batch)==2:
-                    th,x = trn_batch
-                    trn_batch = (th, 
-                                 x.reshape(-1,*n_inputs))
-
-                return trn_batch
-
-
         with pbar:
             # loop over epochs
             for epoch in range(epochs):
@@ -198,12 +152,9 @@ class Trainer:
                 self.lr_op.set_value(lr_epoch)
 
                 # loop over batches
-                for trn_batch in iterate_minibatches(self.trn_data, minibatch,
+                for trn_batch in iterate_minibatches(self.network, self.trn_data, minibatch,
                                                      seed=self.gen_newseed()):
                     trn_batch = tuple(trn_batch)
-
-                    # split stats into (stats, extra_stats) if needed
-                    trn_batch = split_stats(trn_batch)
 
                     outputs = self.make_update(*trn_batch)
 
@@ -239,7 +190,7 @@ class Trainer:
             return self.rng.randint(0, 2**31)
 
 
-def iterate_minibatches(trn_data, minibatch=10, seed=None):
+def iterate_minibatches(network, trn_data, minibatch=10, seed=None):
     """Minibatch iterator
 
     Parameters
@@ -262,14 +213,52 @@ def iterate_minibatches(trn_data, minibatch=10, seed=None):
     rng = np.random.RandomState(seed=seed)
     rng.shuffle(indices)
 
+    weight_Z = np.sum(trn_data[2])
+
     start_idx = 0
 
-    for start_idx in range(0, n_samples-minibatch+1, minibatch):
-        excerpt = indices[start_idx:start_idx + minibatch]
+    queue = None
+    batches = []
+    while start_idx < n_samples:
+        total_weight = 0
+        end_idx = start_idx
 
-        yield (trn_data[k][excerpt] for k in range(len(trn_data)))
+        excerpt = [[], [], []]
 
-    rem_i = n_samples - (n_samples % minibatch)
-    if rem_i != n_samples:
-        excerpt = indices[rem_i:]
-        yield (trn_data[k][excerpt] for k in range(len(trn_data)))
+        while True:
+            if queue == None:
+                if end_idx >= n_samples:
+                    break
+
+                queue = [ td[indices[end_idx]] for td in trn_data ] 
+                queue[2] = queue[2] * n_samples / weight_Z
+                end_idx += 1
+
+            if queue[2] == 0:
+                queue = None
+                continue
+
+            if total_weight + queue[2] <= minibatch:
+                total_weight += queue[2]
+
+                for i in range(3):
+                    excerpt[i].append(np.asarray(queue[i]))
+                queue = None
+            else:
+                new_excerpt = [ q for q in queue ]
+                new_excerpt[2] = minibatch - total_weight
+
+                if new_excerpt[2] != 0:
+                    for i in range(3):
+                        excerpt[i].append(np.asarray(new_excerpt[i]))
+
+                queue[2] -= minibatch - total_weight
+                total_weight = minibatch
+                break
+            
+        batches.append(excerpt)
+        start_idx = end_idx
+
+    rng.shuffle(batches)
+
+    return batches

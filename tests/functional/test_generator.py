@@ -15,8 +15,12 @@ def test_gauss_shape():
         g = dg.Default(model=m, prior=p, summary=s)
 
         n_samples = 100
-        params, stats = g.gen(n_samples)
+
+        params, stats, sources = g.gen(n_samples)
 
         n_summary = n_params
         assert params.shape == (n_samples, n_params)
         assert stats.shape == (n_samples, n_summary)
+        assert sources.size == n_samples
+        assert np.all(np.in1d(np.unique(sources), [0,1]))
+
