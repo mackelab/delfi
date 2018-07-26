@@ -227,9 +227,9 @@ class CDELFI(BaseInference):
         """
         proposal = self.generator.proposal
 
-        if proposal is None or isinstance(proposal, (Uniform,Gaussian)):  
+        if proposal is None or isinstance(proposal, (Uniform,Gaussian)):
             posterior = self._predict_from_Gaussian_prop(self.obs)
-        elif len(self.generator.proposal.xs) <= self.network.n_components:                    
+        elif len(self.generator.proposal.xs) <= self.network.n_components:
             print('correcting for MoG proposal')
             posterior = self._predict_from_MoG_prop(self.obs)
         else:
@@ -277,9 +277,9 @@ class CDELFI(BaseInference):
         missmatch in the prior and proposal prior if the latter is
         given by a Gaussian mixture with multiple mixture components.
 
-        Assumes proposal mixture components are well-separated, which 
-        allows to locally correct each posterior component only for the 
-        closest proposal component. 
+        Assumes proposal mixture components are well-separated, which
+        allows to locally correct each posterior component only for the
+        closest proposal component.
 
         Parameters
         ----------
@@ -314,7 +314,7 @@ class CDELFI(BaseInference):
             # correct mixture coefficients a[i]
 
             # prefactors
-            log_a = np.log(mog.a[i]) - np.log(a_prop) 
+            log_a = np.log(mog.a[i]) - np.log(a_prop)
             # determinants
             log_a += 0.5 * (logdet(c.P)+ldetP0-logdet(c_prop.P)-logdet(c_post.P))
             # Mahalanobis distances
@@ -323,7 +323,7 @@ class CDELFI(BaseInference):
             log_a += 0.5 * c_prop.m.dot(c_prop.Pm)
             log_a += 0.5 * c_post.m.dot(c_post.Pm)
             a_i = np.exp(log_a)
-            
+
             xs_new.append(c_post)
             a_new.append(a_i)
 
@@ -338,10 +338,10 @@ class CDELFI(BaseInference):
         """Predict posterior given x under proposal prior
 
         Predicts the uncorrected posterior associated with the proposal
-        prior (versus the original prior). 
+        prior (versus the original prior).
 
-        Allows to obtain some posterior estimates when the analytical 
-        correction for the proposal prior fails. 
+        Allows to obtain some posterior estimates when the analytical
+        correction for the proposal prior fails.
 
         Parameters
         ----------
@@ -355,21 +355,21 @@ class CDELFI(BaseInference):
         """Split MoG components
 
         Replicates, perturbes and (optionally) standardizes MoG
-        components across rounds. 
+        components across rounds.
 
-        Replica MoG components serve as part of initialization for 
-        MDN in the next round. 
+        Replica MoG components serve as part of initialization for
+        MDN in the next round.
 
         Parameters
         ----------
         standardize : boolean
-            whether to standardize the replicated components 
+            whether to standardize the replicated components
         """
         # define magnitute of (symmetry-breaking) perturbation noise on weights
         eps = 1.0e-2 if standardize else 1.0e-6
 
         if self.kwargs['n_components'] > self.network.n_components:
-            
+
             # get parameters of current network
             old_params = self.network.params_dict.copy()
             old_n_components = self.network.n_components
@@ -402,17 +402,17 @@ class CDELFI(BaseInference):
     def standardize_components(self):
         """Standardize MoG components
 
-        Changes weights in MoG layer of the attached MDN to split the 
+        Changes weights in MoG layer of the attached MDN to split the
         support of a Gaussian proposal prior among multiple MoG components
-        of the posterior estimate. 
+        of the posterior estimate.
 
         Meant to give multi-component MDN initializations that start with
-        more distinguishable components than is achieved through simply 
+        more distinguishable components than is achieved through simply
         replicating components and perturbing them with symmetry-breaking
-        noise.  
+        noise.
 
         """
-        assert isinstance(self.generator.proposal, Gaussian) 
+        assert isinstance(self.generator.proposal, Gaussian)
 
         # grab activation from last hidden layer
         last_hidden = self.network.layer['mixture_weights'].input_layer
