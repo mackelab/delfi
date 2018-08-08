@@ -94,7 +94,7 @@ class MPGenerator(Default):
             samples given parameters drawn from proposal distribution rather
             than samples drawn from prior when `gen` is called.
         """
-        super().__init__(model=None, prior=prior, summary=summary, seed=None)
+        super().__init__(model=None, prior=prior, summary=summary, seed=seed)
         
         if rej is None:
             def rej(x):
