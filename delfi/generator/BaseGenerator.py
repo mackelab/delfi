@@ -32,6 +32,29 @@ class BaseGenerator(metaclass=ABCMetaDoc):
 
         self.rng = np.random.RandomState(seed=seed)
 
+    def gen_newseed(self):
+        """Generates a new random seed"""
+        if self.seed is None:
+            return None
+        else:
+            return self.rng.randint(0, 2**31)
+
+    def reseed(self, seed):
+        """Carries out the following operations, in order:
+        1) Reseeds the master RNG for the generator object, using the input seed
+        2) Reseeds the prior from the master RNG. This may cause additional
+        distributions to be reseeded using the prior's RNG (e.g. if the prior is
+        a mixture)
+        3) Reseeds the simulator RNG, from the master RNG
+        4) Reseeds the proposal, if present
+        """
+        self.rng.seed(seed=seed)
+        self.seed = seed
+        self.prior.reseed(self.gen_newseed())
+        self.model.reseed(self.gen_newseed())
+        if self.proposal is not None:
+            self.proposal.reseed(self.gen_newseed())
+
     def draw_params(self, n_samples, skip_feedback=False, prior_mixin=0, verbose=True):
         if not verbose:
             pbar = no_tqdm()
@@ -76,7 +99,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
 
         rem_i = n_samples - (n_samples % minibatch)
         if rem_i != n_samples:
-            yield params[rem_i:]    
+            yield params[rem_i:]
 
     def gen(self, n_samples, n_reps=1, skip_feedback=False, prior_mixin=0, minibatch=50, keep_data=True, verbose=True):
         """Draw parameters and run forward model
@@ -103,7 +126,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         assert n_reps == 1, 'n_reps > 1 is not yet supported'
 
         params = self.draw_params(n_samples=n_samples,
-                                  skip_feedback=skip_feedback, 
+                                  skip_feedback=skip_feedback,
                                   prior_mixin=prior_mixin,
                                   verbose = verbose)
 
@@ -124,7 +147,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
                 # run forward model for all params, each n_reps times
                 result = self.model.gen(params_batch, n_reps=n_reps, pbar=pbar)
 
-                stats, params = self.process_batch(params_batch, result)
+                stats, params = self.process_batch(params_batch, result,skip_feedback=skip_feedback)
                 final_params += params
                 final_stats += stats
 
@@ -139,7 +162,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
 
         return params, stats
 
-    def process_batch(self, params_batch, result):
+    def process_batch(self, params_batch, result,skip_feedback=False):
         ret_stats = []
         ret_params = []
 

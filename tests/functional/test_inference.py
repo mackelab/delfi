@@ -8,13 +8,14 @@ from delfi.simulator.Gauss import Gauss
 
 
 def test_basic_inference(n_params=2, seed=42):
-    m = Gauss(dim=n_params, seed=seed)
-    p = dd.Gaussian(m=np.zeros((n_params, )), S=np.eye(n_params), seed=seed)
+    m = Gauss(dim=n_params)
+    p = dd.Gaussian(m=np.zeros((n_params, )), S=np.eye(n_params))
     s = ds.Identity()
     g = dg.Default(model=m, prior=p, summary=s)
 
     # set up inference
-    res = infer.Basic(g, seed=seed)
+    res = infer.Basic(g, seed=seed)  # need seed for pilot samples
+    res.reset(seed=seed)  # reseed generator etc.
 
     # run with N samples
     out = res.run(1000)
@@ -27,16 +28,17 @@ def test_basic_inference(n_params=2, seed=42):
 
 
 def test_snpe_inference(n_params=2, seed=42):
-    m = Gauss(dim=n_params, seed=seed)
-    p = dd.Gaussian(m=np.zeros((n_params, )), S=np.eye(n_params), seed=seed)
+    m = Gauss(dim=n_params)
+    p = dd.Gaussian(m=np.zeros((n_params, )), S=np.eye(n_params))
     s = ds.Identity()
     g = dg.Default(model=m, prior=p, summary=s)
 
     # observation
-    _, obs = g.gen(1)
+    obs = np.zeros((1, 2))
 
     # set up inference
-    res = infer.SNPE(g, obs=obs)
+    res = infer.SNPE(g, obs=obs, seed=seed)  # need seed for pilot samples
+    res.reset(seed=seed)  # reseed generator etc.
 
     # run with N samples
     out = res.run(n_train=1000, n_rounds=1)
@@ -46,3 +48,4 @@ def test_snpe_inference(n_params=2, seed=42):
     assert np.allclose(posterior.xs[0].S, np.array([[0.1, 0.0],
                                                     [0.0, 0.1]]), atol=0.05)
     assert np.allclose(posterior.xs[0].m, np.array([0.0, 0.0]), atol=0.05)
+    return res, out

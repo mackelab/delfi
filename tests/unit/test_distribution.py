@@ -104,6 +104,46 @@ def test_uniform_2d():
     assert logprobs.shape == (N,)
 
 
+def test_IndependentJoint_eval():
+    N = 1000
+    B1 = [-1.0, 1.0]
+    B2 = [-2.0, 2.0]
+    u1 = dd.Uniform(B1[0], B1[1])
+    u2 = dd.Uniform(B2[0], B2[1])
+    dist = dd.IndependentJoint([u1, u2])
+    samples = dist.gen(N)
+    logprobs = dist.eval(samples, log=True)
+    lpdfval = -np.log((B2[1] - B2[0]) * (B1[1] - B1[0]))
+    assert np.isclose(logprobs, lpdfval).all()
+
+    assert samples.shape == (N, 2)
+    assert logprobs.shape == (N,)
+
+
+def test_IndependentJoint_marginals():
+    N = 1000
+    m = np.array([1., 3., 0.])
+    S = [[8., 2., 1.],
+         [2., 3., 2.],
+         [1., 2., 3.]]
+    gs = [dd.Gaussian(m=m + i, S=S) for i in [-1, 0, 1]]
+    dist = dd.IndependentJoint(gs)
+    samples = dist.gen(N)
+    log_probs = dist.eval(samples, log=True)
+    jjs = [np.arange(3 * i, 3 * (i + 1)) for i in range(3)]
+    log_marginals = [dist.eval(samples[:, jj], ii = jj) for jj in jjs]
+    assert np.isclose(log_probs, np.vstack(log_marginals).sum(axis=0)).all()
+
+    log_submarginal_1 = dist.dists[0].eval(samples[:, [1]], ii=[1])
+    log_submarginal_4 = dist.dists[1].eval(samples[:, [4]], ii=[1])
+    log_submarginal_6_7_8 = dist.dists[2].eval(samples[:, [6, 7, 8]])
+    log_submarginal_1_4_6_7_8 = dist.eval(samples[:, [1, 4, 6, 7, 8]],
+                                    ii=[1, 4, 6, 7, 8])
+    assert np.isclose(log_submarginal_1_4_6_7_8,
+                      log_submarginal_1 + log_submarginal_4 +
+                      log_submarginal_6_7_8).all()
+
+
 def test_mixture_of_gaussians_1d():
     N = 1000
     m = [1.]

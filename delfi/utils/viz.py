@@ -116,7 +116,7 @@ def probs2contours(probs, levels):
     return contours
 
 
-def plot_pdf(pdf1, lims, pdf2=None, gt=None, contours=False, levels=(0.68, 0.95),
+def plot_pdf(pdf1, lims=None, pdf2=None, gt=None, contours=False, levels=(0.68, 0.95),
              resolution=500, labels_params=None, ticks=False, diag_only=False,
              diag_only_cols=4, diag_only_rows=4, figsize=(5, 5), fontscale=1,
              partial=False, samples=None, col1='k', col2='b', col3='g'):
@@ -167,6 +167,8 @@ def plot_pdf(pdf1, lims, pdf2=None, gt=None, contours=False, levels=(0.68, 0.95)
         contours = True
         if levels is None:
             levels = (0.68, 0.95)
+            
+    if samples is not None and lims is None:
         lims_min = np.min(samples, axis=1)
         lims_max = np.max(samples, axis=1)
         lims = np.asarray(lims)
@@ -307,7 +309,8 @@ def plot_pdf(pdf1, lims, pdf2=None, gt=None, contours=False, levels=(0.68, 0.95)
 
                     if samples is not None:
                         H, xedges, yedges = np.histogram2d(
-                            samples[i, :], samples[j, :], bins=30, normed=True)
+                            samples[i, :], samples[j, :], bins=30, range=[
+                            [lims[i, 0], lims[i, 1]], [lims[j, 0], lims[j, 1]]], normed=True)
                         ax[i, j].imshow(H, origin='lower', extent=[
                                         yedges[0], yedges[-1], xedges[0], xedges[-1]])
 
@@ -322,7 +325,7 @@ def plot_pdf(pdf1, lims, pdf2=None, gt=None, contours=False, levels=(0.68, 0.95)
                         ax[i, j].contour(Y, X, probs2contours(
                             pp, levels), levels, colors=('w', 'y'))
                     else:
-                        ax[i, j].imshow(pp.T, origin='lower', cmap=cmaps.parula,
+                        ax[i, j].imshow(pp.T, origin='lower',
                                         extent=[lims[j, 0], lims[j, 1], lims[i, 0], lims[i, 1]],
                                         aspect='auto', interpolation='none')
                     ax[i, j].set_xlim(lims[j])

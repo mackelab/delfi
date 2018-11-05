@@ -54,13 +54,13 @@ class SNPE(BaseInference):
         super().__init__(generator, prior_norm=prior_norm,
                          pilot_samples=pilot_samples, seed=seed,
                          verbose=verbose, **kwargs)
+        assert obs is not None, "SNPE requires observed data"
         self.obs = np.asarray(obs)
 
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
 
         self.reg_lambda = reg_lambda
-        self.round = 0
         self.convert_to_T = convert_to_T
 
         self.prior_mixin = 0 if prior_mixin is None else prior_mixin
@@ -103,7 +103,7 @@ class SNPE(BaseInference):
         return loss
 
     def run(self, n_train=100, n_rounds=2, epochs=100, minibatch=50,
-            round_cl=1, stop_on_nan=False, proposal=None, 
+            round_cl=1, stop_on_nan=False, proposal=None,
             monitor=None, **kwargs):
         """Run algorithm
 
@@ -190,7 +190,7 @@ class SNPE(BaseInference):
                 iws = p_prior / (self.prior_mixin * p_prior + (1 - self.prior_mixin) * p_proposal)
             else:
                 iws = np.ones((n_train_round,))
-                
+
             # normalize weights
             iws /= np.mean(iws)
 
@@ -198,7 +198,7 @@ class SNPE(BaseInference):
                 iws *= self.kernel.eval(trn_data[1].reshape(n_train_round, -1))
 
             trn_data = (trn_data[0], trn_data[1], iws)
-            trn_inputs = [self.network.params, self.network.stats, 
+            trn_inputs = [self.network.params, self.network.stats,
                           self.network.iws]
 
             t = Trainer(self.network,
@@ -213,12 +213,10 @@ class SNPE(BaseInference):
             trn_datasets.append(trn_data)
 
             try:
-                new_posterior = self.predict(self.obs)
+                posteriors.append(self.predict(self.obs))
             except np.linalg.LinAlgError:
                 posteriors.append(None)
                 print("Cannot predict posterior after round {} due to NaNs".format(r))
                 break
-
-            posteriors.append(new_posterior)
 
         return logs, trn_datasets, posteriors

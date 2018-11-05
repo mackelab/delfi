@@ -301,6 +301,11 @@ class NeuralNet(object):
 
         return dd.MoG(a=a, ms=ms, Us=Us, seed=self.gen_newseed())
 
+    def reseed(self, seed):
+        """Reseeds the network's RNG"""
+        self.rng.seed(seed=seed)
+        self.seed = seed
+
     def gen_newseed(self):
         """Generates a new random seed"""
         if self.seed is None:

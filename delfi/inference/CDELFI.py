@@ -50,18 +50,18 @@ class CDELFI(BaseInference):
             Dictionary containing theano variables that can be monitored while
             training the neural network.
         """
-        # Algorithm 1 of PM requires a single component
-        kwargs.update({'n_components': 1})
-
         super().__init__(generator, prior_norm=prior_norm,
                          pilot_samples=pilot_samples, seed=seed,
                          verbose=verbose, **kwargs)
-
-        self.n_components = n_components
+        assert obs is not None, "CDELFI requires observed data"
         self.obs = obs
-    
+
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
+
+        # we'll use only 1 component until the last round
+        kwargs.update({'n_components': 1})
+        self.n_components = n_components
 
         self.reg_lambda = reg_lambda
 
@@ -123,16 +123,18 @@ class CDELFI(BaseInference):
         trn_datasets = []
         posteriors = []
 
-        for r in range(1, n_rounds + 1):  # start at 1
+        for r in range(n_rounds):  # start at 1
+            self.round += 1
+
             # if round > 1, set new proposal distribution before sampling
-            if r > 1:
+            if self.round > 1:
                 # posterior becomes new proposal prior
                 posterior = self.predict(self.obs)
                 self.generator.proposal = posterior.project_to_gaussian()
             # number of training examples for this round
             if type(n_train) == list:
                 try:
-                    n_train_round = n_train[r-1]
+                    n_train_round = n_train[self.round - 1]
                 except:
                     n_train_round = n_train[-1]
             else:
@@ -143,7 +145,7 @@ class CDELFI(BaseInference):
             trn_data = self.gen(n_train_round, verbose=verbose)
 
             # algorithm 2 of Papamakarios and Murray
-            if r == n_rounds and self.n_components > 1:
+            if r + 1 == n_rounds and self.n_components > 1:
                 # get parameters of current network
                 old_params = self.network.params_dict.copy()
 
@@ -153,18 +155,29 @@ class CDELFI(BaseInference):
                 self.network = NeuralNet(**network_spec)
                 new_params = self.network.params_dict
 
-                # set weights of new network
-                # weights of additional components are duplicates
-                for p in [s for s in new_params if 'means' in s or
-                          'precisions' in s]:
-                    old_params[p] = old_params[p[:-1] + '0'].copy()
-                    old_params[p] += 1.0e-6*self.rng.randn(*new_params[p].shape)
+                """In order to go from 1 component in previous rounds to
+                self.n_components in the current round we will duplicate
+                component 1 self.n_components times, with small random
+                perturbations to the parameters affecting component means
+                and precisions, and the SVI s.d.s of those parameters. Set the
+                mixture coefficients to all be equal"""
+                mp_param_names = [s for s in new_params if 'means' in s or \
+                    'precisions' in s]  # list of dict keys
+                for param_name in mp_param_names:
+                    """for each param_name, get the corresponding old parameter
+                    name/value for what was previously the only mixture
+                    component"""
+                    source_param_name = param_name[:-1] + '0'
+                    source_param_val = old_params[source_param_name]
+                    # copy it to the new component, add noise to break symmetry
+                    old_params[param_name] = source_param_val.copy() + \
+                        1.0e-6 * self.rng.randn(*source_param_val.shape)
 
-                # assert mixture coefficients are initialized as uniform
+                # initialize with equal mixture coefficients for all data
                 old_params['weights.mW'] = 0. * new_params['weights.mW']
                 old_params['weights.mb'] = 0. * new_params['weights.mb']
 
-                self.network.params_dict = old_params                
+                self.network.params_dict = old_params
 
             trn_inputs = [self.network.params, self.network.stats]
 
@@ -174,8 +187,8 @@ class CDELFI(BaseInference):
                         seed=self.gen_newseed(), **kwargs)
             logs.append(t.train(epochs=epochs, minibatch=minibatch,
                                 verbose=verbose))
-            trn_datasets.append(trn_data)
 
+            trn_datasets.append(trn_data)
             try:
                 posteriors.append(self.predict(self.obs))
             except:
@@ -195,17 +208,17 @@ class CDELFI(BaseInference):
         """
         if self.generator.proposal is None:
             # no correction necessary
-            return super(CDELFI, self).predict(x)  # via super
+            return super().predict(x)  # via super
         else:
             # mog is posterior given proposal prior
-            mog = super(CDELFI, self).predict(x)  # via super
+            mog = super().predict(x)  # via super
 
             mog.prune_negligible_components(threshold=threshold)
-            
+
             # compute posterior given prior by analytical division step
-            if 'Uniform' in str(type(self.generator.prior)):
+            if isinstance(self.generator.prior, dd.Uniform):
                 posterior = mog / self.generator.proposal
-            elif 'Gaussian' in str(type(self.generator.prior)):
+            elif isinstance(self.generator.prior, dd.Gaussian):
                 posterior = (mog * self.generator.prior) / \
                     self.generator.proposal
             else:

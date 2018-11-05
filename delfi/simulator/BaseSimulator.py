@@ -72,6 +72,11 @@ class BaseSimulator(metaclass=ABCMetaDoc):
         """
         pass
 
+    def reseed(self, seed):
+        """Reseeds the distribution's RNG"""
+        self.rng.seed(seed=seed)
+        self.seed = seed
+
     def gen_newseed(self):
         """Generates a new random seed"""
         if self.seed is None:

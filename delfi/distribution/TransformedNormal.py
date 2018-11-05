@@ -31,7 +31,7 @@ class TransformedNormal(BaseDistribution):
             List of flags for each variable whether it is untransformed (=0),
             log-transformed (=1) or logit-transformed (=2).
         lower: list or np.array, 1d
-            Lower bounds for logit-box. Defaults to 1 for each parameter.
+            Lower bounds for logit-box. Defaults to 0 for each parameter.
         upper: list or np.array, 1d
             Upper bounds for logit-box. Defaults to 1 for each parameter.
         seed : int or None

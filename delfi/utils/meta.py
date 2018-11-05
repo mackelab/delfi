@@ -4,9 +4,9 @@ from functools import partial
 
 
 class ABCMetaDoc(type, metaclass=abc.ABCMeta):
-    '''
+    """
     Source: http://code.activestate.com/recipes/578587-inherit-method-docstrings-without-breaking-decorat/
-    '''
+    """
     @classmethod
     def __prepare__(cls, name, bases, **kwds):
         classdict = super().__prepare__(name, bases, *kwds)
@@ -39,10 +39,10 @@ class ABCMetaDoc(type, metaclass=abc.ABCMeta):
 
 
 def _copy_ancestor_docstring(mro, fn):
-    '''Decorator to set docstring for *fn* from *mro*
+    """Decorator to set docstring for *fn* from *mro*
 
     Source: http://code.activestate.com/recipes/578587-inherit-method-docstrings-without-breaking-decorat/
-    '''
+    """
     if fn.__doc__ is not None:
         raise RuntimeError('Function already has docstring')
 
