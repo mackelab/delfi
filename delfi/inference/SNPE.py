@@ -208,6 +208,7 @@ class SNPE(BaseInference):
                         monitor=self.monitor_dict_from_names(monitor),
                         **kwargs)
             logs.append(t.train(epochs=epochs, minibatch=minibatch,
+                                n_inputs=self.network.n_inputs,                
                                 verbose=verbose, stop_on_nan=stop_on_nan))
 
             trn_datasets.append(trn_data)
