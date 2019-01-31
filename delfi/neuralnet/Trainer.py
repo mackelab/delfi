@@ -11,7 +11,7 @@ dtype = theano.config.floatX
 class Trainer:
     def __init__(self, network, loss, trn_data, trn_inputs,
                  step=lu.adam, lr=0.001, lr_decay=1.0, max_norm=0.1,
-                 monitor=None, seed=None):
+                 monitor=None, seed=None, **kwargs):
         """Construct and configure the trainer
 
         The trainer takes as inputs a neural network, a loss function and
@@ -60,10 +60,14 @@ class Trainer:
             grads = lu.total_norm_constraint(grads, max_norm=max_norm)
 
         # updates
-        self.lr = lr
+        if 'lr' in kwargs.keys():
+            self.lr = kwargs['lr']
+            kwargs.pop('lr')
+        else:
+            self.lr = lr
         self.lr_decay = lr_decay
         self.lr_op = theano.shared(np.array(self.lr, dtype=dtype))
-        self.updates = step(grads, self.network.aps, learning_rate=self.lr_op)
+        self.updates = step(grads, self.network.aps, learning_rate=self.lr_op, **kwargs)
 
         # check trn_data
         n_trn_data_list = set([x.shape[0] for x in trn_data])
@@ -94,7 +98,9 @@ class Trainer:
               monitor_every=None,
               stop_on_nan=False,
               tol=None,
-              verbose=False):
+              verbose=False,
+              n_inputs=None,
+              n_inputs_hidden=0):
         """Trains the model
 
         Parameters
@@ -144,6 +150,41 @@ class Trainer:
                 desc += verbose
             pbar.set_description(desc)
 
+
+        if not n_inputs is None and n_inputs_hidden > 0:
+            def split_stats(trn_batch):
+   
+                if len(trn_batch)==3:
+                    th,x,iws = trn_batch
+                    trn_batch = (th, 
+                                 x[:,:-n_inputs_hidden].reshape(-1,*n_inputs),
+                                 x[:,-n_inputs_hidden:],
+                                 iws)
+
+                elif len(trn_batch)==2:
+                    th,x = trn_batch
+                    trn_batch = (th, 
+                                 x[:,:-n_inputs_hidden].reshape(-1,*n_inputs), 
+                                 x[:,-n_inputs_hidden:])
+
+                return trn_batch
+        else:
+            def split_stats(trn_batch):
+
+                if len(trn_batch)==3:
+                    th,x,iws = trn_batch
+                    trn_batch = (th, 
+                                 x.reshape(-1,*n_inputs),
+                                 iws)
+
+                elif len(trn_batch)==2:
+                    th,x = trn_batch
+                    trn_batch = (th, 
+                                 x.reshape(-1,*n_inputs))
+
+                return trn_batch
+
+
         with pbar:
             # loop over epochs
             for epoch in range(epochs):
@@ -155,6 +196,9 @@ class Trainer:
                 for trn_batch in iterate_minibatches(self.trn_data, minibatch,
                                                      seed=self.gen_newseed()):
                     trn_batch = tuple(trn_batch)
+
+                    # split stats into (stats, extra_stats) if needed
+                    trn_batch = split_stats(trn_batch)
 
                     outputs = self.make_update(*trn_batch)
 

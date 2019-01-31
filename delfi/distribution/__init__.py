@@ -1,8 +1,10 @@
 from delfi.distribution.Discrete import Discrete
 from delfi.distribution.Gaussian import Gaussian
+from delfi.distribution.LogNormal import LogNormal
+from delfi.distribution.LogitNormal import LogitNormal
 from delfi.distribution.TransformedNormal import TransformedNormal
 from delfi.distribution.StudentsT import StudentsT
-from delfi.distribution.Uniform import Uniform
+from delfi.distribution.Uniform import Uniform, LogUniform
 from delfi.distribution.Gamma import Gamma
 
 from delfi.distribution.MixedDistribution import MixedDistribution
