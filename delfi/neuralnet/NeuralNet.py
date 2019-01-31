@@ -19,7 +19,7 @@ def MyLogSumExp(x, axis=None):
 class NeuralNet(object):
     def __init__(self, n_inputs, n_outputs, n_components=1, n_filters=[],
                  n_hiddens=[10, 10], n_rnn=None, impute_missing=True, seed=None,
-                 svi=True, rank=None, homoscedastic=False, 
+                 svi=True, rank=None, homoscedastic=False, actfun=lnl.tanh,
                  filter_sizes=[5,3,3], pool_sizes=[2,2,2], n_inputs_hidden=None):
         """Initialize a mixture density network with custom layers
 
@@ -173,7 +173,7 @@ class NeuralNet(object):
         # hidden layers
         for l in range(len(n_hiddens)):
             self.layer['hidden_' + str(l + 1)] = dl.FullyConnectedLayer(
-                last(self.layer), n_units=n_hiddens[l], actfun=lnl.rectify,
+                last(self.layer), n_units=n_hiddens[l], actfun=actfun,
                 svi=svi, name='h' + str(l + 1))
 
         last_hidden = last(self.layer)

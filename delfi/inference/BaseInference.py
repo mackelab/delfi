@@ -60,8 +60,8 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         if 'n_inputs_hidden' in kwargs.keys() and kwargs['n_inputs_hidden']>0:
             assert 'n_inputs' in kwargs.keys()
-        #else:
-        #    kwargs.update({'n_inputs': stats.shape[1:]})   
+        else:
+            kwargs.update({'n_inputs': stats.shape[1:]})   
 
         self.network = NeuralNet(**kwargs)
         self.svi = self.network.svi
@@ -85,9 +85,6 @@ class BaseInference(metaclass=ABCMetaDoc):
             # parameters are set such that z-transform has no effect
             self.stats_mean = np.zeros((1,*stats.shape[1:]))
             self.stats_std = np.ones((1,*stats.shape[1:]))
-
-            print('init mean' , self.stats_mean.shape)
-            print('init  std' , self.stats_std.shape)
 
         # optional: z-transform output for obs (also re-centres x onto obs!)
         self.init_norm = init_norm
