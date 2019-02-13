@@ -227,10 +227,10 @@ class CDELFI(BaseInference):
         proposal = self.generator.proposal
 
         if proposal is None or isinstance(proposal, (Uniform,Gaussian)):  
-            posterior = self._predict_from_Gaussian_prop(self.obs)
+            posterior = self._predict_from_Gaussian_prop(x)
         elif len(self.generator.proposal.xs) <= self.network.n_components:                    
             print('correcting for MoG proposal')
-            posterior = self._predict_from_MoG_prop(self.obs)
+            posterior = self._predict_from_MoG_prop(x)
         else:
             raise NotImplementedError
 
