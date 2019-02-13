@@ -240,49 +240,6 @@ class BaseInference(metaclass=ABCMetaDoc):
         self.conditional_norm(fcv)
 
 
-    def init_single_layer_net(self, trn_data, obs_stats):
-        """ Initializes network with zero hidden layers.
-
-        Without hidden layers, posterior means are linear functions Ax+b,
-        and posterior precisions are exp(Cx + d)**2.
-
-        We can initialize A,b,C,d from a homoscedastic linear fit assuming
-        theta = f(x) = Ax + b + eps, where eps ~ N(0, Sig)
-        and Sig = exp(d)**2, C = 0.
-        We assume diagonal noise covariance Sig. 
-
-        """
-        assert self.network.n_components == 1
-        assert self.network.diag_cov
-        assert np.all(obs_stats==self.stats_mean) # assumes self.centre_on_obs()
-
-        ndim, nstats = self.params_mean.size, self.stats_mean.size
-        th, x, w = trn_data
-        w = w.reshape(-1, 1)
-        wth =  w * th
-
-        # solve means
-        X = np.hstack((np.ones((th.shape[0], 1)), x))
-        ndim, nstats = 3, 13
-        beta = np.linalg.solve( X.T.dot(w * X), X.T.dot(wth))
-        A, b = beta[1:,:], beta[0,:]
-
-        # solve variances
-        Sig = (th.T.dot(wth) - X.dot(beta).T.dot(wth))/th.shape[0]
-
-        C = np.zeros((nstats, ndim**2))
-        d = - np.diag(np.log(np.sqrt(np.diag(Sig)))).reshape(-1)
-
-        aps = self.network.aps
-        names = np.array([aps[i].name for i in range(len(aps))])
-
-        self.network.aps[np.where(names=='means.mW0')[0][0]].set_value(A)
-        self.network.aps[np.where(names=='means.mb0')[0][0]].set_value(b)
-        if 'precisions.mW0' in names:
-            self.network.aps[np.where(names=='precisions.mW0')[0][0]].set_value(C)
-        self.network.aps[np.where(names=='precisions.mb0')[0][0]].set_value(d)
-
-
     def gen(self, n_samples, n_reps=1, prior_mixin=0, verbose=None):
         """Generate from generator and z-transform
 
