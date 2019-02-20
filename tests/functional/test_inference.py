@@ -17,7 +17,7 @@ def test_basic_inference(n_params=2, seed=42):
     res = infer.Basic(g, seed=seed)
 
     # run with N samples
-    out = res.run(3000)
+    out = res.run(1000)
 
     # check result
     posterior = res.predict(np.array([0., 0.]).reshape(1, -1))
@@ -39,7 +39,7 @@ def test_snpe_inference(n_params=2, seed=42):
     res = infer.SNPE(g, obs=obs)
 
     # run with N samples
-    out = res.run(n_train=3000, n_rounds=1)
+    out = res.run(n_train=1000, n_rounds=1)
 
     # check result
     posterior = res.predict(np.array([0., 0.]).reshape(1, -1))

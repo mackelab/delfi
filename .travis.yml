@@ -25,7 +25,7 @@ install:
   - source activate testenv
   - pip install travis-sphinx nbsphinx
   - export PATH=$HOME/.local/bin:$PATH
-  - pip install pep8 pytest-pep8 python-coveralls pytest-cov==2.5.0
+  - pip install pep8 pytest-pep8 python-coveralls pytest-cov
   - pip install sphinxcontrib-napoleon sphinx_rtd_theme
   - pip install theano
   - echo -e "\n[blas]\nldflags = -lopenblas\n" >> ~/.theanorc
