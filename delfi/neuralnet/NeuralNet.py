@@ -19,7 +19,8 @@ def MyLogSumExp(x, axis=None):
 class NeuralNet(object):
     def __init__(self, n_inputs, n_outputs, n_components=1, n_filters=[],
                  n_hiddens=[10, 10], n_rnn=None, impute_missing=True, seed=None,
-                 svi=True):
+                 svi=True, rank=None, actfun=lnl.tanh,
+                 filter_sizes=[5,3,3], pool_sizes=[2,2,2], n_inputs_hidden=None):
         """Initialize a mixture density network with custom layers
 
         Parameters
@@ -46,10 +47,13 @@ class NeuralNet(object):
         """
         self.impute_missing = impute_missing
         self.n_components = n_components
+        self.rank = rank
         self.n_filters = n_filters
         self.n_hiddens = n_hiddens
         self.n_outputs = n_outputs
         self.svi = svi
+
+        self.n_inputs_hidden = 0 if n_inputs_hidden is None else n_inputs_hidden
 
         self.iws = tt.vector('iws', dtype=dtype)
         if n_rnn is None:
@@ -124,15 +128,17 @@ class NeuralNet(object):
             if rs is not None:
                 self.layer['conv_reshape'] = ll.ReshapeLayer(last(self.layer), rs)
 
+            assert len(filter_sizes) >= len(n_filters)
+
             # add layers
             for l in range(len(n_filters)):
                 self.layer['conv_' + str(l + 1)] = ll.Conv2DLayer(
                     name='c' + str(l + 1),
                     incoming=last(self.layer),
                     num_filters=n_filters[l],
-                    filter_size=3,
-                    stride=(2, 2),
-                    pad=0,
+                    filter_size=filter_sizes[l],
+                    stride=(1,1),
+                    pad=(filter_sizes[l]-1)//2 if pool_sizes[l]==1 else 0,
                     untie_biases=False,
                     W=lasagne.init.GlorotUniform(),
                     b=lasagne.init.Constant(0.),
@@ -140,15 +146,33 @@ class NeuralNet(object):
                     flip_filters=True,
                     convolution=tt.nnet.conv2d)
 
+                if pool_sizes[l] > 1:
+                    self.layer['pool_' + str(l + 1)] = ll.MaxPool2DLayer(
+                        name='p' + str(l+1),
+                        incoming=last(self.layer),
+                        pool_size=pool_sizes[l], 
+                        stride=None, 
+                        ignore_border=True)
+
         # flatten
         self.layer['flatten'] = ll.FlattenLayer(
             incoming=last(self.layer),
             outdim=2)
 
+        if not n_inputs_hidden is None and n_inputs_hidden > 0:
+            self.extra_stats = tt.matrix('extra_stats', dtype=dtype)
+            extra_in = ll.InputLayer((None, n_inputs_hidden), 
+                                     input_var=self.extra_stats)
+            self.layer['extra_input'] = lasagne.layers.ConcatLayer([extra_in, last(self.layer)], 
+                                                   axis=1)
+
+        else:
+            pass
+
         # hidden layers
         for l in range(len(n_hiddens)):
             self.layer['hidden_' + str(l + 1)] = dl.FullyConnectedLayer(
-                last(self.layer), n_units=n_hiddens[l],
+                last(self.layer), n_units=n_hiddens[l], actfun=actfun,
                 svi=svi, name='h' + str(l + 1))
 
         last_hidden = last(self.layer)
@@ -163,6 +187,7 @@ class NeuralNet(object):
         self.layer['mixture_precisions'] = dl.MixturePrecisionsLayer(
             last_hidden, n_components=n_components, n_dim=n_outputs, svi=svi,
             name='precisions')
+
         last_mog = [self.layer['mixture_weights'],
                     self.layer['mixture_means'],
                     self.layer['mixture_precisions']]
@@ -231,17 +256,23 @@ class NeuralNet(object):
 
     def compile_funs(self):
         """Compiles theano functions"""
+
+        if self.n_inputs_hidden > 0: 
+            stats = [self.stats, self.extra_stats]
+        else:
+            stats = [self.stats]
+
         self._f_eval_comps = theano.function(
-            inputs=[self.stats],
+            inputs=stats,
             outputs=self.comps)
         self._f_eval_lprobs = theano.function(
-            inputs=[self.params, self.stats],
+            inputs=[self.params, *stats],
             outputs=self.lprobs)
         self._f_eval_dcomps = theano.function(
-            inputs=[self.stats],
+            inputs=stats,
             outputs=self.dcomps)
         self._f_eval_dlprobs = theano.function(
-            inputs=[self.params, self.stats],
+            inputs=[self.params, *stats],
             outputs=self.dlprobs)
 
     def eval_comps(self, stats, deterministic=True):
@@ -258,10 +289,17 @@ class NeuralNet(object):
         -------
         mixing coefficients, means and scale matrices
         """
+        n, d = self.n_inputs_hidden, self.n_inputs
+        if self.n_inputs_hidden > 0: 
+            input_stats = [stats[:,:-n].reshape(-1,*d).astype(dtype),
+                           stats[:,-n:].astype(dtype)]
+        else: 
+            input_stats = [stats.reshape(-1,*d).astype(dtype)]
+
         if deterministic:
-            return self._f_eval_dcomps(stats.astype(dtype))
+            return self._f_eval_dcomps(*input_stats)
         else:
-            return self._f_eval_comps(stats.astype(dtype))
+            return self._f_eval_comps(*input_stats)
 
     def eval_lprobs(self, params, stats, deterministic=True):
         """Evaluate log probabilities for given input-output pairs.
@@ -277,10 +315,17 @@ class NeuralNet(object):
         -------
         log probabilities : log p(params|stats)
         """
+        n, d = self.n_inputs_hidden, self.n_inputs
+        if self.n_inputs_hidden > 0: 
+            input_stats = [stats[:,:-n].reshape(-1,*d).astype(dtype),
+                           stats[:,-n:].astype(dtype)]
+        else: 
+            input_stats = [stats.reshape(-1,*d).astype(dtype)]
+
         if deterministic:
-            return self._f_eval_dlprobs(params.astype(dtype), stats.astype(dtype))
+            return self._f_eval_dlprobs(params.astype(dtype), *input_stats)
         else:
-            return self._f_eval_lprobs(params.astype(dtype), stats.astype(dtype))
+            return self._f_eval_lprobs(params.astype(dtype), *input_stats)
 
     def get_mog(self, stats, deterministic=True):
         """Return the conditional MoG at location x

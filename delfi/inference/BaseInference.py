@@ -55,9 +55,13 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         # generate a sample to get input and output dimensions
         params, stats = generator.gen(1, skip_feedback=True, verbose=False)
-        kwargs.update({'n_inputs': stats.shape[1:],
-                       'n_outputs': params.shape[1],
+        kwargs.update({'n_outputs': params.shape[1],
                        'seed': self.gen_newseed()})
+
+        if 'n_inputs_hidden' in kwargs.keys() and kwargs['n_inputs_hidden']>0:
+            assert 'n_inputs' in kwargs.keys()
+        else:
+            kwargs.update({'n_inputs': stats.shape[1:]})   
 
         self.network = NeuralNet(**kwargs)
         self.svi = self.network.svi
@@ -79,8 +83,8 @@ class BaseInference(metaclass=ABCMetaDoc):
             self.pilot_run(pilot_samples)
         else:
             # parameters are set such that z-transform has no effect
-            self.stats_mean = np.zeros((stats.shape[1],))
-            self.stats_std = np.ones((stats.shape[1],))
+            self.stats_mean = np.zeros((1,*stats.shape[1:]))
+            self.stats_std = np.ones((1,*stats.shape[1:]))
 
         # optional: z-transform output for obs (also re-centres x onto obs!)
         self.init_norm = init_norm
@@ -270,8 +274,22 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         verbose = '(pilot run) ' if self.verbose else False
         params, stats = self.generator.gen(n_samples, verbose=verbose)
-        self.stats_mean = np.nanmean(stats, axis=0)
-        self.stats_std = np.nanstd(stats, axis=0)
+        if 'n_inputs_hidden' in self.kwargs:
+
+            n_inputs_hidden = self.kwargs['n_inputs_hidden']
+            n_inputs = np.prod(self.kwargs['n_inputs'])
+
+            self.stats_mean = np.zeros((1,n_inputs+n_inputs_hidden))
+            self.stats_std = np.ones((1,n_inputs+n_inputs_hidden))
+
+            # assuming inputs directly to hidden units to come *last* in stats
+            idx = np.arange(n_inputs_hidden) + n_inputs
+
+            self.stats_mean[0,idx] = np.nanmean(stats[:,idx], axis=0)
+            self.stats_std[ 0,idx] = np.nanstd( stats[:,idx], axis=0)
+        else:
+            self.stats_mean = np.nanmean(stats, axis=0).reshape((1, *stats.shape[1:]))
+            self.stats_std = np.nanstd(stats, axis=0).reshape((1, *stats.shape[1:]))
 
     def predict(self, x, deterministic=True):
         """Predict posterior given x
