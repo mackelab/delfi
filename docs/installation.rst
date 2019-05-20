@@ -11,7 +11,7 @@ You can install delfi by cloning from the github repository and using pip:
 
 .. code-block:: console
 
-    git clone git@github.com:dgreenberg/delfi.git
+    git clone https://github.com/mackelab/delfi.git
     cd delfi
     pip install -r requirements.txt
     pip install .
