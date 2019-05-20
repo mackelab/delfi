@@ -7,8 +7,6 @@ Installation
 Installation through pip
 ------------------------
 
-delfi is `hosted on PyPI`_, the Python software repository.
-
 You can install delfi by cloning from the github repository and using pip:
 
 .. code-block:: console
