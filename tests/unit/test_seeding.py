@@ -50,7 +50,7 @@ def test_rng_repeatability():
     #yC = inf.CDELFI(deepcopy(g), **inf_opts)
     #check_repeatability_infer(yC)
 
-    yS = inf.SNPE(deepcopy(g), prior_mixin=0.5, **inf_opts)
+    yS = inf.SNPEB(deepcopy(g), prior_mixin=0.5, **inf_opts)
     check_repeatability_infer(yS)
 
 

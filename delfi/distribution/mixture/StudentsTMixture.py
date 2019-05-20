@@ -76,7 +76,7 @@ class MoT(BaseMixture):
             raise NotImplementedError
 
         ps = np.array([c.eval(x, ii=None, log=log) for c in self.xs]).T
-        res = scipy.misc.logsumexp(
+        res = scipy.special.logsumexp(
             ps +
             np.log(
                 self.a),

@@ -2,11 +2,12 @@ import abc
 import numpy as np
 
 from delfi.neuralnet.NeuralNet import NeuralNet
-from delfi.neuralnet.Trainer import Trainer
 from delfi.utils.meta import ABCMetaDoc
+from delfi.utils.data import isint
 
 import theano
 dtype = theano.config.floatX
+
 
 class BaseInference(metaclass=ABCMetaDoc):
     def __init__(self, generator,
@@ -24,11 +25,13 @@ class BaseInference(metaclass=ABCMetaDoc):
             Generator instance
         prior_norm : bool
             If set to True, will z-transform params based on mean/std of prior
-        pilot_samples : None or int
+        pilot_samples : None or int or tuple
             If an integer is provided, a pilot run with the given number of
             samples is run. The mean and std of the summary statistics of the
             pilot samples will be subsequently used to z-transform summary
             statistics.
+            If an tuple of the form (params, stats) is provided, these will be
+            used directly as samples from the prior.
         seed : int or None
             If provided, random number generator will be seeded
         kwargs : additional keyword arguments
@@ -51,9 +54,13 @@ class BaseInference(metaclass=ABCMetaDoc):
         self.generator = generator
         self.generator.proposal = None
 
-        # generate a sample to get input and output dimensions
-        params, stats = generator.gen(1, skip_feedback=True, verbose=False)
-        kwargs.update({'n_inputs': stats.shape[1:],
+        # get input and output dimensions
+        if type(pilot_samples) is tuple:
+            params, stats = pilot_samples[0], pilot_samples[1]
+        else:
+            params, stats = generator.gen(1, skip_feedback=True, verbose=False)
+        assert stats.ndim == 2, "invalid summary stats"
+        kwargs.update({'n_inputs': stats.shape[1],
                        'n_outputs': params.shape[1],
                        'seed': self.gen_newseed()})
 
@@ -66,28 +73,21 @@ class BaseInference(metaclass=ABCMetaDoc):
         else:
             self.init_fcv = 0.0
 
-        self.reinit_network()  # init network, then update self.kwargs['seed']
-
         # parameters for z-transform of params
         if prior_norm:
             # z-transform for params based on prior
             self.params_mean = self.generator.prior.mean
             self.params_std = self.generator.prior.std
+            assert not np.any(np.isnan(self.params_mean)) and \
+                not np.any(np.isnan(self.params_std))
         else:
             # parameters are set such that z-transform has no effect
             self.params_mean = np.zeros((params.shape[1],))
             self.params_std = np.ones((params.shape[1],))
 
-        # parameters for z-transform for stats
-        if pilot_samples is not None and pilot_samples != 0:
-            # determine via pilot run
-            if seed is not None:  #reseed generator for consistent inits
-                self.generator.reseed(self.gen_newseed())
-            self.pilot_run(pilot_samples)
-        else:
-            # parameters are set such that z-transform has no effect
-            self.stats_mean = np.zeros((stats.shape[1],))
-            self.stats_std = np.ones((stats.shape[1],))
+        self.pilot_run(pilot_samples, stats.shape[1])
+
+        self.reinit_network()  # init network, then update self.kwargs['seed']
 
         # observables contains vars that can be monitored during training
         self.compile_observables()
@@ -101,8 +101,8 @@ class BaseInference(metaclass=ABCMetaDoc):
     def run(self):
         pass
 
-    def run_repeated(self, n_repeats=10, n_NN_inits_per_repeat=1, callback=None,
-                    **kwargs):
+    def run_repeated(self, n_repeats=10, n_NN_inits_per_repeat=1,
+                     callback=None, **kwargs):
         """Repeatedly run the method and collect results. Optionally, carry out
         several runs with the same initial generator RNG state but different
         neural network initializations.
@@ -114,8 +114,8 @@ class BaseInference(metaclass=ABCMetaDoc):
         n_NN_inits : int
             Number of times to
         callback: function
-            callback function that will be called after each run. It should take
-            4 inputs: callback(log, train_data, posterior, self)
+            callback function that will be called after each run. It should
+            take 4 inputs: callback(log, train_data, posterior, self)
         kwargs : additional keyword arguments
             Additional arguments that will be passed to the run() method
         """
@@ -146,7 +146,7 @@ class BaseInference(metaclass=ABCMetaDoc):
         """Reinitializes the network instance (re-setting the weights!)
         """
         self.network = NeuralNet(**self.kwargs)
-        self.svi = self.network.svi
+        self.svi = self.network.svi if 'svi' in dir(self.network) else False
         """update self.kwargs['seed'] so that reinitializing the network gives a
         different result each time unless we reseed the inference method"""
         self.kwargs['seed'] = self.gen_newseed()
@@ -165,12 +165,12 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         """
         def idx_hiddens(x):
-            return x.name[0]=='h'
+            return x.name[0] == 'h'
 
         for b in filter(idx_hiddens, self.network.mps_bp):
             b.set_value(np.zeros_like(b.get_value()))
 
-    def conditional_norm(self, fcv = 0.8, tmu=None, tSig=None, h=None):
+    def conditional_norm(self, fcv=0.8, tmu=None, tSig=None, h=None):
         """ Normalizes current network output at observed summary statistics
 
 
@@ -187,13 +187,14 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         """
 
-        # avoiding CDELFI.predict() attempt to analytically correct for proposal
+        # avoid CDELFI.predict() attempt to analytically correct for proposal
         print('obs', self.obs.shape)
         print('mean', self.stats_mean.shape)
         print('std', self.stats_std.shape)
         obz = (self.obs - self.stats_mean) / self.stats_std
-        posterior = self.network.get_mog(obz.reshape(self.obs.shape), deterministic=True)
-        mog =  posterior.ztrans_inv(self.params_mean, self.params_std)
+        posterior = self.network.get_mog(obz.reshape(self.obs.shape),
+                                         deterministic=True)
+        mog = posterior.ztrans_inv(self.params_mean, self.params_std)
 
         assert np.all(np.diff(mog.a)==0.) # assumes uniform alpha
 
@@ -208,8 +209,9 @@ class BaseInference(metaclass=ABCMetaDoc):
             mu  += mog.a[i] * mog.xs[i].m
         C = np.zeros_like(Sig)
         for i in range(self.network.n_components):
-            dmu = mog.xs[i].m - mu if self.network.n_components > 1 else mog.xs[i].m
-            C   += mog.a[i] * np.outer(dmu, dmu)
+            dmu = mog.xs[i].m - mu if self.network.n_components > 1 \
+                else mog.xs[i].m
+            C += mog.a[i] * np.outer(dmu, dmu)
 
         # if not provided, target zero-mean unit variance (as for prior_norm=True)
         tmu = np.zeros_like(mog.xs[0].m) if tmu is None else tmu
@@ -253,7 +255,7 @@ class BaseInference(metaclass=ABCMetaDoc):
 
 
     def norm_init(self):
-        if self.init_norm:
+        if self.init_norm and self.network.density == 'mog':
             print('standardizing network initialization')
             if self.network.n_components > 1:
                 self.standardize_init(fcv = self.init_fcv)
@@ -267,6 +269,7 @@ class BaseInference(metaclass=ABCMetaDoc):
         Alters hidden layers to propagates x=xo as zero to the last layer, and
         alters the MoG layers to produce the desired output distribution.
         """
+        assert isinstance(self.network, NeuralNet)
 
         # ensure x' = x - xo
         self.centre_on_obs()
@@ -289,8 +292,26 @@ class BaseInference(metaclass=ABCMetaDoc):
         verbose : None or bool or str
             If None is passed, will default to self.verbose
         """
+        assert n_reps == 1, 'n_reps > 1 is not yet supported'
         verbose = self.verbose if verbose is None else verbose
-        params, stats = self.generator.gen(n_samples, prior_mixin=prior_mixin, verbose=verbose)
+
+        params = np.zeros((0, self.generator.prior.ndim), dtype=dtype)
+        stats = np.zeros((0, self.generator.summary.n_summary), dtype=dtype)
+        n_pilot = np.minimum(n_samples, len(self.unused_pilot_samples[0]))
+        if n_pilot > 0 and self.generator.proposal is self.generator.prior:  # reuse pilot samples
+            params = self.unused_pilot_samples[0][:n_pilot, :]
+            stats = self.unused_pilot_samples[1][:n_pilot, :]
+            self.unused_pilot_samples = \
+                (self.unused_pilot_samples[0][n_pilot:, :],
+                 self.unused_pilot_samples[1][n_pilot:, :])
+            n_samples -= n_pilot
+
+        if n_samples > 0:
+            params_rem, stats_rem = self.generator.gen(n_samples,
+                                                       prior_mixin=prior_mixin,
+                                                       verbose=verbose)
+            params = np.concatenate((params, params_rem), axis=0)
+            stats = np.concatenate((stats, stats_rem), axis=0)
 
         # z-transform params and stats
         params = (params - self.params_mean) / self.params_std
@@ -318,7 +339,9 @@ class BaseInference(metaclass=ABCMetaDoc):
         self.seed = seed
         self.kwargs['seed'] = self.gen_newseed()   # for consistent NN init
         self.generator.reseed(self.gen_newseed())  # also reseeds prior + model
-        self.network.reseed(self.gen_newseed())  # for reproducible MoG samples
+        if isinstance(self.network, NeuralNet):
+            self.network.reseed(self.gen_newseed())  # for reproducible samples
+        # unfortunately, MAFs cannot currently be (re)seeded
 
     def gen_newseed(self):
         """Generates a new random seed"""
@@ -327,14 +350,34 @@ class BaseInference(metaclass=ABCMetaDoc):
         else:
             return self.rng.randint(0, 2**31)
 
-    def pilot_run(self, n_samples):
-        """Pilot run in order to find parameters for z-scoring stats
-        """
+    def pilot_run(self, pilot_samples, n_stats, min_std=1e-4):
+        """Pilot run in order to find parameters for z-scoring stats"""
+        if pilot_samples is None or \
+                (isint(pilot_samples) and pilot_samples == 0):
+            self.unused_pilot_samples = ([], [])
+            self.stats_mean = np.zeros(n_stats)
+            self.stats_std = np.ones(n_stats)
+            return
 
-        verbose = '(pilot run) ' if self.verbose else False
-        params, stats = self.generator.gen(n_samples, verbose=verbose)
+        if isint(pilot_samples):  # determine via pilot run
+            assert pilot_samples > 0
+            if self.seed is not None:  # reseed generator for consistent inits
+                self.generator.reseed(self.gen_newseed())
+            verbose = '(pilot run) ' if self.verbose else False
+            params, stats = self.generator.gen(pilot_samples, verbose=verbose)
+        else:  # samples were provided as an input
+            params, stats = pilot_samples
+
         self.stats_mean = np.nanmean(stats, axis=0)
         self.stats_std = np.nanstd(stats, axis=0)
+        assert not np.isnan(self.stats_mean).any(), "pilot run failed"
+        assert not np.isnan(self.stats_std).any(), "pilot run failed"
+        self.stats_std[self.stats_std == 0.0] = 1.0
+        self.stats_std = np.maximum(self.stats_std, min_std)
+        assert (self.stats_std > 0).all(), "pilot run failed"
+        ok_sims = np.logical_not(np.logical_or(np.isnan(stats).any(axis=1),
+                                               np.isnan(params).any(axis=1)))
+        self.unused_pilot_samples = (params[ok_sims, :], stats[ok_sims, :])
 
     def predict(self, x, deterministic=True):
         """Predict posterior given x
@@ -346,9 +389,23 @@ class BaseInference(metaclass=ABCMetaDoc):
         deterministic : bool
             if True, mean weights are used for Bayesian network
         """
+        assert isinstance(self.network, NeuralNet)
+        # z-transform inputs
         x_zt = (x - self.stats_mean) / self.stats_std
-        posterior = self.network.get_mog(x_zt, deterministic=deterministic)
-        return posterior.ztrans_inv(self.params_mean, self.params_std)
+
+        posterior = self.network.get_density(x_zt, deterministic=deterministic)
+
+        # z-transform outputs
+        if self.network.density == 'mog':
+            posterior = posterior.ztrans_inv(self.params_mean, self.params_std)
+        elif self.network.density == 'maf':
+            posterior.set_scale_and_offset(scale=self.params_std,
+                                           offset=self.params_mean)
+        else:
+            assert np.all(self.params_std == 1.0) and \
+                   np.all(self.params_mean == 0.0)
+
+        return posterior
 
     def compile_observables(self):
         """Creates observables dict"""

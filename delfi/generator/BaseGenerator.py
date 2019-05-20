@@ -55,11 +55,11 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         if self.proposal is not None:
             self.proposal.reseed(self.gen_newseed())
 
-    def draw_params(self, n_samples, skip_feedback=False, prior_mixin=0, verbose=True):
+    def draw_params(self, n_samples, skip_feedback=False, prior_mixin=0, verbose=True, leave_pbar=True):
         if not verbose:
             pbar = no_tqdm()
         else:
-            pbar = progressbar(total=n_samples)
+            pbar = progressbar(total=n_samples, leave=leave_pbar)
             desc = 'Draw parameters '
             if type(verbose) == str:
                 desc += verbose
@@ -101,7 +101,8 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         if rem_i != n_samples:
             yield params[rem_i:]
 
-    def gen(self, n_samples, n_reps=1, skip_feedback=False, prior_mixin=0, minibatch=50, keep_data=True, verbose=True):
+    def gen(self, n_samples, n_reps=1, skip_feedback=False, prior_mixin=0, minibatch=50, keep_data=True, verbose=True,
+            leave_pbar=True):
         """Draw parameters and run forward model
 
         Parameters
@@ -128,13 +129,14 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         params = self.draw_params(n_samples=n_samples,
                                   skip_feedback=skip_feedback,
                                   prior_mixin=prior_mixin,
-                                  verbose = verbose)
+                                  verbose=verbose,
+                                  leave_pbar=leave_pbar)
 
         # Run forward model for params (in batches)
         if not verbose:
             pbar = no_tqdm()
         else:
-            pbar = progressbar(total=len(params))
+            pbar = progressbar(total=len(params), leave=leave_pbar)
             desc = 'Run simulations '
             if type(verbose) == str:
                 desc += verbose
@@ -153,12 +155,13 @@ class BaseGenerator(metaclass=ABCMetaDoc):
 
         # TODO: for n_reps > 1 duplicate params; reshape stats array
 
-        # n_samples x n_reps x dim theta
+        # n_samples x dim theta
         params = np.array(final_params)
 
-        # n_samples x n_reps x dim summary stats
+        # n_samples x dim summary stats
         stats = np.array(final_stats)
-        stats = stats.squeeze(axis=1)
+        if len(final_stats)>0:
+            stats = stats.squeeze(axis=1)
 
         return params, stats
 

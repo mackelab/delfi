@@ -11,16 +11,23 @@ Basic
   :inherited-members:
   :members:
 
-SNPE
-````
-.. autoclass:: delfi.inference.SNPE
+SNPE-A
+``````
+.. autoclass:: delfi.inference.SNPEA
   :show-inheritance:
   :inherited-members:
   :members:
 
-CDELFI
+SNPE-B
+````
+.. autoclass:: delfi.inference.SNPEB
+  :show-inheritance:
+  :inherited-members:
+  :members:
+
+APT
 ``````
-.. autoclass:: delfi.inference.CDELFI
+.. autoclass:: delfi.inference.APT
   :show-inheritance:
   :inherited-members:
   :members:
