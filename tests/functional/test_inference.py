@@ -3,6 +3,7 @@ import delfi.generator as dg
 import delfi.inference as infer
 import delfi.summarystats as ds
 import numpy as np
+import theano
 
 from delfi.simulator.Gauss import Gauss
 from delfi.neuralnet.NeuralNet import MAFconditional
@@ -182,6 +183,9 @@ def test_inference_apt_maf_rnn(n_steps=2, dim_per_t=2, seed=42):
 
 
 def test_inference_apt_maf_cnn(rows=2, cols=2, seed=42):
+    if theano.config.device == 'cpu':
+        return  # need a gpu
+
     # we're going to reshape a Gaussian observation to be an image
     # this will test the code but a better test would involve correlated x_i.
     # one option would be to try using a very small blob model
@@ -204,6 +208,9 @@ def test_inference_apt_maf_cnn(rows=2, cols=2, seed=42):
 
 
 def dont_test_apt_inference_atomicprop_maf_normalize(n_params, seed=47):
+    if theano.config.device == 'cpu':
+        return  # need a gpu
+
     # normalization test is not finished yet.
     m = Gauss(dim=n_params, noise_cov=0.1)
     p = dd.Uniform(lower=-0.05 * np.ones(n_params),
