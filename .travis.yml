@@ -1,5 +1,7 @@
 sudo: required
 dist: xenial
+services:
+  - xvfb
 language: python
 matrix:
   include:
@@ -9,9 +11,6 @@ notifications:
 addons:
   apt_packages:
     - pandoc
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
 install:
   - sudo apt-get install libopenblas-dev
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
