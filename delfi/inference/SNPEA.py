@@ -1,14 +1,16 @@
 import delfi.distribution as dd
 import numpy as np
 import theano.tensor as tt
+import re
 
 from delfi.inference.BaseInference import BaseInference
 from delfi.neuralnet.NeuralNet import NeuralNet
 from delfi.neuralnet.Trainer import Trainer
 from delfi.neuralnet.loss.regularizer import svi_kl_zero
+from delfi.neuralnet.NeuralNet import dtype
 
 
-class CDELFI(BaseInference):
+class SNPEA(BaseInference):
     def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
                  n_components=1, reg_lambda=0.01, seed=None, verbose=True,
                  **kwargs):
@@ -50,14 +52,13 @@ class CDELFI(BaseInference):
             Dictionary containing theano variables that can be monitored while
             training the neural network.
         """
+        assert obs is not None, "CDELFI requires observed data"
+        self.obs = obs
+        if np.any(np.isnan(self.obs)):
+            raise ValueError("Observed data contains NaNs")
         super().__init__(generator, prior_norm=prior_norm,
                          pilot_samples=pilot_samples, seed=seed,
                          verbose=verbose, **kwargs)
-        assert obs is not None, "CDELFI requires observed data"
-        self.obs = obs
-
-        if np.any(np.isnan(self.obs)):
-            raise ValueError("Observed data contains NaNs")
 
         # we'll use only 1 component until the last round
         kwargs.update({'n_components': 1})
@@ -129,7 +130,10 @@ class CDELFI(BaseInference):
             # if round > 1, set new proposal distribution before sampling
             if self.round > 1:
                 # posterior becomes new proposal prior
-                posterior = self.predict(self.obs)
+                try:
+                    posterior = self.predict(self.obs)
+                except:
+                    pass
                 self.generator.proposal = posterior.project_to_gaussian()
             # number of training examples for this round
             if type(n_train) == list:
@@ -146,6 +150,7 @@ class CDELFI(BaseInference):
 
             # algorithm 2 of Papamakarios and Murray
             if r + 1 == n_rounds and self.n_components > 1:
+
                 # get parameters of current network
                 old_params = self.network.params_dict.copy()
 
@@ -167,15 +172,16 @@ class CDELFI(BaseInference):
                     """for each param_name, get the corresponding old parameter
                     name/value for what was previously the only mixture
                     component"""
-                    source_param_name = param_name[:-1] + '0'
+                    param_label = re.sub("\d", "", param_name) # removing layer counts
+                    source_param_name = param_label + '0'
                     source_param_val = old_params[source_param_name]
                     # copy it to the new component, add noise to break symmetry
-                    old_params[param_name] = source_param_val.copy() + \
-                        1.0e-6 * self.rng.randn(*source_param_val.shape)
+                    old_params[param_name] = (source_param_val.copy() + \
+                        1.0e-6 * self.rng.randn(*source_param_val.shape)).astype(dtype)
 
                 # initialize with equal mixture coefficients for all data
-                old_params['weights.mW'] = 0. * new_params['weights.mW']
-                old_params['weights.mb'] = 0. * new_params['weights.mb']
+                old_params['weights.mW'] = (0. * new_params['weights.mW']).astype(dtype)
+                old_params['weights.mb'] = (0. * new_params['weights.mb']).astype(dtype)
 
                 self.network.params_dict = old_params
 
@@ -194,7 +200,7 @@ class CDELFI(BaseInference):
             except:
                 posteriors.append(None)
                 print('analytic correction for proposal seemingly failed!')
-                break
+                pass
 
         return logs, trn_datasets, posteriors
 

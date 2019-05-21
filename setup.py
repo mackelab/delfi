@@ -9,13 +9,14 @@ setup(
     url='https://github.com/mackelab/delfi',
     author='Mackelab',
     packages=['delfi', 'delfi.distribution', 'delfi.distribution.mixture',
-              'delfi.generator', 'delfi.inference', 'delfi.kernel',
+              'delfi.generator', 'delfi.inference',
               'delfi.neuralnet', 'delfi.neuralnet.layers',
               'delfi.neuralnet.loss', 'delfi.simulator', 'delfi.summarystats',
               'delfi.utils'],
     license='BSD',
-    install_requires=['dill', 'lasagne==0.2.dev1', 'numpy', 'scipy', 'theano', 'tqdm'],
+    install_requires=['dill', 'lasagne==0.2.dev1', 'numpy', 'scipy', 'theano', 'tqdm', 'snl'],
     dependency_links=[
         'https://github.com/Lasagne/Lasagne/archive/master.zip#egg=lasagne-0.2.dev1',
+        'https://github.com/mnonnenm/SNL_py3port',
     ]
 )

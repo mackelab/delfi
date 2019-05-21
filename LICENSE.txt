@@ -1,3 +1,4 @@
+Modified work Copyright (c) 2019, David Greenberg, Marcel Nonnemacher, Jan-Matthis Lueckmann, Pedro J. Goncalves, Jakob H. Macke
 Modified work Copyright (c) 2017, Jan-Matthis Lueckmann, Pedro J. Goncalves, Jakob H. Macke
 Original work Copyright (c) 2016, George Papamakarios
 

@@ -49,3 +49,17 @@ def test_IndependentJoint_uniform_rejection():
     assert (params.min(axis=0) >= np.array([B1[0], B2[0]])).all() and \
         (params.min(axis=0) <= np.array([B1[1], B2[1]])).all(), \
         "rejection failed"
+
+
+def test_mpgen(n_samples=1000, n_params=2, n_cores=4, seed=500):
+    p = dd.Gaussian(m=np.zeros((n_params,)), S=np.eye(n_params), seed=seed)
+    s = ds.Identity(seed=seed + 1)
+
+    mlist = [Gauss(dim=n_params, seed=seed + 2 + i) for i in range(n_cores)]
+    g = dg.MPGenerator(models=mlist, prior=p, summary=s,
+                       seed=seed + 2 + n_cores)
+    params, stats = g.gen(n_samples, verbose=False)
+
+    # make sure the different models are providing different outputs
+    assert np.unique(params.size) == params.size
+    assert np.unique(stats.size) == stats.size

@@ -5,10 +5,15 @@ from delfi.summarystats.BaseSummaryStats import BaseSummaryStats
 
 class Identity(BaseSummaryStats):
     """Just apply the identity instead of reducing data.
+    Parameters
+        ----------
+        idx : list or array of int or bool
+            Set of data indices to use us sufficient statistics (None for all).
     """
 
-    def __init__(self, seed=None):
+    def __init__(self, seed=None, idx=None):
         super().__init__(seed=seed)
+        self.idx = idx
 
     @copy_ancestor_docstring
     def calc(self, repetition_list):
@@ -25,4 +30,4 @@ class Identity(BaseSummaryStats):
         for rep_idx, rep_dict in enumerate(repetition_list):
             data_matrix[rep_idx, :] = rep_dict['data']
 
-        return data_matrix
+        return data_matrix if self.idx is None else data_matrix[:, self.idx]

@@ -1,0 +1,10 @@
+numpy
+scipy
+theano
+dill
+matplotlib
+tqdm
+ipython
+ipywidgets
+https://github.com/Lasagne/Lasagne/archive/master.zip#egg=lasagne-0.2.dev1
+git+https://github.com/mnonnenm/SNL_py3port

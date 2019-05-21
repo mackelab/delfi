@@ -1,5 +1,5 @@
 import numpy as np
-import scipy.misc
+import scipy.special
 import scipy.stats
 
 from delfi.distribution.Gaussian import Gaussian
@@ -100,7 +100,7 @@ class MoG(BaseMixture):
             lcs[i] *= 0.5
 
         la = np.log(self.a) + lcs
-        la -= scipy.misc.logsumexp(la)
+        la -= scipy.special.logsumexp(la)
         a = np.exp(la)
 
         return MoG(a=a, xs=ys, seed=self.seed)
@@ -133,7 +133,7 @@ class MoG(BaseMixture):
             lcs[i] *= 0.5
 
         la = np.log(self.a) + lcs
-        la -= scipy.misc.logsumexp(la)
+        la -= scipy.special.logsumexp(la)
         a = np.exp(la)
 
         return MoG(a=a, xs=ys, seed=self.seed)
@@ -192,7 +192,7 @@ class MoG(BaseMixture):
     def eval(self, x, ii=None, log=True):
         # See BaseMixture.py for docstring
         ps = np.array([c.eval(x, ii, log) for c in self.xs]).T
-        res = scipy.misc.logsumexp(
+        res = scipy.special.logsumexp(
             ps +
             np.log(
                 self.a),

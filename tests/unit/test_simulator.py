@@ -1,6 +1,29 @@
 import numpy as np
 
-from delfi.simulator.Gauss import Gauss
+from delfi.simulator import Gauss, TwoMoons, MoGDistractors
+
+
+def test_distractors():
+    dim = 2
+    s = MoGDistractors(dim=dim)
+    n_samples = 10
+    thetas = np.random.rand(n_samples, dim)
+    sample_list = s.gen(thetas)
+    assert len(sample_list) == n_samples
+    assert isinstance(
+        sample_list[0][0], dict), 'the entries should be dictionaries'
+
+
+def test_twomoons():
+    s = TwoMoons()
+
+    n_samples = 10
+    thetas = np.random.rand(n_samples, 2)
+    sample_list = s.gen(thetas)
+
+    assert len(sample_list) == n_samples
+    assert isinstance(
+        sample_list[0][0], dict), 'the entries should be dictionaries'
 
 
 def test_gauss_1d_simulator_output():

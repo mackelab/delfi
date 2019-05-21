@@ -1,5 +1,5 @@
 import numpy as np
-import scipy.misc
+import scipy.special
 import scipy.stats
 
 from delfi.distribution.TransformedNormal import TransformedNormal
@@ -144,7 +144,7 @@ class MoTG(BaseMixture):
     def eval(self, x, ii=None, log=True):
         # See BaseMixture.py for docstring
         ps = np.array([c.eval(x, ii, log) for c in self.xs]).T
-        res = scipy.misc.logsumexp(
+        res = scipy.special.logsumexp(
             ps +
             np.log(
                 self.a),

@@ -4,11 +4,11 @@ from delfi.inference.BaseInference import BaseInference
 from delfi.neuralnet.Trainer import Trainer
 from delfi.neuralnet.loss.regularizer import svi_kl_init, svi_kl_zero
 
-class SNPE(BaseInference):
+class SNPEB(BaseInference):
     def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
                  convert_to_T=3, reg_lambda=0.01, prior_mixin=0, kernel=None, seed=None, verbose=True,
                  **kwargs):
-        """Sequential neural posterior estimation (SNPE)
+        """Sequential neural posterior estimation with importance-weighted loss (SNPE-B)
 
         Parameters
         ----------
@@ -51,11 +51,11 @@ class SNPE(BaseInference):
             Dictionary containing theano variables that can be monitored while
             training the neural network.
         """
+        assert obs is not None, "SNPE requires observed data"
+        self.obs = np.asarray(obs)
         super().__init__(generator, prior_norm=prior_norm,
                          pilot_samples=pilot_samples, seed=seed,
                          verbose=verbose, **kwargs)
-        assert obs is not None, "SNPE requires observed data"
-        self.obs = np.asarray(obs)
 
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
