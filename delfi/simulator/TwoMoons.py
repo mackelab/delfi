@@ -38,6 +38,18 @@ class TwoMoons(BaseSimulator):
 
         Parameters
         ----------
+        mean_radius: float
+            Radius of curvature for each moon in the posterior
+        sd_radius: float
+            Dispersion of samples perpendicular to moon curvature
+        base_offset: float
+            Minimum separation between moons in the posterior
+        mapfunc: callable or None
+            Mapping applied to points. Default as described in Greenberg et al., 2019
+        mapfunc_inverse: callable or None
+            Inverse of mapping
+        mapfunc_Jacobian_determinant: callable or None
+            determinant of Jacobian of manfunc, used for change of variables when calculating likelihood
         seed : int or None
             If set, randomness is seeded
         """

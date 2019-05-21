@@ -223,10 +223,8 @@ class APT(BaseInference):
         else:
             raise NotImplemented()
 
-    def run_prior(self, n_train=100, epochs=100, minibatch=50,
-                  n_atoms=None, moo=None, train_on_all=False, round_cl=1,
-                  stop_on_nan=False, monitor=None, verbose=False,
-                  reuse_prior_samples=True, **kwargs):
+    def run_prior(self, n_train=100, epochs=100, minibatch=50, n_atoms=None, moo=None, train_on_all=False, round_cl=1,
+                  stop_on_nan=False, monitor=None, verbose=False, print_each_epoch=False, reuse_prior_samples=True, **kwargs):
 
         # simulate data
         self.generator.proposal = self.generator.prior
@@ -249,13 +247,14 @@ class APT(BaseInference):
                     seed=self.gen_newseed(),
                     monitor=self.monitor_dict_from_names(monitor),
                     **kwargs)
-        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose, stop_on_nan=stop_on_nan)
+        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose,
+                      print_each_epoch=print_each_epoch, stop_on_nan=stop_on_nan)
 
         return log, trn_data
 
     def run_gaussian(self, n_train=100, epochs=100, minibatch=50, n_atoms=None, moo=None,  train_on_all=False,
-                     round_cl=1, stop_on_nan=False, monitor=None, verbose=False, reuse_prior_samples=True,
-                     **kwargs):
+                     round_cl=1, stop_on_nan=False, monitor=None, verbose=False, print_each_epoch=False,
+                     reuse_prior_samples=True, **kwargs):
 
         # simulate data
         self.set_proposal(project_to_gaussian=True)
@@ -306,15 +305,14 @@ class APT(BaseInference):
                     monitor=self.monitor_dict_from_names(monitor),
                     **kwargs)
 
-        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch,
-                      verbose=verbose, stop_on_nan=stop_on_nan)
+        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose,
+                      print_each_epoch=print_each_epoch, stop_on_nan=stop_on_nan)
 
         return log, trn_data
 
-    def run_atomic(self, n_train=100, epochs=100, minibatch=50,
-                   n_atoms=10, moo='resample', train_on_all=False,
-                   reuse_prior_samples=True, combined_loss=False, round_cl=1,
-                   stop_on_nan=False, monitor=None, verbose=False, **kwargs):
+    def run_atomic(self, n_train=100, epochs=100, minibatch=50, n_atoms=10, moo='resample', train_on_all=False,
+                   reuse_prior_samples=True, combined_loss=False, round_cl=1, stop_on_nan=False, monitor=None,
+                   verbose=False, print_each_epoch=False, **kwargs):
 
         # activetrainer doesn't de-norm params before evaluating the prior
         assert np.all(self.params_mean == 0.0) \
@@ -359,16 +357,14 @@ class APT(BaseInference):
                           obs=(self.obs - self.stats_mean) / self.stats_std,
                           **kwargs)
 
-        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch,
-                      stop_on_nan=stop_on_nan, verbose=verbose,
-                      strict_batch_size=True)
+        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose,
+                      print_each_epoch=print_each_epoch, strict_batch_size=True)
 
         return log, trn_data
 
-    def run_MoG(self, n_train=100, epochs=100, minibatch=50,
-                n_atoms=None, moo=None, train_on_all=False, round_cl=1,
-                stop_on_nan=False, monitor=None, verbose=False,
-                reuse_prior_samples=True, **kwargs):
+    def run_MoG(self, n_train=100, epochs=100, minibatch=50, n_atoms=None, moo=None, train_on_all=False, round_cl=1,
+                stop_on_nan=False, monitor=None, verbose=False, print_each_epoch=False, reuse_prior_samples=True,
+                **kwargs):
         assert not train_on_all, "train_on_all is not yet implemented for MoG "\
                 "proposals"
 
@@ -406,8 +402,8 @@ class APT(BaseInference):
                     monitor=self.monitor_dict_from_names(monitor),
                     **kwargs)
 
-        log = t.train(epochs=epochs, minibatch=minibatch,
-                      verbose=verbose, stop_on_nan=stop_on_nan)
+        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose,
+                      print_each_epoch=print_each_epoch, stop_on_nan=stop_on_nan)
 
         return log, trn_data
 

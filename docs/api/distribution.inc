@@ -14,6 +14,13 @@ Discrete
   :inherited-members:
   :members:
 
+Gamma
+`````
+.. autoclass:: delfi.distribution.Gamma
+  :show-inheritance:
+  :inherited-members:
+  :members:
+
 Gaussian
 ````````
 .. autoclass:: delfi.distribution.Gaussian

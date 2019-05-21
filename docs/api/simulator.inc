@@ -21,3 +21,17 @@ Gaussian Mixture
   :show-inheritance:
   :inherited-members:
   :members:
+
+Blob
+````
+.. autoclass:: delfi.simulator.Blob
+  :show-inheritance:
+  :inherited-members:
+  :members:
+
+TwoMoons
+````````
+.. autoclass:: delfi.simulator.TwoMoons
+  :show-inheritance:
+  :inherited-members:
+  :members:

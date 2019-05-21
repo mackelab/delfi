@@ -3,6 +3,7 @@ import delfi.generator as dg
 import delfi.inference as infer
 import delfi.summarystats as ds
 import numpy as np
+import theano
 
 from delfi.simulator.Gauss import Gauss
 from delfi.neuralnet.NeuralNet import MAFconditional
@@ -84,7 +85,7 @@ def test_basic_inference_inputsamples(n_params=2, seed=42, n_pilot=1000):
     check_gaussian_posterior(posterior, m_true, S_true)
 
 
-def test_snpe_inference(n_params=2, seed=42):
+def test_snpeB_inference(n_params=2, seed=42):
     res, m_true, S_true = init_all_gaussian(seed=seed, n_params=n_params,
                                             inferenceobj=infer.SNPEB)
     out = res.run(n_train=1000, n_rounds=1)
@@ -98,7 +99,7 @@ def test_apt_inference_mogprop(n_params=2, seed=47):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     # note that train_on_all is not yet implemented for MoG proposals!
-    out = res.run(n_train=3000, n_rounds=2, proposal='mog', silent_fail=False)
+    out = res.run(n_train=3000, n_rounds=2, proposal='mog', silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 
@@ -110,7 +111,7 @@ def test_apt_inference_gaussprop(n_params=2, seed=47):
                                             **inf_setup_opts)
     # 3 rounds to test re-use sample reuse. by default prior samples not reused
     out = res.run(n_train=1000, n_rounds=3, proposal='gaussian',
-                  train_on_all=True, silent_fail=False)
+                  train_on_all=True, silent_fail=False, print_each_epoch=True)
 
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
@@ -122,7 +123,7 @@ def test_apt_inference_atomicprop_mdn(n_params=2, seed=47):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     out = res.run(n_train=1000, n_rounds=2, proposal='atomic', n_atoms=10,
-                  train_on_all=True, silent_fail=False)
+                  train_on_all=True, silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 
@@ -133,7 +134,7 @@ def test_apt_inference_atomicprop_mdn_comb(n_params=2, seed=47):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     out = res.run(n_train=1000, n_rounds=2, proposal='atomic_comb',
-                  n_atoms=10, train_on_all=True, silent_fail=False)
+                  n_atoms=10, train_on_all=True, silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 
@@ -145,7 +146,7 @@ def test_apt_inference_atomicprop_maf(n_params=2, seed=47):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     out = res.run(n_train=1000, n_rounds=2, proposal='atomic', n_atoms=10,
-                  train_on_all=True, silent_fail=False)
+                  train_on_all=True, silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 
@@ -157,7 +158,7 @@ def test_apt_inference_atomicprop_maf_comb(n_params=2, seed=47):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     out = res.run(n_train=1000, n_rounds=2, proposal='atomic_comb', n_atoms=10,
-                  train_on_all=True, silent_fail=False)
+                  train_on_all=True, silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 
@@ -176,12 +177,15 @@ def test_inference_apt_maf_rnn(n_steps=2, dim_per_t=2, seed=42):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     out = res.run(n_train=5000, n_rounds=2, proposal='atomic', n_atoms=10,
-                  train_on_all=True, silent_fail=False)
+                  train_on_all=True, silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 
 
 def test_inference_apt_maf_cnn(rows=2, cols=2, seed=42):
+    if theano.config.device == 'cpu':
+        return  # need a gpu
+
     # we're going to reshape a Gaussian observation to be an image
     # this will test the code but a better test would involve correlated x_i.
     # one option would be to try using a very small blob model
@@ -198,12 +202,15 @@ def test_inference_apt_maf_cnn(rows=2, cols=2, seed=42):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     out = res.run(n_train=5000, n_rounds=3, proposal='atomic', n_atoms=10,
-                  train_on_all=True, silent_fail=False)
+                  train_on_all=True, silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 
 
 def dont_test_apt_inference_atomicprop_maf_normalize(n_params, seed=47):
+    if theano.config.device == 'cpu':
+        return  # need a gpu
+
     # normalization test is not finished yet.
     m = Gauss(dim=n_params, noise_cov=0.1)
     p = dd.Uniform(lower=-0.05 * np.ones(n_params),
