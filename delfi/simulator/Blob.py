@@ -15,6 +15,14 @@ class Blob(BaseSimulator):
         ----------
         isize: int
             Number of image rows and columns
+        maxval: int
+            Maximum pixel value
+        xy_abs_max: int
+            Maximum distance of blob center from image center, in pixels
+        gamma_min: float
+            Parameter controlling blob shape
+        gamma__max: float
+            Parameter controlling blob shape
         sigma : float
             Sigma value. If none, it will become a 4th parameter for inference.
         seed : int or None
