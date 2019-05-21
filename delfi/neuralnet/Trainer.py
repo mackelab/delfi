@@ -146,7 +146,8 @@ class Trainer:
               stop_on_nan=False,
               strict_batch_size=False,
               tol=None,
-              verbose=False):
+              verbose=False,
+              print_each_epoch=False):
         """Trains the model
 
         Parameters
@@ -165,6 +166,8 @@ class Trainer:
             if True, print progress during training
         strict_batch_size : bool
             Whether to ignore last batch if it would be smaller than minibatch
+        print_each_epoch: bool
+            Whether to print a period `.' each epoch, useful to avoid timeouts in continuous integration.
 
         Returns
         -------
@@ -266,7 +269,8 @@ class Trainer:
                                 break
                     pbar.update(minibatch)
                     iter += 1
-
+                if print_each_epoch:
+                    print('.')
                 if break_flag:
                     break
 
