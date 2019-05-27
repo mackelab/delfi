@@ -164,6 +164,8 @@ def test_apt_inference_atomicprop_maf_comb(n_params=2, seed=47):
 
 
 def test_inference_apt_maf_rnn(n_steps=2, dim_per_t=2, seed=42):
+    if theano.config.device == 'cpu':
+        return  # need a gpu
     # we're going to reshape a Gaussian observation to be a time series
     # this will test the code but a better test would be a Kalman filter.
     n_params = n_steps * dim_per_t
@@ -208,9 +210,6 @@ def test_inference_apt_maf_cnn(rows=2, cols=2, seed=42):
 
 
 def dont_test_apt_inference_atomicprop_maf_normalize(n_params, seed=47):
-    if theano.config.device == 'cpu':
-        return  # need a gpu
-
     # normalization test is not finished yet.
     m = Gauss(dim=n_params, noise_cov=0.1)
     p = dd.Uniform(lower=-0.05 * np.ones(n_params),
