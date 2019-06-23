@@ -78,7 +78,7 @@ class Basic(BaseInference):
 
         return loss
 
-    def run(self, n_train=100, n_rounds=2, epochs=100, minibatch=50,
+    def run(self, n_train=100, n_rounds=1, epochs=100, minibatch=50,
             round_cl=1, stop_on_nan=False, monitor=None, **kwargs):
         """Run algorithm
 
