@@ -295,8 +295,6 @@ class BaseInference(metaclass=ABCMetaDoc):
         assert n_reps == 1, 'n_reps > 1 is not yet supported'
         verbose = self.verbose if verbose is None else verbose
 
-        params = np.zeros((0, self.generator.prior.ndim), dtype=dtype)
-        stats = np.zeros((0, self.generator.summary.n_summary), dtype=dtype)
         n_pilot = np.minimum(n_samples, len(self.unused_pilot_samples[0]))
         if n_pilot > 0 and self.generator.proposal is self.generator.prior:  # reuse pilot samples
             params = self.unused_pilot_samples[0][:n_pilot, :]
@@ -306,12 +304,16 @@ class BaseInference(metaclass=ABCMetaDoc):
                  self.unused_pilot_samples[1][n_pilot:, :])
             n_samples -= n_pilot
 
-        if n_samples > 0:
-            params_rem, stats_rem = self.generator.gen(n_samples,
-                                                       prior_mixin=prior_mixin,
-                                                       verbose=verbose)
-            params = np.concatenate((params, params_rem), axis=0)
-            stats = np.concatenate((stats, stats_rem), axis=0)
+            if n_samples > 0:
+                params_rem, stats_rem = self.generator.gen(n_samples,
+                                                           prior_mixin=prior_mixin,
+                                                           verbose=verbose)
+                params = np.concatenate((params, params_rem), axis=0)
+                stats = np.concatenate((stats, stats_rem), axis=0)
+        else:
+            params, stats = self.generator.gen(n_samples,
+                                               prior_mixin=prior_mixin,
+                                               verbose=verbose)
 
         # z-transform params and stats
         params = (params - self.params_mean) / self.params_std
