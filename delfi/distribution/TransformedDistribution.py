@@ -3,39 +3,40 @@ from delfi.distribution.BaseDistribution import BaseDistribution
 
 
 class TransformedDistribution(BaseDistribution):
-    """Distribution object that carries out an invertible change of variables for another distribution object
+    """Distribution object that carries out an invertible change of variables
+    for another distribution object
 
     Parameters
     ----------
     distribution : delfi distribution or mixture object
-        Original distribution to be transformed. Must implement eval and gen methods.
+        Original distrib. to be transformed. Must implement eval() and gen()
     bijection : callable
-        Bijective mapping from original distribution's random variable to this one's.
+        Bijective mapping from original distrib.'s random variable to this one's
     inverse_bijection: callable
-        Inverse of the bijective mapping, going from this distribution's random variable to the original one's.
+        Inverse of the bijective mapping, going from this distribution's random
+        variable to the original one's.
     bijection_log_determinant: callable
-        Log determinant of the bijection from the original distribution's random variable to this one's.
+        Log determinant of the bijection from the original distribution's random
+        variable to this one's.
     """
-    def __init__(self, distribution, bijection, inverse_bijection, bijection_log_determinant):
+    def __init__(self, distribution, bijection, inverse_bijection,
+                 bijection_log_determinant):
+        self.distribution = distribution
+        self.bijection, self.inverse_bijection = bijection, inverse_bijection
+        self.bijection_log_determinant = bijection_log_determinant
         self.ndim = distribution.ndim
 
-        self.seed = seed
-        if seed is not None:
-            self.rng = np.random.RandomState(seed=seed)
-        else:
-            self.rng = np.random.RandomState()
-
-    @abc.abstractproperty
+    @property
     def mean(self):
         """Means"""
-        pass
+        return np.nan(self.ndim)  # generally unknown
 
-    @abc.abstractproperty
+    @property
     def std(self):
         """Standard deviations of marginals"""
-        pass
+        return np.nan(self.ndim)  # generally unknown
 
-    @abc.abstractmethod
+    @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
         """Method to evaluate pdf
 
@@ -53,9 +54,10 @@ class TransformedDistribution(BaseDistribution):
         -------
         scalar
         """
-        pass
+        assert ii is None, "cannot marginalize transformed distributions"
+        x_original = self.inverse_bijection(x)
 
-    @abc.abstractmethod
+    @copy_ancestor_docstring
     def gen(self, n_samples=1):
         """Method to generate samples
 
@@ -68,16 +70,13 @@ class TransformedDistribution(BaseDistribution):
         -------
         n_samples x self.ndim
         """
-        pass
+        samples = self.distribution.gen(n_samples=n_samples)
+        return self.bijection(samples)
 
     def reseed(self, seed):
         """Reseeds the distribution's RNG"""
-        self.rng.seed(seed=seed)
-        self.seed = seed
+        self.distribution.reseed(seed)
 
     def gen_newseed(self):
         """Generates a new random seed"""
-        if self.seed is None:
-            return None
-        else:
-            return self.rng.randint(0, 2**31)
+        return self.distribution.gen_newseed()
