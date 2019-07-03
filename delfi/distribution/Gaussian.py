@@ -221,6 +221,8 @@ class Gaussian(BaseDistribution):
             ii = np.atleast_1d(ii)
             m = self.m[ii]
             S = self.S[ii][:, ii]
+            if m.size == 1:  # single marginal
+                x = x.reshape(-1, m.size)
             assert x.shape[1] == m.size
             if np.linalg.matrix_rank(S)==len(S[:,0]):
                 lp = scipy.stats.multivariate_normal.logpdf(x, m, S, allow_singular=True)
