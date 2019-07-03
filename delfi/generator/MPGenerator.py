@@ -66,7 +66,7 @@ class Worker(mp.Process):
             ret_params.append(param)
 
         return ret_stats, ret_params
-    
+
     def log(self, msg):
         if self.verbose:
             print("Worker {}: {}".format(self.n, msg))
@@ -95,13 +95,30 @@ class MPGenerator(Default):
             than samples drawn from prior when `gen` is called.
         """
         super().__init__(model=None, prior=prior, summary=summary, seed=seed)
-        
+
         if rej is None:
             def rej(x):
                 return 1
         self.rej = rej
         self.verbose = verbose
         self.models = models
+
+    def reseed(self, seed):
+        """Carries out the following operations, in order:
+        1) Reseeds the master RNG for the generator object, using the input seed
+        2) Reseeds the prior from the master RNG. This may cause additional
+        distributions to be reseeded using the prior's RNG (e.g. if the prior is
+        a mixture)
+        3) Reseeds the simulator RNG, from the master RNG
+        4) Reseeds the proposal, if present
+        """
+        self.rng.seed(seed=seed)
+        self.seed = seed
+        self.prior.reseed(self.gen_newseed())
+        for m in self.models:
+            m.reseed(self.gen_newseed())
+        if self.proposal is not None:
+            self.proposal.reseed(self.gen_newseed())
 
     def start_workers(self):
         pipes = [ mp.Pipe(duplex=True) for m in self.models ]
@@ -170,7 +187,7 @@ class MPGenerator(Default):
         assert n_reps == 1, 'n_reps > 1 is not yet supported'
 
         params = self.draw_params(n_samples=n_samples,
-                                  skip_feedback=skip_feedback, 
+                                  skip_feedback=skip_feedback,
                                   prior_mixin=prior_mixin,
                                   verbose = verbose)
 
@@ -252,9 +269,9 @@ class MPGenerator(Default):
                 continue
             else:
                 raise ValueError('response not supported')
-        
+
         return ret_stats, ret_params
-    
+
     def _feedback_summary_stats(self, sum_stats):
         """Feedback step after summary stats were computed
         Parameters
@@ -268,7 +285,7 @@ class MPGenerator(Default):
         """
         if self.rej(sum_stats):
             return 'accept'
-        else: 
+        else:
             return 'discard'
 
     def log(self, msg):
