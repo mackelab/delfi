@@ -1,5 +1,7 @@
 import numpy as np
 from delfi.distribution.BaseDistribution import BaseDistribution
+from delfi.distribution.mixture.BaseMixture import BaseMixture
+from copy import deepcopy
 
 
 class TransformedDistribution(BaseDistribution):
@@ -15,15 +17,18 @@ class TransformedDistribution(BaseDistribution):
     inverse_bijection: callable
         Inverse of the bijective mapping, going from this distribution's random
         variable to the original one's.
-    bijection_log_determinant: callable
-        Log determinant of the bijection from the original distribution's random
-        variable to this one's.
+    bijection_jac_logD: callable
+        Log determinant of the Jacobian of the bijection from the original distribution's random variable to this one's.
+    makecopy: bool
+        Whether to call deepcopy on the simulator, unlinking the RNGs
     """
-    def __init__(self, distribution, bijection, inverse_bijection,
-                 bijection_log_determinant):
+    def __init__(self, distribution, bijection, inverse_bijection, bijection_jac_logD, makecopy=False):
+        assert isinstance(distribution, BaseDistribution) or isinstance(distribution, BaseMixture)
+        if makecopy:
+            distribution = deepcopy(distribution)
         self.distribution = distribution
         self.bijection, self.inverse_bijection = bijection, inverse_bijection
-        self.bijection_log_determinant = bijection_log_determinant
+        self.bijection_jac_logD = bijection_jac_logD
         self.ndim = distribution.ndim
 
     @property
@@ -38,38 +43,14 @@ class TransformedDistribution(BaseDistribution):
 
     @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
-        """Method to evaluate pdf
-
-        Parameters
-        ----------
-        x : int or list or np.array
-            Rows are inputs to evaluate at
-        ii : list
-            A list of indices specifying which marginal to evaluate.
-            If None, the joint pdf is evaluated
-        log : bool, defaulting to True
-            If True, the log pdf is evaluated
-
-        Returns
-        -------
-        scalar
-        """
         assert ii is None, "cannot marginalize transformed distributions"
         x_original = self.inverse_bijection(x)
+        logp_original = self.distribution.eval(x_original, log=True)
+        logp = logp_original - self.bijection_jac_logD(x_original)  # change of variables
+        return logp if log else np.exp(logp)
 
     @copy_ancestor_docstring
     def gen(self, n_samples=1):
-        """Method to generate samples
-
-        Parameters
-        ----------
-        n_samples : int
-            Number of samples to generate
-
-        Returns
-        -------
-        n_samples x self.ndim
-        """
         samples = self.distribution.gen(n_samples=n_samples)
         return self.bijection(samples)
 

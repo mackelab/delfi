@@ -20,8 +20,8 @@ class Logistic(BaseDistribution):
         if s.size == 1:
             s = np.full(mu.size, s[0])
 
-        assert (s > 0 and np.isfinite(s) and np.isfinite(mu) and
-                np.isreal(s) and np.isreal(mu)).all(), "bad params"
+        assert (s > 0).all() and np.isfinite(s).all() and np.isfinite(mu).all() and np.isreal(s).all() and \
+               np.isreal(mu).all(), "bad params"
         assert s.ndim == 1 and mu.ndim == 1 and mu.size == s.size, "bad sizes"
         self.mu, self.s = mu, s
 
@@ -48,7 +48,7 @@ class Logistic(BaseDistribution):
 
         z = (x - self.mu) / self.s
         logp_eachdim = -z - np.log(self.s) - 2.0 * np.log(1.0 + np.exp(-z))
-        logp = logp_eachdim[ii].sum(axis=1)
+        logp = logp_eachdim[:, ii].sum(axis=1)
 
         return logp if log else np.exp(logp)
 

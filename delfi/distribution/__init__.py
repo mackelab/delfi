@@ -6,6 +6,7 @@ from delfi.distribution.Uniform import Uniform
 from delfi.distribution.Gamma import Gamma
 from delfi.distribution.Logistic import Logistic
 from delfi.distribution.IndependentJoint import IndependentJoint
+from delfi.distribution.TransformedDistribution import TransformedDistribution
 
 from delfi.distribution.mixture.EllipsoidalMixture import MoE
 from delfi.distribution.mixture.GaussianMixture import MoG

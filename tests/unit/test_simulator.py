@@ -73,4 +73,4 @@ def test_TransformedSimulator(seed=5, nsamples=1000, dim=2):
     s_transformed.reseed(seed)
     x_from_transformed_theta = np.array([z[0]['data'] for z in s_transformed.gen(theta_transformed)])
 
-    assert np.allclose(x, x_from_transformed_theta, atol=1e-5), "data don't match after parameter transformation"
+    assert np.allclose(x, x_from_transformed_theta, atol=1e-8), "data don't match after parameter transformation"
