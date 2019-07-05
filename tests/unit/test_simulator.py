@@ -1,6 +1,6 @@
 import numpy as np
 
-from delfi.simulator import Gauss, TwoMoons, MoGDistractors
+from delfi.simulator import Gauss, TwoMoons, MoGDistractors, TransformedSimulator
 
 
 def test_distractors():
@@ -55,3 +55,22 @@ def test_gauss_2d_data_dimension():
     assert sample_list[0][0]['data'].shape == (dim, ), \
         'the dimensionality of the data is wrong. ' \
         'should be {} is {}'.format((dim, 1), sample_list[0][0]['data'].shape)
+
+
+def test_TransformedSimulator(seed=5, nsamples=1000, dim=2):
+    s = Gauss(dim=dim)
+
+    bijection = lambda x: np.log(x)
+    inverse_bijection = lambda x: np.exp(x)
+
+    theta = np.random.rand(nsamples, dim)
+    theta_transformed = bijection(theta)
+
+    s.reseed(seed)
+    x = np.array([z[0]['data'] for z  in s.gen(theta)])
+
+    s_transformed = TransformedSimulator(s, inverse_bijection)
+    s_transformed.reseed(seed)
+    x_from_transformed_theta = np.array([z[0]['data'] for z in s_transformed.gen(theta_transformed)])
+
+    assert np.allclose(x, x_from_transformed_theta, atol=1e-8), "data don't match after parameter transformation"

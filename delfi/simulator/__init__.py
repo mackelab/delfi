@@ -6,3 +6,4 @@ from delfi.simulator.TwoMoons import TwoMoons
 from delfi.simulator.MoGDistractors import MoGDistractors
 from delfi.simulator.NoiseDataDimensions import NoiseDataDimensions
 from delfi.simulator.Blob import Blob
+from delfi.simulator.TransformedSimulator import TransformedSimulator

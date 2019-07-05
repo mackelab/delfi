@@ -1,5 +1,6 @@
 import delfi.distribution as dd
 import numpy as np
+from scipy.special import expit, logit
 
 seed = 42
 
@@ -206,3 +207,33 @@ def test_mixture_of_studentst_3d():
 
     assert samples.shape == (N, 3)
     assert logprobs.shape == (N,)
+
+
+def test_TransformedDistribution(seed=5, nsamples=1000, ndim=2):
+    lower = np.random.rand(ndim)
+    upper = np.random.rand(ndim) + 2
+    dist = dd.Uniform(lower, upper)
+
+    dist.reseed(seed)
+    z = dist.gen(nsamples)
+
+    inputscale = lambda x: (x - lower) / (upper - lower)
+    bijection = lambda x: logit(inputscale(x))  # logit function with scaled input
+    inverse_bijection = lambda y: expit(y) * (upper - lower) + lower  # logistic function with scaled output
+    bijection_jac_logD = lambda x: -(np.log(inputscale(x) * (1 - inputscale(x))) + np.log(upper - lower)).sum(axis=1)
+
+    dist_transformed = dd.TransformedDistribution(distribution=dist,
+                                                  bijection=bijection,
+                                                  inverse_bijection=inverse_bijection,
+                                                  bijection_jac_logD=bijection_jac_logD)
+    dist_transformed.reseed(seed)
+    z_transformed = dist_transformed.gen(nsamples)
+    assert np.allclose(z_transformed, bijection(z), atol=1e-8)
+
+    dist_logistic = dd.Logistic(mu=np.zeros(ndim))
+
+    assert np.allclose(dist_logistic.eval(z_transformed, log=False), dist_transformed.eval(z_transformed, log=False)), \
+        "incorrect density"
+    assert np.allclose(dist_logistic.eval(z_transformed, log=True), dist_transformed.eval(z_transformed, log=True)), \
+        "incorrect log density"
+

@@ -79,7 +79,9 @@ class BaseInference(metaclass=ABCMetaDoc):
             self.params_mean = self.generator.prior.mean
             self.params_std = self.generator.prior.std
             assert not np.any(np.isnan(self.params_mean)) and \
-                not np.any(np.isnan(self.params_std))
+                not np.any(np.isnan(self.params_std)) and \
+                self.params_mean is not None and \
+                self.params_std is not None
         else:
             # parameters are set such that z-transform has no effect
             self.params_mean = np.zeros((params.shape[1],))
