@@ -8,6 +8,13 @@ base class defines the interface.
 The following simulators are currently part of ``delfi`` for testing and to
 provide examples:
 
+Blob
+````
+.. autoclass:: delfi.simulator.Blob
+  :show-inheritance:
+  :inherited-members:
+  :members:
+
 Gauss
 `````
 .. autoclass:: delfi.simulator.Gauss
@@ -22,9 +29,9 @@ Gaussian Mixture
   :inherited-members:
   :members:
 
-Blob
+Transformed Simulator
 ````
-.. autoclass:: delfi.simulator.Blob
+.. autoclass:: delfi.simulator.TransformedSimulator
   :show-inheritance:
   :inherited-members:
   :members:

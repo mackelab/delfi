@@ -6,7 +6,14 @@ from copy import deepcopy
 
 class TransformedDistribution(BaseDistribution):
     """Distribution object that carries out an invertible change of variables
-    for another distribution object
+    for another distribution object.
+
+    A bijection must be supplied mapping from
+    the original distributions variables into the new one's along with the
+    bijection's inverse and the log determinant of the bijection's Jacobian.
+
+    There is no checking of whether the supplied functions are really inverses
+    of each other or are in fact bijections at all, this is up to the user.
 
     Parameters
     ----------
