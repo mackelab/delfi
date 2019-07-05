@@ -228,7 +228,7 @@ def test_TransformedDistribution(seed=5, nsamples=1000, ndim=2):
                                                   bijection_jac_logD=bijection_jac_logD)
     dist_transformed.reseed(seed)
     z_transformed = dist_transformed.gen(nsamples)
-    np.allclose(z_transformed, bijection(z), atol=1e-8)
+    assert np.allclose(z_transformed, bijection(z), atol=1e-8)
 
     dist_logistic = dd.Logistic(mu=np.zeros(ndim))
 
