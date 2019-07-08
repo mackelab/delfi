@@ -200,10 +200,13 @@ html_context = {
 }
 
 # automatically choose the correct github repo and user based on the remote url for "origin"
-print(os.getcwd())
-print(sp.getoutput('git remote -v'))
-print(sp.getoutput('git config --get remote.origin.url'))
-github_user, github_repo = sp.getoutput('git config --get remote.origin.url').split(sep=':')[1].split(sep='/')
+remote_url = sp.getoutput('git config --get remote.origin.url')
+if remote_url[:4] == 'git':  # ssh
+    github_user, github_repo = remote_url.split(sep=':')[1].split('/')
+else:
+    github_user, github_repo = remote_url.split('/')[-2:]
+assert github_repo[-4:] == '.git'
+github_repo = github_repo[:-4]
 
 # -- Options for LaTeX output ---------------------------------------------
 
