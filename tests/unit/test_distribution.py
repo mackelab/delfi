@@ -220,7 +220,7 @@ def test_TransformedDistribution(seed=5, nsamples=1000, ndim=2):
     inputscale = lambda x: (x - lower) / (upper - lower)
     bijection = lambda x: logit(inputscale(x))  # logit function with scaled input
     inverse_bijection = lambda y: expit(y) * (upper - lower) + lower  # logistic function with scaled output
-    bijection_jac_logD = lambda x: -(np.log(inputscale(x) * (1 - inputscale(x))) + np.log(upper - lower)).sum(axis=1)
+    bijection_jac_logD = lambda x: -(np.log(inputscale(x) * (1 - inputscale(x))) + np.log(upper - lower)).sum(axis=-1)
 
     dist_transformed = dd.TransformedDistribution(distribution=dist,
                                                   bijection=bijection,
