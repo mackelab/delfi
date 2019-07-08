@@ -13,6 +13,7 @@
 
 import sys
 import os
+import subprocess as sp
 
 exec(open('../delfi/version.py').read())
 
@@ -197,8 +198,9 @@ html_context = {
     "last_updated": False,
     "commit": False
 }
-github_user = 'mackelab'
-github_repo = 'delfi'
+
+# automatically choose the correct github repo and user based on the remote url for "origin"
+github_user, github_repo = sp.getoutput('git config --get remote.origin.url').split(sep=':')[1].split(sep='/')
 
 # -- Options for LaTeX output ---------------------------------------------
 
