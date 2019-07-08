@@ -200,6 +200,7 @@ html_context = {
 }
 
 # automatically choose the correct github repo and user based on the remote url for "origin"
+print(os.getcwd())
 github_user, github_repo = sp.getoutput('git config --get remote.origin.url').split(sep=':')[1].split(sep='/')
 
 # -- Options for LaTeX output ---------------------------------------------
