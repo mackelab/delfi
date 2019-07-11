@@ -1,7 +1,7 @@
 import numpy as np
 from delfi.distribution.BaseDistribution import BaseDistribution
 from delfi.distribution.mixture.BaseMixture import BaseMixture
-from delfi.neuralnet import MAFconditional
+from delfi.neuralnet.NeuralNet import MAFconditional
 from copy import deepcopy
 
 
