@@ -510,6 +510,7 @@ class MAFconditional(object):
         # store a scale and offset so we can transform/normalize
         self.scale = np.ones(self.model.n_outputs)
         self.offset = np.zeros(self.model.n_outputs)
+        self.ndim = self.model.n_outputs
 
     def set_scale_and_offset(self, scale=None, offset=None):
         if scale is not None:

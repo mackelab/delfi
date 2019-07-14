@@ -30,7 +30,7 @@ Gaussian Mixture
   :members:
 
 Transformed Simulator
-````
+`````````````````````
 .. autoclass:: delfi.simulator.TransformedSimulator
   :show-inheritance:
   :inherited-members:

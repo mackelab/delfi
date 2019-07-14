@@ -36,7 +36,7 @@ Student's T
   :members:
 
 Transformed Distribution
-```````````
+````````````````````````
 .. autoclass:: delfi.distribution.TransformedDistribution
   :show-inheritance:
   :inherited-members:

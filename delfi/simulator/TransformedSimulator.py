@@ -7,7 +7,7 @@ class TransformedSimulator(BaseSimulator):
     def __init__(self, simulator, inverse_bijection, makecopy=False):
         '''
         Simulator with parameters in a transformed space. An inverse bijection
-        must be supplied to make back into the original parameter space. This
+        must be supplied to map back into the original parameter space. This
         reparamterization allows unrestricted real-valued Euclidean parameter
         spaces for simulators whose outputs are defined only for certain
         parameter values
