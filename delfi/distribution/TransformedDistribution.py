@@ -1,7 +1,7 @@
 import numpy as np
 from delfi.distribution.BaseDistribution import BaseDistribution
-from delfi.distribution.mixture.BaseMixture import BaseMixture
-from delfi.neuralnet.NeuralNet import MAFconditional
+#from delfi.distribution.mixture.BaseMixture import BaseMixture
+#from delfi.neuralnet.NeuralNet import MAFconditional
 from copy import deepcopy
 
 
@@ -31,8 +31,8 @@ class TransformedDistribution(BaseDistribution):
         Whether to call deepcopy on the simulator, unlinking the RNGs
     """
     def __init__(self, distribution, bijection, inverse_bijection, bijection_jac_logD, makecopy=False):
-        assert isinstance(distribution, BaseDistribution) or isinstance(distribution, BaseMixture) \
-            or isinstance(distribution, MAFconditional)
+        #assert isinstance(distribution, BaseDistribution) or isinstance(distribution, BaseMixture) \
+        #    or isinstance(distribution, MAFconditional)
         if makecopy:
             distribution = deepcopy(distribution)
         self.distribution = distribution
