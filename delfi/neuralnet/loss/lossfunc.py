@@ -305,7 +305,7 @@ def apt_mdn_loss_atomic_proposal(mdn, svi=False, combined_loss=False):
         axis=3)**2, axis=2 ) for dtheta,U in zip(dthetas, Us)]
 
     # compute (unnormalized) log-densities, weighted by log prior ratios
-    Ms = [-0.5 * M + lprs for M in Ms]
+    Ms = [-0.5 * M - lprs for M in Ms]
 
     # compute per-component log-densities and log-normalizers
     lprobs_comps = [M[:,0] + ldetU for M, ldetU in zip(Ms, ldetUs)]
