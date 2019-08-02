@@ -46,7 +46,7 @@ class Uniform(BaseDistribution):
         p = p*np.ones((N,))  # broadcasting
         
         # truncation of density
-        ind = (x > self.lower) & (x < self.upper)
+        ind = (x > self.lower[ii]) & (x < self.upper[ii])
         p[np.prod(ind,axis=1)==0] = 0
 
         if log:
