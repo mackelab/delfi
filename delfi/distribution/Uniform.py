@@ -36,18 +36,20 @@ class Uniform(BaseDistribution):
 
     @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
+        x = np.atleast_2d(x)
+
         # See BaseDistribution.py for docstring
         if ii is None:
             ii = np.arange(self.ndim)
 
-        N = np.atleast_2d(x).shape[0]
+        N = x.shape[0]
 
-        p = 1/np.prod(self.upper[ii] - self.lower[ii])
-        p = p*np.ones((N,))  # broadcasting
+        p = 1.0 / np.prod(self.upper[ii] - self.lower[ii])
+        p = p * np.ones((N,))  # broadcasting
         
         # truncation of density
         ind = (x > self.lower[ii]) & (x < self.upper[ii])
-        p[np.prod(ind,axis=1)==0] = 0
+        p[np.prod(ind, axis=1)==0] = 0
 
         if log:
             if ind.any() == False:
