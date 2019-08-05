@@ -36,11 +36,19 @@ class Uniform(BaseDistribution):
 
     @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
-        x = np.atleast_2d(x)
-
         # See BaseDistribution.py for docstring
         if ii is None:
             ii = np.arange(self.ndim)
+        else:
+            ii = np.atleast_1d(ii)
+
+        if x.ndim == 1 and ii.size == 1:
+            x = x.reshape(-1, 1)
+        else:
+            x = np.atleast_2d(x)
+
+        assert x.ndim == 2 and ii.ndim == 1
+        assert x.shape[1] == ii.size
 
         N = x.shape[0]
 
