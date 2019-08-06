@@ -156,8 +156,8 @@ class Trainer:
             number of epochs (iterations per sample)
         minibatch : int
             minibatch size
-        monitor_every : int
-            monitoring frequency
+        monitor_every : float
+            after how many epochs should validation loss be checked?
         stop_on_nan : bool (default: False)
             if True, will stop if loss becomes NaN
         tol : float
@@ -248,8 +248,11 @@ class Trainer:
 
                     # validation-data tracking of convergence
                     if self.do_validation:
-                        epoch_frac = (iter * minibatch) / self.n_trn_data
-                        if epoch_frac % monitor_every == 0:  # do validation
+                        epoch_frac = (iter * minibatch) / self.n_trn_data  # how many epochs so far
+                        prev_epoch_frac = ((iter - 1) * minibatch) / self.n_trn_data
+                        # do validation if we've passed a multiple of monitor_every epochs
+                        if iter == 0 or \
+                                np.floor(epoch_frac / monitor_every) != np.floor(prev_epoch_frac / monitor_every):
                             val_loss = self.validate()
                             trn_outputs['val_loss'].append(val_loss)
                             trn_outputs['val_loss_iter'].append(iter)
