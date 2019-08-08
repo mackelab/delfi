@@ -1,6 +1,7 @@
 import delfi.distribution as dd
 import numpy as np
 from scipy.special import expit, logit
+from delfi.utils.bijection import named_bijection
 
 seed = 42
 
@@ -217,10 +218,21 @@ def test_TransformedDistribution(seed=5, nsamples=1000, ndim=2):
     dist.reseed(seed)
     z = dist.gen(nsamples)
 
-    inputscale = lambda x: (x - lower) / (upper - lower)
-    bijection = lambda x: logit(inputscale(x))  # logit function with scaled input
-    inverse_bijection = lambda y: expit(y) * (upper - lower) + lower  # logistic function with scaled output
-    bijection_jac_logD = lambda x: -(np.log(inputscale(x) * (1 - inputscale(x))) + np.log(upper - lower)).sum(axis=-1)
+    f, finv, f_jac_logD, finv_jac_logD = \
+        named_bijection('affine',
+                        scale=1.0 / (upper - lower),
+                        offset=-lower / (upper - lower))
+
+    g, ginv, g_jac_logD, ginv_jac_logD = named_bijection('logit')
+
+    bijection = lambda x: g(f(x))
+    inverse_bijection = lambda y: finv(ginv(y))
+    bijection_jac_logD = lambda x: g_jac_logD(f(x)) + f_jac_logD(x)
+
+    #inputscale = lambda x: (x - lower) / (upper - lower)
+    #bijection = lambda x: logit(inputscale(x))  # logit function with scaled input
+    #inverse_bijection = lambda y: expit(y) * (upper - lower) + lower  # logistic function with scaled output
+    #bijection_jac_logD = lambda x: -(np.log(inputscale(x) * (1 - inputscale(x))) + np.log(upper - lower)).sum(axis=-1)
 
     dist_transformed = dd.TransformedDistribution(distribution=dist,
                                                   bijection=bijection,
