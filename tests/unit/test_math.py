@@ -1,6 +1,7 @@
 import numpy as np
-from delfi.distribution import Gaussian
 import delfi.utils.math as mm
+from delfi.distribution import Gaussian
+from delfi.utils.bijection import named_bijection
 
 
 def test_gaussprodZ():
@@ -43,3 +44,21 @@ def test_gaussprodquotientZ():
         - x3.eval(test_pts, log=True)
     lpdfprodquot_normed = xprodquot.eval(test_pts, log=True)
     assert np.isclose(lpdfprodquot_normed + logZ, lpdfprodquot).all(), "wrong Z (prod-quot)"
+
+
+def test_bijections(dim=2, nsamples=1000, seed=1):
+    rng = np.random.RandomState(seed=seed)
+
+    for name in ['affine', 'logit', 'norminvcdf']:
+
+        kwargs = dict()
+        if name == 'affine':
+            kwargs.update(dict(scale=1.0 + rng.rand(dim),
+                               offset=rng.rand(dim)))
+
+        f, finv, f_jac_logD, finv_jac_logD = named_bijection(name, **kwargs)
+
+        x = rng.rand(nsamples, dim)  # values between 0 and 1
+        y = f(x)
+        assert np.allclose(x, finv(y), atol=1e-8)
+        assert np.allclose(f_jac_logD(x), -finv_jac_logD(y), atol=1e-8)
