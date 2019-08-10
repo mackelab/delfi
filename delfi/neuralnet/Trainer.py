@@ -265,10 +265,10 @@ class Trainer:
                             if patience_left <= 0:
                                 break_flag = True
                                 if verbose:
-                                    print('Stopping at epoch = {0}, '
+                                    print('Stopping at epoch {0}, '
                                           'training loss = {1}, '
                                           'validation loss = {2}\n'
-                                          .format(epoch, trn_loss, val_loss))
+                                          .format(epoch_frac, trn_loss, val_loss))
                                 break
                     pbar.update(minibatch)
                     iter += 1
