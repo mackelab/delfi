@@ -226,7 +226,7 @@ class APT(BaseInference):
     def run_prior(self, n_train=100, epochs=100, minibatch=50, n_atoms=None,
                   moo=None, train_on_all=False, round_cl=1, stop_on_nan=False,
                   monitor=None, verbose=False, print_each_epoch=False,
-                  patience=20, monitory_every=None, reuse_prior_samples=True,
+                  patience=20, monitor_every=None, reuse_prior_samples=True,
                   **kwargs):
 
         # simulate data
