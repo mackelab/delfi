@@ -223,8 +223,11 @@ class APT(BaseInference):
         else:
             raise NotImplemented()
 
-    def run_prior(self, n_train=100, epochs=100, minibatch=50, n_atoms=None, moo=None, train_on_all=False, round_cl=1,
-                  stop_on_nan=False, monitor=None, verbose=False, print_each_epoch=False, reuse_prior_samples=True, **kwargs):
+    def run_prior(self, n_train=100, epochs=100, minibatch=50, n_atoms=None,
+                  moo=None, train_on_all=False, round_cl=1, stop_on_nan=False,
+                  monitor=None, verbose=False, print_each_epoch=False,
+                  patience=20, monitory_every=None, reuse_prior_samples=True,
+                  **kwargs):
 
         # simulate data
         self.generator.proposal = self.generator.prior
@@ -247,8 +250,10 @@ class APT(BaseInference):
                     seed=self.gen_newseed(),
                     monitor=self.monitor_dict_from_names(monitor),
                     **kwargs)
-        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose,
-                      print_each_epoch=print_each_epoch, stop_on_nan=stop_on_nan)
+        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch,
+                      verbose=verbose, print_each_epoch=print_each_epoch,
+                      stop_on_nan=stop_on_nan, patience=patience,
+                      monitor_every=monitor_every)
 
         return log, trn_data
 
