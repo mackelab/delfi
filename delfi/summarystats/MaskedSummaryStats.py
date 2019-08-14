@@ -3,7 +3,7 @@ import numpy as np
 
 from delfi.summarystats import BaseSummaryStats
 
-class MaskedSummaryStats(BaseSummaryStats)
+class MaskedSummaryStats(BaseSummaryStats):
     def __init__(self, s, mask, obs, seed=None):
         """ Summary stats with imputed values
 
