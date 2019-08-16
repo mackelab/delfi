@@ -1,4 +1,5 @@
 import numpy as np
+from functools import partial
 from scipy.special import expit, logit, ndtr, ndtri
 
 
@@ -19,6 +20,22 @@ def norminvcdf_jac_logD(x):
     return -normcdf_jac_logD(ndtri(x))
 
 
+def affine_map(x, s, o):
+    return x * s + o
+
+
+def inv_affine_map(y, s, o):
+    return (y - o) / s
+
+
+def affine_jac_logD(x, s):
+    return np.full(x.shape[0], np.log(s).sum())
+
+
+def inv_affine_jac_logD(y, s):
+    return np.full(y.shape[0], -np.log(s).sum())
+
+
 def named_bijection(name, **kwargs):
     name = name.lower()
 
@@ -34,17 +51,10 @@ def named_bijection(name, **kwargs):
         s = kwargs['scale'].copy()
         o = kwargs['offset'].copy()
 
-        def f(x):
-            return x * s + o
-
-        def finv(y):
-            return (y - o) / s
-
-        def f_jac_logD(x):
-            return np.log(s).sum(axis=-1)
-
-        def finv_jac_logD(y):
-            return -np.log(s).sum(axis=-1)
+        f = partial(affine_map, s=s, o=o)
+        finv = partial(inv_affine_map, s=s, o=o)
+        f_jac_logD = partial(affine_jac_logD, s=s)
+        finv_jac_logD = partial(inv_affine_jac_logD, s=s)
 
     elif name == 'norminvcdf':
 
