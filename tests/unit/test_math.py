@@ -61,4 +61,6 @@ def test_bijections(dim=2, nsamples=1000, seed=1):
         x = rng.rand(nsamples, dim)  # values between 0 and 1
         y = f(x)
         assert np.allclose(x, finv(y), atol=1e-8)
+        assert np.allclose(x[0], finv(y[0]), atol=1e-8)
         assert np.allclose(f_jac_logD(x), -finv_jac_logD(y), atol=1e-8)
+        assert np.allclose(f_jac_logD(x[0]), -finv_jac_logD(y[0]), atol=1e-8)

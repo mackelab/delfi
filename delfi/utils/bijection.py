@@ -29,11 +29,15 @@ def inv_affine_map(y, s, o):
 
 
 def affine_jac_logD(x, s):
-    return np.full(x.shape[0], np.log(s).sum())
+    if x.ndim == 1:
+        return np.log(s).sum()
+    return np.full(x.shape[:-1], np.log(s).sum())
 
 
 def inv_affine_jac_logD(y, s):
-    return np.full(y.shape[0], -np.log(s).sum())
+    if y.ndim == 1:
+        return -np.log(s).sum()
+    return np.full(y.shape[:-1], -np.log(s).sum())
 
 
 def named_bijection(name, **kwargs):
