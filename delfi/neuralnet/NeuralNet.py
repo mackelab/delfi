@@ -22,8 +22,8 @@ class NeuralNet(object):
     def __init__(self, n_inputs=None, n_outputs=None, input_shape=None,
                  n_bypass=0,
                  density='mog',
-                 n_hiddens=[10, 10], impute_missing=True, seed=None,
-                 n_filters=[], filter_sizes=3, pool_sizes=2,
+                 n_hiddens=(10, 10), impute_missing=True, seed=None,
+                 n_filters=(), filter_sizes=3, pool_sizes=2,
                  n_rnn=0,
                  **density_opts):
 
@@ -64,14 +64,14 @@ class NeuralNet(object):
 
         self.density = density.lower()
         self.impute_missing = impute_missing
-        self.n_hiddens = n_hiddens
+        self.n_hiddens = list(n_hiddens)
         self.n_outputs, self.n_inputs = n_outputs, n_inputs
         self.n_bypass = n_bypass
 
         self.n_rnn = n_rnn
 
         self.n_filters, self.filter_sizes, self.pool_sizes, n_cnn = \
-            n_filters, filter_sizes, pool_sizes, len(n_filters)
+            list(n_filters), filter_sizes, pool_sizes, len(n_filters)
         if type(self.filter_sizes) is int:
             self.filter_sizes = [self.filter_sizes for _ in range(n_cnn)]
         else:
