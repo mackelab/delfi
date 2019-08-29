@@ -478,7 +478,9 @@ class NeuralNet(object):
         """Specs as dict"""
         spec = dict(n_inputs=self.n_inputs, n_outputs=self.n_outputs,
                     n_filters=self.n_filters, n_hiddens=self.n_hiddens,
-                    n_rnn=self.n_rnn, seed=self.seed)
+                    n_rnn=self.n_rnn, n_bypass=self.n_bypass,
+                    input_shape=self.input_shape, filter_sizes=self.filter_sizes,
+                    pool_sizes=self.pool_sizes, seed=self.seed)
 
         if self.density == 'mog':
             spec.update(dict(svi=self.svi, n_components=self.n_components,
