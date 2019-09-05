@@ -23,6 +23,23 @@ def test_lprobs():
     mog = nn.get_mog(np.array([[1.]], dtype=dtype))
 
 
+def test_diag_precision_bounds():
+    n_components = 2
+    seed = 42
+    svi = False
+    min_precisions = np.array([0.1, 2.0, 15.0])
+
+    nn = NeuralNet(n_components=n_components, n_hiddens=[10], n_inputs=3,
+                   n_outputs=3, seed=seed, svi=svi, min_precisions=None)
+
+    nn_bounded = NeuralNet(n_components=n_components, n_hiddens=[10],
+                           n_inputs=3, n_outputs=3, seed=seed, svi=svi,
+                           min_precisions=min_precisions)
+    mog_bounded = nn_bounded.get_mog(np.array(np.ones((1, 3)), dtype=dtype))
+    for x in mog_bounded.xs:
+        assert np.allclose(0.0, np.maximum(0.0, min_precisions - np.diag(x.P)))
+
+
 def test_conv():
     """Test multichannel convolution with bypass"""
     n_components = 1

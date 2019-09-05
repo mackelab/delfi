@@ -232,7 +232,8 @@ class NeuralNet(object):
         self.dlprobs = self.lprobs  # svi not possible
 
     def init_mdn(self, svi=False, n_components=1, rank=None,
-                 mdn_actfun=lnl.tanh, homoscedastic=False, **unused_kwargs):
+                 mdn_actfun=lnl.tanh, homoscedastic=False, min_precisions=None,
+                 **unused_kwargs):
         """
         :param svi: bool
             Whether to use SVI version or not
@@ -242,10 +243,13 @@ class NeuralNet(object):
         :param unused_kwargs: dict
         :param mdn_actfun: lasagne nonlinearity
             activation function for hidden units
+        :param min_precisions: minimum values for diagonal elements of precision
+            matrix for all components (usually taken to be prior precisions)
         :return: None
         """
-        self.svi, self.n_components, self.rank, self.mdn_actfun, self.homoscedastic = \
-            svi, n_components, rank, mdn_actfun, homoscedastic
+        self.svi, self.n_components, self.rank, self.mdn_actfun,\
+            self.homoscedastic, self.min_precisions = \
+            svi, n_components, rank, mdn_actfun, homoscedastic, min_precisions
         for key in unused_kwargs.keys():
             print("MDN ignoring unused input {0}".format(key))
 
@@ -271,7 +275,8 @@ class NeuralNet(object):
         # why is homoscedastic an input to the layer init?
         self.layer['mixture_precisions'] = PrecisionsLayer(last_hidden,
             n_components=self.n_components, n_dim=self.n_outputs, svi=self.svi,
-            name='precisions', rank=self.rank, homoscedastic=self.homoscedastic)
+            name='precisions', rank=self.rank, homoscedastic=self.homoscedastic,
+            min_precisions=min_precisions)
 
         last_mog = [self.layer['mixture_weights'],
                     self.layer['mixture_means'],
