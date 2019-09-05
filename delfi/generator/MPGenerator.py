@@ -72,6 +72,10 @@ class Worker(mp.Process):
             print("Worker {}: {}".format(self.n, msg))
 
 
+def default_MPGenerator_rej(x):
+    return 1
+
+
 class MPGenerator(Default):
     def __init__(self, models, prior, summary, rej=None, seed=None, verbose=False):
         """Generator
@@ -96,10 +100,7 @@ class MPGenerator(Default):
         """
         super().__init__(model=None, prior=prior, summary=summary, seed=seed)
 
-        if rej is None:
-            def rej(x):
-                return 1
-        self.rej = rej
+        self.rej = rej if rej is not None else default_MPGenerator_rej
         self.verbose = verbose
         self.models = models
 
