@@ -1,7 +1,5 @@
 import lasagne
 import lasagne.init as linit
-import lasagne.layers as ll
-import lasagne.nonlinearities as lnl
 import numpy as np
 import theano
 import theano.tensor as tt
@@ -23,6 +21,7 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
                  mbs_init=linit.Constant([0.]),
                  sWs_init=linit.Constant([-5.]),
                  sbs_init=linit.Constant([-5.]),
+                 min_precisions=None,
                  **kwargs):
         """Fully connected layer for mixture precisions, optional weight uncertainty
 
@@ -48,6 +47,7 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
         sbs_init : function
             Function to initialise weights for log std of weight (bias);
             applied per component
+        min_precisions: 1D numpy array of float32 or None
         """
         super(MixturePrecisionsLayer, self).__init__(incoming, **kwargs)
         self.n_components = n_components
@@ -78,6 +78,14 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
                                        (self.n_dim**2,),
                                        name='sb' + str(c), sp=True, bp=True)
                         for c in range(n_components)]
+
+        if min_precisions is not None:
+            assert min_precisions.ndim == 1 and \
+                   min_precisions.size == self.n_dim, "invalid min precisions"
+            min_precisions = min_precisions.astype(dtype)
+            self.min_U_column_norms = np.sqrt(min_precisions)
+        else:
+            self.min_U_column_norms = None
 
     def get_output_for(self, input, deterministic=False, **kwargs):
         """Compute outputs
@@ -123,6 +131,15 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
                 za) for za in zas_reshaped]
         ldetUs = [tt.sum(tt.sum(diag_mask * za, axis=2), axis=1)
                   for za in zas_reshaped]
+
+        # enforce lower bound on diagonal elements of the Precision matices
+        if self.min_U_column_norms is not None:
+            U_column_norms = \
+                [tt.sqrt(tt.sum(U**2, axis=1)).reshape((-1, self.n_dim))
+                 for U in Us]
+            scale_factors = [tt.maximum(1.0, self.min_U_column_norms / Ucn)
+                             for Ucn in U_column_norms]
+            Us = [U * sf.dimshuffle([0, 'x', 1]) for U, sf in zip(Us, scale_factors)]
 
         return {'Us': Us, 'ldetUs': ldetUs}
 
