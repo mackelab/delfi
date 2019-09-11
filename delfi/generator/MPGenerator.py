@@ -1,9 +1,8 @@
-import abc
 import multiprocessing as mp
 import numpy as np
-
+import os
+import pickle
 from delfi.generator.Default import Default
-from delfi.utils.meta import ABCMetaDoc
 from delfi.utils.progress import no_tqdm, progressbar
 
 
@@ -156,7 +155,7 @@ class MPGenerator(Default):
     def iterate_minibatches(self, params, minibatch=50):
         n_samples = len(params)
 
-        for i in range(0, n_samples - minibatch+1, minibatch):
+        for i in range(0, n_samples - minibatch + 1, minibatch):
             yield params[i:i + minibatch]
 
         rem_i = n_samples - (n_samples % minibatch)
@@ -190,7 +189,7 @@ class MPGenerator(Default):
         params = self.draw_params(n_samples=n_samples,
                                   skip_feedback=skip_feedback,
                                   prior_mixin=prior_mixin,
-                                  verbose = verbose)
+                                  verbose=verbose)
 
         return self.run_model(params, skip_feedback=skip_feedback, verbose=verbose, **kwargs)
 
@@ -220,7 +219,7 @@ class MPGenerator(Default):
                         done = True
                         break
 
-                    active_list.append((w,p))
+                    active_list.append((w, p))
                     self.log("Dispatching to worker (len = {})".format(len(params_batch)))
                     p.send(params_batch)
                     self.log("Done")
@@ -295,3 +294,50 @@ class MPGenerator(Default):
 
     def __del__(self):
         self.stop_workers()
+
+
+def mpgen_from_file(filename):
+    """
+    Run simulations from a file using a multi-process generator. This function
+    can be used as a stand-alone utility, but is mainly meant to be called on a
+    remote host over ssh by a RemoteGenerator.
+
+    :param filename: file describing simulations to be run
+    :return:
+    """
+    with open(filename, 'rb') as f:
+        data = pickle.load(f)
+
+    n_workers, simulator_class, prior, simulator_seeds, summary, n_samples, \
+        generator_seed, proposal, generator_kwargs, \
+        simulator_args, simulator_kwargs, samplefile = data['n_workers'], \
+        data['simulator_class'], data['prior'], data['simulator_seeds'],\
+        data['summary'], data['n_samples'], data['generator_seed'], \
+        data['proposal'], data['generator_kwargs'], \
+        data['simulator_args'], data['simulator_kwargs'], data['samplefile']
+
+    if n_workers is None:
+        if simulator_seeds is not None:
+            n_workers = len(simulator_seeds)
+        else:
+            n_workers = mp.cpu_count()
+
+    if simulator_seeds is None:
+        rng = np.random.RandomState(seed=generator_seed + 25)
+        simulator_seeds = [rng.randint(0, 2**31) for i in range(n_workers)]
+    else:
+        assert n_workers == len(simulator_seeds), "invalid settings"
+
+    n_workers = np.minimum(n_workers, n_samples)
+    simulator_seeds = simulator_seeds[:n_workers]
+
+    models = [simulator_class(seed=s, *simulator_args, **simulator_kwargs)
+              for s in simulator_seeds]
+    g = MPGenerator(models, prior, summary, seed=generator_seed, verbose=False)
+    g.proposal = proposal
+
+    params, stats = g.gen(n_samples, **generator_kwargs)
+
+    with open(samplefile, 'wb') as f:
+        pickle.dump(dict(params=params, stats=stats), f,
+                    protocol=pickle.HIGHEST_PROTOCOL)

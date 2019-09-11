@@ -1,3 +1,5 @@
+import getpass
+import sys
 import delfi.distribution as dd
 import delfi.generator as dg
 import delfi.summarystats as ds
@@ -58,6 +60,34 @@ def test_mpgen(n_samples=1000, n_params=2, n_cores=4, seed=500):
     mlist = [Gauss(dim=n_params, seed=seed + 2 + i) for i in range(n_cores)]
     g = dg.MPGenerator(models=mlist, prior=p, summary=s,
                        seed=seed + 2 + n_cores)
+    params, stats = g.gen(n_samples, verbose=False)
+
+    # make sure the different models are providing different outputs
+    assert np.unique(params.size) == params.size
+    assert np.unique(stats.size) == stats.size
+
+
+def test_remotegen(n_samples=1000, n_params=2, seed=66):
+    """
+    test the RemoteGenerator by using the local machine to ssh into itself.
+    For this test to succeed, an ssh private key will need to be added to the
+    ssh agent, and the corresponding public key added to authorized_keys
+    """
+    p = dd.Gaussian(m=np.zeros((n_params,)), S=np.eye(n_params), seed=seed)
+    s = ds.Identity(seed=seed + 1)
+
+    simulator_kwargs = dict(dim=2)
+
+    username = getpass.getuser()
+
+    g = dg.RemoteGenerator(simulator_class=Gauss,
+                           prior=p, summary=s,
+                           hostname='127.0.0.1',
+                           username=username,
+                           simulator_kwargs=simulator_kwargs,
+                           use_slurm=False,
+                           remote_python_path=sys.executable,
+                           seed=seed+2)
     params, stats = g.gen(n_samples, verbose=False)
 
     # make sure the different models are providing different outputs

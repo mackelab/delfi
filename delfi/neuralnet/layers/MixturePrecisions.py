@@ -48,6 +48,8 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
             Function to initialise weights for log std of weight (bias);
             applied per component
         min_precisions: 1D numpy array of float32 or None
+            Minimum values for the diagonal elements of the precision matrix,
+            for all components
         """
         super(MixturePrecisionsLayer, self).__init__(incoming, **kwargs)
         self.n_components = n_components
@@ -132,7 +134,7 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
         ldetUs = [tt.sum(tt.sum(diag_mask * za, axis=2), axis=1)
                   for za in zas_reshaped]
 
-        # enforce lower bound on diagonal elements of the Precision matices
+        # enforce lower bound on diagonal elements of the precision matrices
         if self.min_U_column_norms is not None:
             U_column_norms = \
                 [tt.sqrt(tt.sum(U**2, axis=1)).reshape((-1, self.n_dim))

@@ -48,3 +48,7 @@ class BaseSummaryStats(metaclass=ABCMetaDoc):
             return None
         else:
             return self.rng.randint(0, 2**31)
+
+    def reseed(self, seed):
+        self.rng.seed(seed=seed)
+        self.seed = seed
