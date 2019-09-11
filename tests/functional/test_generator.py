@@ -85,19 +85,36 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66):
     # the host. what we're doing here is a big security risk, but for localhost
     # it's (probably?) ok
     os.system('cp ~/.ssh/known_hosts ~/.ssh/known_hosts_backup')
-    os.system('ssh-keyscan H {0} >> ~/.ssh/known_hosts'.format(hostname))
+    os.system('cp ~/.ssh/authorized_keys ~/.ssh/authorized_keys_backup')
+    os.system('ssh-keyscan -H {0} >> ~/.ssh/known_hosts'.format(hostname))
+    # generate a key-pair to use on localhost
+    os.system('ssh-keygen -b 2048 -t rsa -f ~/.ssh/test_remotegen -q -N ""')
+    os.system('ssh-add ~/.ssh/test_remotegen')   # add private key for client side
+    os.system('cat ~/.ssh/test_remotegen.pub >> ~/.ssh/authorized_keys')
 
-    g = dg.RemoteGenerator(simulator_class=Gauss,
-                           prior=p, summary=s,
-                           hostname=hostname,
-                           username=username,
-                           simulator_kwargs=simulator_kwargs,
-                           use_slurm=False,
-                           remote_python_path=sys.executable,
-                           seed=seed+2)
-    params, stats = g.gen(n_samples, verbose=False)
+    try:
+        g = dg.RemoteGenerator(simulator_class=Gauss,
+                               prior=p, summary=s,
+                               hostname=hostname,
+                               username=username,
+                               simulator_kwargs=simulator_kwargs,
+                               use_slurm=False,
+                               remote_python_path=sys.executable,
+                               seed=seed+2)
+        params, stats = g.gen(n_samples, verbose=False)
+        success = True
+    except Exception as e:
+        success = False
+        err = e
 
+    # restore ssh to previous state etc.
+    os.system('ssh-add -d ~/.ssh/test_remotegen')
     os.system('mv ~/.ssh/known_hosts_backup ~/.ssh/known_hosts')
+    os.system('mv ~/.ssh/authorized_keys_backup ~/.ssh/authorized_keys')
+    os.system('rm ~/.ssh/test_remotegen*')
+
+    if not success:
+        raise err
 
     # make sure the different models are providing different outputs
     assert np.unique(params.size) == params.size
