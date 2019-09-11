@@ -96,14 +96,14 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66):
 
     # run some diagnostics and print results to stderr (so we can see it on CI servers)
     sshdir = os.path.expanduser('~/.ssh/')
-    sys.stdout.write(subprocess.run(['ssh-add', '-l'], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
-    sys.stdout.write(subprocess.run(['ls', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
-    sys.stdout.write(subprocess.run(['cat', os.path.join(sshdir, 'authorized_keys')],
+    sys.stderr.write(subprocess.run(['ssh-add', '-l'], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['ls', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['cat', os.path.join(sshdir, 'authorized_keys')],
                                     stdout=subprocess.PIPE).stdout.decode() + '\n\n')
-    sys.stdout.write(subprocess.run(['cat', os.path.join(sshdir, 'known_hosts')],
+    sys.stderr.write(subprocess.run(['cat', os.path.join(sshdir, 'known_hosts')],
                                     stdout=subprocess.PIPE).stdout.decode() + '\n\n')
-    sys.stdout.write(subprocess.run(['ls', '-ld', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
-    sys.stdout.write(subprocess.run(['ls', '-l', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['ls', '-ld', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['ls', '-l', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
 
     try:
         g = dg.RemoteGenerator(simulator_class=Gauss,
