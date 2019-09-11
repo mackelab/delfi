@@ -1,10 +1,11 @@
 import getpass
 import sys
+import os
+import subprocess
 import delfi.distribution as dd
 import delfi.generator as dg
 import delfi.summarystats as ds
 import numpy as np
-import os
 from delfi.simulator.Gauss import Gauss
 
 
@@ -84,6 +85,7 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66):
     # in a real-world scenario, we would have already manually authenticated
     # the host. what we're doing here is a big security risk, but for localhost
     # it's (probably?) ok
+    os.system('eval $(ssh-agent -s)')
     os.system('cp ~/.ssh/known_hosts ~/.ssh/known_hosts_backup')
     os.system('cp ~/.ssh/authorized_keys ~/.ssh/authorized_keys_backup')
     os.system('ssh-keyscan -H {0} >> ~/.ssh/known_hosts'.format(hostname))
@@ -91,6 +93,17 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66):
     os.system('ssh-keygen -b 2048 -t rsa -f ~/.ssh/test_remotegen -q -N ""')
     os.system('ssh-add ~/.ssh/test_remotegen')   # add private key for client side
     os.system('cat ~/.ssh/test_remotegen.pub >> ~/.ssh/authorized_keys')
+
+    # run some diagnostics and print results to stderr (so we can see it on CI servers)
+    sshdir = os.path.expanduser('~/.ssh/')
+    sys.stderr.write(subprocess.run(['ssh-add', '-l'], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['ls', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['cat', os.path.join(sshdir, 'authorized_keys')],
+                                    stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['cat', os.path.join(sshdir, 'known_hosts')],
+                                    stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['ls', '-ld', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
+    sys.stderr.write(subprocess.run(['ls', '-l', sshdir], stdout=subprocess.PIPE).stdout.decode() + '\n\n')
 
     try:
         g = dg.RemoteGenerator(simulator_class=Gauss,
