@@ -4,7 +4,7 @@ import delfi.distribution as dd
 import delfi.generator as dg
 import delfi.summarystats as ds
 import numpy as np
-
+import os
 from delfi.simulator.Gauss import Gauss
 
 
@@ -78,17 +78,26 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66):
 
     simulator_kwargs = dict(dim=2)
 
+    hostname = '127.0.0.1'
     username = getpass.getuser()
+
+    # in a real-world scenario, we would have already manually authenticated
+    # the host. what we're doing here is a big security risk, but for localhost
+    # it's (probably?) ok
+    os.system('cp ~/.ssh/known_hosts ~/.ssh/known_hosts_backup')
+    os.system('ssh-keyscan H {0} >> ~/.ssh/known_hosts'.format(hostname))
 
     g = dg.RemoteGenerator(simulator_class=Gauss,
                            prior=p, summary=s,
-                           hostname='127.0.0.1',
+                           hostname=hostname,
                            username=username,
                            simulator_kwargs=simulator_kwargs,
                            use_slurm=False,
                            remote_python_path=sys.executable,
                            seed=seed+2)
     params, stats = g.gen(n_samples, verbose=False)
+
+    os.system('mv ~/.ssh/known_hosts_backup ~/.ssh/known_hosts')
 
     # make sure the different models are providing different outputs
     assert np.unique(params.size) == params.size

@@ -31,6 +31,8 @@ def run_remote(simulator_class,
     :param n_samples:
     :param hostname:
     :param username:
+    :param simulator_args:
+    :param simulator_kwargs:
     :param remote_python_path:
     :param remote_work_path:
     :param local_work_path:
@@ -55,15 +57,17 @@ def run_remote(simulator_class,
     if local_work_path is None:
         local_work_path = os.getcwd()
 
-    U = str(uuid.uuid1())
+    # define file names. important to use different local/remote names in case
+    # we're ssh-ing into localhost etc.
+    uu = str(uuid.uuid1())
     datafile_local = os.path.join(local_work_path,
-                                  'local_data_{0}.pickle'.format(U))
+                                  'local_data_{0}.pickle'.format(uu))
     datafile_remote = os.path.join(remote_work_path,
-                                   'remote_data_{0}.pickle'.format(U))
+                                   'remote_data_{0}.pickle'.format(uu))
     samplefile_local = os.path.join(local_work_path,
-                                    'local_samples_{0}.pickle'.format(U))
+                                    'local_samples_{0}.pickle'.format(uu))
     samplefile_remote = os.path.join(remote_work_path,
-                                     'remote_samples_{0}.pickle'.format(U))
+                                     'remote_samples_{0}.pickle'.format(uu))
 
     data = dict(simulator_class=simulator_class, simulator_args=simulator_args,
                 simulator_kwargs=simulator_kwargs, prior=prior, summary=summary,
@@ -125,6 +129,13 @@ def run_remote(simulator_class,
 
     return samples['params'], samples['stats']
 
+
+def generate_slurm_script(scriptfile=None,
+                          outputfile=None,
+                          ):
+    '--delay-boot=0'
+    '--job-name='
+    '--output=.%j.%N.out'
 
 class RemoteGenerator(Default):
     def __init__(self,
