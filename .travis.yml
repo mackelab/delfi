@@ -31,7 +31,11 @@ install:
   - pip install -r requirements.txt
   - python setup.py install
 script:
-  - python -c "import os; os.chdir('tests/functional'); from test_generator import *; test_remotegen()"
+  - cp ~/.ssh/known_hosts ~/.ssh/known_hosts_backup
+  - ls ~/.ssh
+  - ls -l ~/.ssh
+  - ls -ld ~/.ssh
+  - eval $(ssh-agent -s)
   - PYTHONPATH=$PWD:$PYTHONPATH pytest --cov=delfi;
   - travis-sphinx build -n -s docs/
 after_success:
