@@ -21,6 +21,7 @@ def run_remote(simulator_class,
                simulator_seeds=None,
                generator_seed=None,
                use_slurm=False,  # use the job manager with sbatch
+               slurm_options=None,
                **generator_kwargs):
     """
     Create a MPGenerator on a remote server and generate samples.
@@ -56,6 +57,8 @@ def run_remote(simulator_class,
         local_work_path = os.getenv('HOME')
     if local_work_path is None:
         local_work_path = os.getcwd()
+    if slurm_options is None:
+        slurm_options = dict()
 
     # define file names. important to use different local/remote names in case
     # we're ssh-ing into localhost etc.
@@ -72,9 +75,9 @@ def run_remote(simulator_class,
     data = dict(simulator_class=simulator_class, simulator_args=simulator_args,
                 simulator_kwargs=simulator_kwargs, prior=prior, summary=summary,
                 proposal=proposal, n_samples=n_samples,
-                generator_seed=generator_seed, simulator_seeds=simulator_seeds,
+                generator_seed=generator_seed,
                 n_workers=n_workers, generator_kwargs=generator_kwargs,
-                samplefile=samplefile_remote)
+                samplefile=samplefile_remote, use_slurm=use_slurm, slurm_options=slurm_options)
 
     with open(datafile_local, 'wb') as f:
         pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -92,11 +95,7 @@ def run_remote(simulator_class,
     python_commands = 'from delfi.generator.MPGenerator import ' \
         'mpgen_from_file; mpgen_from_file(\'{0}\')'.format(datafile_remote)
 
-    if use_slurm:
-        raise NotImplementedError
-    else:
-        remote_command = '{0} -c \"{1}\"'.format(remote_python_path,
-                                                 python_commands)
+    remote_command = '{0} -c \"{1}\"'.format(remote_python_path, python_commands)
 
     result = subprocess.run(['ssh', hostname, '-l', username, remote_command],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -173,11 +172,6 @@ class RemoteGenerator(Default):
         self.prior.reseed(self.gen_newseed())
         self.summary.reseed(self.gen_newseed())
 
-        if n_workers is not None:
-            simulator_seeds = [self.gen_newseed() for _ in range(n_workers)]
-        else:
-            simulator_seeds = None
-
         return run_remote(self.simulator_class,
                           self.prior,
                           self.summary,
@@ -191,7 +185,6 @@ class RemoteGenerator(Default):
                           local_work_path=self.local_work_path,
                           proposal=self.proposal,
                           n_workers=n_workers,
-                          simulator_seeds=simulator_seeds,
                           generator_seed=self.gen_newseed(),
                           use_slurm=self.use_slurm,
                           **kwargs)

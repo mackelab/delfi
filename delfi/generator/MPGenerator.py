@@ -296,7 +296,11 @@ class MPGenerator(Default):
         self.stop_workers()
 
 
-def mpgen_from_file(filename):
+def generate_slurm_script(filename):
+    raise NotImplementedError
+
+
+def mpgen_from_file(filename, use_slurm=None, n_workers=None):
     """
     Run simulations from a file using a multi-process generator. This function
     can be used as a stand-alone utility, but is mainly meant to be called on a
@@ -308,25 +312,29 @@ def mpgen_from_file(filename):
     with open(filename, 'rb') as f:
         data = pickle.load(f)
 
-    n_workers, simulator_class, prior, simulator_seeds, summary, n_samples, \
-        generator_seed, proposal, generator_kwargs, \
-        simulator_args, simulator_kwargs, samplefile = data['n_workers'], \
-        data['simulator_class'], data['prior'], data['simulator_seeds'],\
-        data['summary'], data['n_samples'], data['generator_seed'], \
-        data['proposal'], data['generator_kwargs'], \
-        data['simulator_args'], data['simulator_kwargs'], data['samplefile']
+    n_workers, simulator_class, prior, summary, n_samples, generator_seed, proposal, \
+        generator_kwargs, simulator_args, simulator_kwargs, samplefile = \
+        data['n_workers'], data['simulator_class'], data['prior'], data['summary'], \
+        data['n_samples'], data['generator_seed'], data['proposal'], data['generator_kwargs'], data['simulator_args'], \
+        data['simulator_kwargs'], data['samplefile']
+
+    if use_slurm is None:
+        use_slurm = data['use_slurm']
+        if use_slurm is None:
+            use_slurm = False
+
+    if use_slurm:
+        generate_slurm_script(filename)
+        os.system('sbatch {0}'.format(filename))
 
     if n_workers is None:
-        if simulator_seeds is not None:
-            n_workers = len(simulator_seeds)
+        if data['n_workers'] is None:
+            n_workers = data['n_workers']
         else:
             n_workers = mp.cpu_count()
 
-    if simulator_seeds is None:
-        rng = np.random.RandomState(seed=generator_seed + 25)
-        simulator_seeds = [rng.randint(0, 2**31) for i in range(n_workers)]
-    else:
-        assert n_workers == len(simulator_seeds), "invalid settings"
+    rng = np.random.RandomState(seed=generator_seed + 25)
+    simulator_seeds = [rng.randint(0, 2**31) for i in range(n_workers)]
 
     n_workers = np.minimum(n_workers, n_samples)
     simulator_seeds = simulator_seeds[:n_workers]
