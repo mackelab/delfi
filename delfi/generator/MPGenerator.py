@@ -328,13 +328,12 @@ def mpgen_from_file(filename, use_slurm=None, n_workers=None):
         os.system('sbatch {0}'.format(filename))
 
     if n_workers is None:
-        if data['n_workers'] is None:
-            n_workers = data['n_workers']
-        else:
-            n_workers = mp.cpu_count()
+        n_workers = data['n_workers']
+    if n_workers is None:
+        n_workers = mp.cpu_count()
 
     rng = np.random.RandomState(seed=generator_seed + 25)
-    simulator_seeds = [rng.randint(0, 2**31) for i in range(n_workers)]
+    simulator_seeds = [rng.randint(0, 2**31) for _ in range(n_workers)]
 
     n_workers = np.minimum(n_workers, n_samples)
     simulator_seeds = simulator_seeds[:n_workers]
