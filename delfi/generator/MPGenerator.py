@@ -297,11 +297,10 @@ class MPGenerator(Default):
 
 
 def default_slurm_opts():
-    opts = {'cpus-per_task': 28,
-            'clusters': None,
+    opts = {'clusters': None,
             'time': '1:00:00',
             'chdir': os.path.expanduser('~'),
-            'ntasks_per_node': 1,
+            'ntasks-per-node': 1,
             'nodes': 1,
             'output': os.path.join(os.path.expanduser('~'), '%j-%t.out')
             }
@@ -317,8 +316,10 @@ def generate_slurm_script(filename):
         slurm_opts.update(data['slurm_opts'])
     assert slurm_opts['clusters'] is not None, "cluster(s) must be specified"
 
-    slurm_script_file = os.splitext(filename)[0] + '_slurm.sh'
+    slurm_script_file = os.path.splitext(filename)[0] + '_slurm.sh'
     with open(slurm_script_file, 'w') as f:
+
+        assert 'wait' not in slurm_opts.keys() and 'W' not in slurm_opts.keys(), "--wait is on by default, not optional"
         for key, val in slurm_opts.items():
             if len(key) == 1:
                 prefix = '-'
@@ -331,14 +332,17 @@ def generate_slurm_script(filename):
                 s += '{0}{1}'.format(postfix, val)
             f.write(s)
 
+        f.write('#SBATCH --wait')  # block execution until the job finishes
+
         python_commands = \
             'from delfi.generator.MPGenerator import mpgen_from_file;'\
             'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
-        f.write('srun {0}')
+        f.write('srun {0} -c "{1}"'.format(data['python_executable'], python_commands))
 
 
 def get_slurm_task_index():
-    raise NotImplementedError
+    localid = int(os.getenv('SLURM_LOCALID'))
+    return int(os.getenv('SLURM_GTIDS').split(',')[localid])
 
 
 def mpgen_from_file(filename, n_workers=None, from_slurm=False):
@@ -361,7 +365,9 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):
 
     if from_slurm:  # this is running on a slurm node
         tid = get_slurm_task_index()
-    elif data['use_slurm']:
+        generator_seed += tid
+        os.getenv('SLURM_NTASKS')
+    elif data['use_slurm']:  # start a slurm job that will call this function once per task
         generate_slurm_script(filename)
         os.system('sbatch {0}'.format(filename))
 
@@ -387,5 +393,4 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):
     params, stats = g.gen(n_samples, **generator_kwargs)
 
     with open(samplefile, 'wb') as f:
-        pickle.dump(dict(params=params, stats=stats), f,
-                    protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(dict(params=params, stats=stats), f, protocol=pickle.HIGHEST_PROTOCOL)

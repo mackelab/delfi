@@ -115,7 +115,7 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66, run_diagnostics=False):
                                username=username,
                                simulator_kwargs=simulator_kwargs,
                                use_slurm=False,
-                               remote_python_path=sys.executable,
+                               remote_python_executable=sys.executable,
                                seed=seed+2)
         params, stats = g.gen(n_samples, verbose=False)
         success = True
