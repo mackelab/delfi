@@ -296,11 +296,52 @@ class MPGenerator(Default):
         self.stop_workers()
 
 
+def default_slurm_opts():
+    opts = {'cpus-per_task': 28,
+            'clusters': None,
+            'time': '1:00:00',
+            'chdir': os.path.expanduser('~'),
+            'ntasks_per_node': 1,
+            'nodes': 1,
+            'output': os.path.join(os.path.expanduser('~'), '%j-%t.out')
+            }
+    return opts
+
+
 def generate_slurm_script(filename):
+    with open(filename, 'rb') as f:
+        data = pickle.load(f)
+
+    slurm_opts = default_slurm_opts()
+    if data['slurm_opts'] is not None:
+        slurm_opts.update(data['slurm_opts'])
+    assert slurm_opts['clusters'] is not None, "cluster(s) must be specified"
+
+    slurm_script_file = os.splitext(filename)[0] + '_slurm.sh'
+    with open(slurm_script_file, 'w') as f:
+        for key, val in slurm_opts.items():
+            if len(key) == 1:
+                prefix = '-'
+                postfix = ' '
+            else:
+                prefix = '--'
+                postfix= '='
+            s = '#SBATCH {0}{1}\n'.format(prefix, key)
+            if val is not None:
+                s += '{0}{1}'.format(postfix, val)
+            f.write(s)
+
+        python_commands = \
+            'from delfi.generator.MPGenerator import mpgen_from_file;'\
+            'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
+        f.write('srun {0}')
+
+
+def get_slurm_task_index():
     raise NotImplementedError
 
 
-def mpgen_from_file(filename, use_slurm=None, n_workers=None):
+def mpgen_from_file(filename, n_workers=None, from_slurm=False):
     """
     Run simulations from a file using a multi-process generator. This function
     can be used as a stand-alone utility, but is mainly meant to be called on a
@@ -318,14 +359,14 @@ def mpgen_from_file(filename, use_slurm=None, n_workers=None):
         data['n_samples'], data['generator_seed'], data['proposal'], data['generator_kwargs'], data['simulator_args'], \
         data['simulator_kwargs'], data['samplefile']
 
-    if use_slurm is None:
-        use_slurm = data['use_slurm']
-        if use_slurm is None:
-            use_slurm = False
-
-    if use_slurm:
+    if from_slurm:  # this is running on a slurm node
+        tid = get_slurm_task_index()
+    elif data['use_slurm']:
         generate_slurm_script(filename)
         os.system('sbatch {0}'.format(filename))
+
+        # collect results from each task's file
+        raise NotImplementedError
 
     if n_workers is None:
         n_workers = data['n_workers']

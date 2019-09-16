@@ -13,7 +13,7 @@ def run_remote(simulator_class,
                username,
                simulator_args=None,
                simulator_kwargs=None,
-               remote_python_path=None,
+               remote_python_executable=None,
                remote_work_path=None,
                local_work_path=None,
                proposal=None,  # use prior by default
@@ -49,8 +49,8 @@ def run_remote(simulator_class,
         simulator_args = []
     if simulator_kwargs is None:
         simulator_kwargs = dict()
-    if remote_python_path is None:
-        remote_python_path = 'python3'
+    if remote_python_executable is None:
+        remote_python_executable = 'python3'
     if remote_work_path is None:
         remote_work_path = './'
     if local_work_path is None:
@@ -77,7 +77,9 @@ def run_remote(simulator_class,
                 proposal=proposal, n_samples=n_samples,
                 generator_seed=generator_seed,
                 n_workers=n_workers, generator_kwargs=generator_kwargs,
-                samplefile=samplefile_remote, use_slurm=use_slurm, slurm_options=slurm_options)
+                samplefile=samplefile_remote, use_slurm=use_slurm,
+                python_executable=remote_python_executable,
+                slurm_options=slurm_options)
 
     with open(datafile_local, 'wb') as f:
         pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -95,7 +97,8 @@ def run_remote(simulator_class,
     python_commands = 'from delfi.generator.MPGenerator import ' \
         'mpgen_from_file; mpgen_from_file(\'{0}\')'.format(datafile_remote)
 
-    remote_command = '{0} -c \"{1}\"'.format(remote_python_path, python_commands)
+    remote_command = '{0} -c \"{1}\"'.format(remote_python_executable,
+                                             python_commands)
 
     result = subprocess.run(['ssh', hostname, '-l', username, remote_command],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -129,19 +132,12 @@ def run_remote(simulator_class,
     return samples['params'], samples['stats']
 
 
-def generate_slurm_script(scriptfile=None,
-                          outputfile=None,
-                          ):
-    '--delay-boot=0'
-    '--job-name='
-    '--output=.%j.%N.out'
-
 class RemoteGenerator(Default):
     def __init__(self,
                  simulator_class, prior, summary,
                  hostname, username,
                  simulator_args=None, simulator_kwargs=None,
-                 remote_python_path=None, use_slurm=False,
+                 remote_python_executable=None, use_slurm=False,
                  local_work_path=None, remote_work_path=None,
                  seed=None):
         """
@@ -153,7 +149,7 @@ class RemoteGenerator(Default):
         :param summary:
         :param hostname:
         :param username:
-        :param remote_python_path:
+        :param remote_python_executable:
         :param use_slurm:
         :param local_work_path:
         :param remote_work_path:
@@ -162,29 +158,30 @@ class RemoteGenerator(Default):
         super().__init__(model=None, prior=prior, summary=summary, seed=seed)
         self.simulator_class, self.hostname, self.username,\
             self.simulator_args, self.simulator_kwargs, \
-            self.remote_python_path, self.local_work_path,\
+            self.remote_python_executable, self.local_work_path,\
             self.remote_work_path, self.use_slurm = \
             simulator_class, hostname, username, simulator_args,\
-            simulator_kwargs, remote_python_path, local_work_path, \
+            simulator_kwargs, remote_python_executable, local_work_path, \
             remote_work_path, use_slurm
 
     def gen(self, n_samples, n_workers=None, **kwargs):
         self.prior.reseed(self.gen_newseed())
         self.summary.reseed(self.gen_newseed())
 
-        return run_remote(self.simulator_class,
-                          self.prior,
-                          self.summary,
-                          n_samples,
-                          hostname=self.hostname,
-                          username=self.username,
-                          simulator_args=self.simulator_args,
-                          simulator_kwargs=self.simulator_kwargs,
-                          remote_python_path=self.remote_python_path,
-                          remote_work_path=self.remote_work_path,
-                          local_work_path=self.local_work_path,
-                          proposal=self.proposal,
-                          n_workers=n_workers,
-                          generator_seed=self.gen_newseed(),
-                          use_slurm=self.use_slurm,
-                          **kwargs)
+        return \
+            run_remote(self.simulator_class,
+                       self.prior,
+                       self.summary,
+                       n_samples,
+                       hostname=self.hostname,
+                       username=self.username,
+                       simulator_args=self.simulator_args,
+                       simulator_kwargs=self.simulator_kwargs,
+                       remote_python_executable=self.remote_python_executable,
+                       remote_work_path=self.remote_work_path,
+                       local_work_path=self.local_work_path,
+                       proposal=self.proposal,
+                       n_workers=n_workers,
+                       generator_seed=self.gen_newseed(),
+                       use_slurm=self.use_slurm,
+                       **kwargs)
