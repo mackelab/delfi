@@ -165,23 +165,23 @@ class RemoteGenerator(Default):
         samples_remaining, params, stats = n_samples, None, None
         while samples_remaining > 0:
             next_params, next_stats = run_remote(self.simulator_class,
-                                                  self.prior,
-                                                  self.summary,
-                                                  n_samples,
-                                                  hostname=self.hostname,
-                                                  username=self.username,
-                                                  simulator_args=self.simulator_args,
-                                                  simulator_kwargs=self.simulator_kwargs,
-                                                  remote_python_executable=self.remote_python_executable,
-                                                  remote_work_path=self.remote_work_path,
-                                                  local_work_path=self.local_work_path,
-                                                  proposal=self.proposal,
-                                                  n_workers=n_workers,
-                                                  generator_seed=self.gen_newseed(),
-                                                  use_slurm=self.use_slurm,
-                                                  save_every=self.save_every,
-                                                  slurm_options=self.slurm_options,
-                                                  **kwargs)
+                                                 self.prior,
+                                                 self.summary,
+                                                 n_samples,
+                                                 hostname=self.hostname,
+                                                 username=self.username,
+                                                 simulator_args=self.simulator_args,
+                                                 simulator_kwargs=self.simulator_kwargs,
+                                                 remote_python_executable=self.remote_python_executable,
+                                                 remote_work_path=self.remote_work_path,
+                                                 local_work_path=self.local_work_path,
+                                                 proposal=self.proposal,
+                                                 n_workers=n_workers,
+                                                 generator_seed=self.gen_newseed(),
+                                                 use_slurm=self.use_slurm,
+                                                 save_every=self.save_every,
+                                                 slurm_options=self.slurm_options,
+                                                 **kwargs)
             if params is None:
                 params, stats = next_params, next_stats
             else:

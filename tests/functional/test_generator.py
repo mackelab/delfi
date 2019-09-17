@@ -137,7 +137,7 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66, run_diagnostics=False):
     assert np.unique(stats.size) == stats.size
 
 
-def dont_test_remotegen_slurm(n_samples=1000, n_params=2, seed=66, save_every=100,
+def dont_test_remotegen_slurm(n_samples=500, n_params=2, seed=66, save_every=200,
                              hostname=None, username=None, clusters=None,
                              remote_python_executable=None, remote_work_path=None):
     assert type(hostname) is str and type(username) is str, "hostname and username must be provided"
@@ -151,7 +151,7 @@ def dont_test_remotegen_slurm(n_samples=1000, n_params=2, seed=66, save_every=10
     simulator_kwargs = dict(dim=2)
 
     slurm_options = {'clusters': clusters,
-                     'time': '0:05:00'}
+                     'time': '0:10:00'}
 
     g = dg.RemoteGenerator(simulator_class=Gauss,
                            prior=p, summary=s,

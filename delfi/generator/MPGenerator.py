@@ -309,12 +309,12 @@ def default_slurm_options():  # pragma: no cover
 
 
 def generate_slurm_script(filename):  # pragma: no cover
-    '''
+    """
     Save a slurm script to run mpgen_from_file through a SLURM job manager
 
     :param filename:
     :return:
-    '''
+    """
     with open(filename, 'rb') as f:
         data = pickle.load(f)
 
