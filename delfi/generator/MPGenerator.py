@@ -296,7 +296,7 @@ class MPGenerator(Default):
         self.stop_workers()
 
 
-def default_slurm_opts():
+def default_slurm_options():
     opts = {'clusters': None,
             'time': '1:00:00',
             'chdir': os.path.expanduser('~'),
@@ -311,16 +311,16 @@ def generate_slurm_script(filename):
     with open(filename, 'rb') as f:
         data = pickle.load(f)
 
-    slurm_opts = default_slurm_opts()
-    if data['slurm_opts'] is not None:
-        slurm_opts.update(data['slurm_opts'])
-    assert slurm_opts['clusters'] is not None, "cluster(s) must be specified"
+    slurm_options = default_slurm_options()
+    if data['slurm_options'] is not None:
+        slurm_options.update(data['slurm_options'])
+    assert slurm_options['clusters'] is not None, "cluster(s) must be specified"
 
     slurm_script_file = os.path.splitext(filename)[0] + '_slurm.sh'
     with open(slurm_script_file, 'w') as f:
 
-        assert 'wait' not in slurm_opts.keys() and 'W' not in slurm_opts.keys(), "--wait is on by default, not optional"
-        for key, val in slurm_opts.items():
+        assert 'wait' not in slurm_options.keys() and 'W' not in slurm_options.keys(), "--wait is on by default, not optional"
+        for key, val in slurm_options.items():
             if len(key) == 1:
                 prefix = '-'
                 postfix = ' '
@@ -339,7 +339,7 @@ def generate_slurm_script(filename):
             'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
         f.write('srun {0} -c "{1}"'.format(data['python_executable'], python_commands))
 
-    return slurm_opts, slurm_script_file
+    return slurm_options, slurm_script_file
 
 
 def get_slurm_task_index():
@@ -382,8 +382,8 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):
 
     elif data['use_slurm']:  # start a slurm job that will call this function once per task
 
-        slurm_opts, slurm_script_file = generate_slurm_script(filename)
-        ntasks = int(slurm_opts['ntasks-per-node']) * int(slurm_opts['nodes'])
+        slurm_options, slurm_script_file = generate_slurm_script(filename)
+        ntasks = int(slurm_options['ntasks-per-node']) * int(slurm_options['nodes'])
         os.system('sbatch {0}'.format(slurm_script_file))
         # sbatch will now block until job is completed due to --wait flag
 
