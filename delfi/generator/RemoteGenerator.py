@@ -18,7 +18,6 @@ def run_remote(simulator_class,
                local_work_path=None,
                proposal=None,  # use prior by default
                n_workers=None,  # use number of remote cpus by default
-               simulator_seeds=None,
                generator_seed=None,
                use_slurm=False,  # use the job manager with sbatch
                slurm_options=None,
@@ -26,6 +25,8 @@ def run_remote(simulator_class,
     """
     Create a MPGenerator on a remote server and generate samples.
 
+    :param remote_python_executable:
+    :param slurm_options:
     :param simulator_class:
     :param prior:
     :param summary:
@@ -34,12 +35,11 @@ def run_remote(simulator_class,
     :param username:
     :param simulator_args:
     :param simulator_kwargs:
-    :param remote_python_path:
+    :param remote_python_executable:
     :param remote_work_path:
     :param local_work_path:
     :param proposal:
     :param n_workers:
-    :param simulator_seeds:
     :param generator_seed:
     :param use_slurm:
     :param generator_kwargs:
@@ -137,7 +137,7 @@ class RemoteGenerator(Default):
                  simulator_class, prior, summary,
                  hostname, username,
                  simulator_args=None, simulator_kwargs=None,
-                 remote_python_executable=None, use_slurm=False,
+                 remote_python_executable=None, use_slurm=False, slurm_options=None,
                  local_work_path=None, remote_work_path=None,
                  seed=None):
         """
@@ -159,10 +159,10 @@ class RemoteGenerator(Default):
         self.simulator_class, self.hostname, self.username,\
             self.simulator_args, self.simulator_kwargs, \
             self.remote_python_executable, self.local_work_path,\
-            self.remote_work_path, self.use_slurm = \
+            self.remote_work_path, self.use_slurm, self.slurm_options = \
             simulator_class, hostname, username, simulator_args,\
             simulator_kwargs, remote_python_executable, local_work_path, \
-            remote_work_path, use_slurm
+            remote_work_path, use_slurm, slurm_options
 
     def gen(self, n_samples, n_workers=None, **kwargs):
         self.prior.reseed(self.gen_newseed())
@@ -184,4 +184,5 @@ class RemoteGenerator(Default):
                        n_workers=n_workers,
                        generator_seed=self.gen_newseed(),
                        use_slurm=self.use_slurm,
+                       slurm_options=self.slurm_options,
                        **kwargs)

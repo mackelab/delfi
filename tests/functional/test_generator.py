@@ -135,3 +135,29 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66, run_diagnostics=False):
     # make sure the different models are providing different outputs
     assert np.unique(params.size) == params.size
     assert np.unique(stats.size) == stats.size
+
+
+def dont_test_remotegen_slum(n_samples=1000, n_params=2, seed=66,
+                             hostname=None, username=None, clusters=None,
+                             remote_python_executable=None, remote_work_path=None):
+    assert type(hostname) is str and type(username) is str, "hostname and username must be provided"
+    assert type(clusters) is str, "cluster(s) must be specified as a (comma-delimited) string"
+
+    p = dd.Gaussian(m=np.zeros((n_params,)), S=np.eye(n_params), seed=seed)
+    s = ds.Identity(seed=seed + 1)
+
+    simulator_kwargs = dict(dim=2)
+
+    slurm_options = {'clusters': clusters,
+                     'time': '0:05:00'}
+
+    g = dg.RemoteGenerator(simulator_class=Gauss,
+                           prior=p, summary=s,
+                           hostname=hostname,
+                           username=username,
+                           simulator_kwargs=simulator_kwargs,
+                           use_slurm=True,
+                           remote_python_executable=remote_python_executable,
+                           remote_work_path=remote_work_path,
+                           seed=seed + 2)
+    params, stats = g.gen(n_samples, verbose=False, slurm_options=slurm_options)

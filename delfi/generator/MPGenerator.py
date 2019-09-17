@@ -339,6 +339,8 @@ def generate_slurm_script(filename):
             'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
         f.write('srun {0} -c "{1}"'.format(data['python_executable'], python_commands))
 
+    return slurm_opts, slurm_script_file
+
 
 def get_slurm_task_index():
     localid = int(os.getenv('SLURM_LOCALID'))
@@ -347,32 +349,70 @@ def get_slurm_task_index():
 
 def mpgen_from_file(filename, n_workers=None, from_slurm=False):
     """
-    Run simulations from a file using a multi-process generator. This function
-    can be used as a stand-alone utility, but is mainly meant to be called on a
-    remote host over ssh by a RemoteGenerator.
+    Run simulations from a file using a multi-process generator, and save them in a file.
 
+    This function can be used as a stand-alone utility, but is mainly meant to be called on a remote host over ssh by a
+    RemoteGenerator.
+
+    :param from_slurm:
+    :param n_workers:
     :param filename: file describing simulations to be run
     :return:
     """
     with open(filename, 'rb') as f:
         data = pickle.load(f)
 
-    n_workers, simulator_class, prior, summary, n_samples, generator_seed, proposal, \
+    simulator_class, prior, summary, generator_seed, proposal, \
         generator_kwargs, simulator_args, simulator_kwargs, samplefile = \
-        data['n_workers'], data['simulator_class'], data['prior'], data['summary'], \
-        data['n_samples'], data['generator_seed'], data['proposal'], data['generator_kwargs'], data['simulator_args'], \
+        data['simulator_class'], data['prior'], data['summary'], \
+        data['generator_seed'], data['proposal'], data['generator_kwargs'], data['simulator_args'], \
         data['simulator_kwargs'], data['samplefile']
 
-    if from_slurm:  # this is running on a slurm node
+    if from_slurm:  # this function is running on a slurm node
+
         tid = get_slurm_task_index()
         generator_seed += tid
-        os.getenv('SLURM_NTASKS')
+        ntasks = os.getenv('SLURM_NTASKS')
+
+        sf, se = os.path.splitext(samplefile)
+        samplefile = sf + '_{0}'.format(tid) + se
+
+        samples_per_task = int(np.ceil(data['n_samples'] / ntasks))
+        n_samples = np.minimum((tid + 1) * samples_per_task, data['n_samples']) - tid * samples_per_task
+
     elif data['use_slurm']:  # start a slurm job that will call this function once per task
-        generate_slurm_script(filename)
-        os.system('sbatch {0}'.format(filename))
+
+        slurm_opts, slurm_script_file = generate_slurm_script(filename)
+        ntasks = int(slurm_opts['ntasks-per-node']) * int(slurm_opts['nodes'])
+        os.system('sbatch {0}'.format(slurm_script_file))
+        # sbatch will now block until job is completed due to --wait flag
 
         # collect results from each task's file
-        raise NotImplementedError
+        params, stats = [], []
+        for tid in range(ntasks):
+            sf, se = os.path.splitext(samplefile)
+            samplefile_this_task = sf + '_{0}'.format(tid) + se
+
+            with open(samplefile_this_task, 'rb') as f:
+                samples = pickle.load(f)
+            params.append(samples['params'])
+            stats.append(samples['stats'])
+
+        # save all samples in one file
+        with open(samplefile, 'wb') as f:
+            pickle.dump(dict(params=params, stats=stats), f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        # remove task-specific sample files
+        for tid in range(ntasks):
+            sf, se = os.path.splitext(samplefile)
+            samplefile_this_task = sf + '_{0}'.format(tid) + se
+            os.remove(samplefile_this_task)
+
+        return
+
+    else:  # non-SLURM: use a single generator for all the samples
+
+        n_samples = data['n_samples']
 
     if n_workers is None:
         n_workers = data['n_workers']
@@ -387,7 +427,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):
 
     models = [simulator_class(seed=s, *simulator_args, **simulator_kwargs)
               for s in simulator_seeds]
-    g = MPGenerator(models, prior, summary, seed=generator_seed, verbose=False)
+    g = MPGenerator(models, prior, summary, seed=rng.randint(0, 2**31), verbose=False)
     g.proposal = proposal
 
     params, stats = g.gen(n_samples, **generator_kwargs)
