@@ -142,6 +142,8 @@ def dont_test_remotegen_slum(n_samples=1000, n_params=2, seed=66,
                              remote_python_executable=None, remote_work_path=None):
     assert type(hostname) is str and type(username) is str, "hostname and username must be provided"
     assert type(clusters) is str, "cluster(s) must be specified as a (comma-delimited) string"
+    '''this test is currently disabled because we don't have slurm running on travis right now. it works fine
+    if it's run locally on a machine with key-based ssh-access to a SLURM cluster, as of 17.09.2019'''
 
     p = dd.Gaussian(m=np.zeros((n_params,)), S=np.eye(n_params), seed=seed)
     s = ds.Identity(seed=seed + 1)
@@ -162,3 +164,4 @@ def dont_test_remotegen_slum(n_samples=1000, n_params=2, seed=66,
                            slurm_options=slurm_options,
                            seed=seed + 2)
     params, stats = g.gen(n_samples, verbose=False)
+    return params, stats
