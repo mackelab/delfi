@@ -1,6 +1,7 @@
 import multiprocessing as mp
 import numpy as np
 import os
+import sys
 import subprocess
 import pickle
 from delfi.generator.Default import Default
@@ -388,22 +389,27 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
         ntasks = int(slurm_options['ntasks-per-node']) * int(slurm_options['nodes'])
 
         result = subprocess.run(['sbatch', slurm_script_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        assert result.returncode == 0, "failed to run slurm script: {0}".format(result.stderr.decode())
+        # sbatch will now block until job is completed due to --wait flag
         with open('test.txt', 'w') as f:
             f.write(result.stdout().decode())
-        #sbatch will now block until job is completed due to --wait flag
+        if result.returncode != 0:  # e.g. job timed out
+            sys.stderr.write('SLURM job terminated abnormally: {0}'.format(result.stderr.decode()))
 
         # collect results from each task's file
+        params, stats = None, None
         for tid in range(ntasks):
             sf, se = os.path.splitext(data['samplefile'])
             samplefile_this_task = sf + '_{0}'.format(tid) + se
+            if not os.path.exists(samplefile_this_task):
+                continue
 
             with open(samplefile_this_task, 'rb') as f:
                 samples = pickle.load(f)
-                if tid == 0:
+                if params is None:
                     params, stats = samples['params'], samples['stats']
                 else:
-                    params, stats = np.vstack(params, samples['params']), np.vstack(stats, samples['stats'])
+                    params, stats = np.vstack((params, samples['params'])), np.vstack((stats, samples['stats']))
+        assert params is not None, "failed to generate any samples"
 
         # save all samples in one file
         with open(data['samplefile'], 'wb') as f:
