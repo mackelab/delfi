@@ -300,7 +300,7 @@ class MPGenerator(Default):
 def default_slurm_options():
     opts = {'clusters': None,
             'time': '1:00:00',
-            'chdir': os.path.expanduser('~'),
+            'D': os.path.expanduser('~'),
             'ntasks-per-node': 1,
             'nodes': 1,
             'output': os.path.join(os.path.expanduser('~'), '%j-%t.out')
@@ -380,7 +380,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):
 
         tid = get_slurm_task_index()
         generator_seed += tid
-        ntasks = os.getenv('SLURM_NTASKS')
+        ntasks = int(os.getenv('SLURM_NTASKS'))
 
         sf, se = os.path.splitext(samplefile)
         samplefile = sf + '_{0}'.format(tid) + se
