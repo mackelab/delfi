@@ -2,6 +2,7 @@ import os
 import uuid
 import pickle
 import subprocess
+import numpy as np
 from delfi.generator.Default import Default
 
 
@@ -21,10 +22,12 @@ def run_remote(simulator_class,
                generator_seed=None,
                use_slurm=False,  # use the job manager with sbatch
                slurm_options=None,
+               save_every=None,
                **generator_kwargs):
     """
     Create a MPGenerator on a remote server and generate samples.
 
+    :param save_every:
     :param remote_python_executable:
     :param slurm_options:
     :param simulator_class:
@@ -79,7 +82,7 @@ def run_remote(simulator_class,
                 n_workers=n_workers, generator_kwargs=generator_kwargs,
                 samplefile=samplefile_remote, use_slurm=use_slurm,
                 python_executable=remote_python_executable,
-                slurm_options=slurm_options)
+                slurm_options=slurm_options, save_every=save_every)
 
     with open(datafile_local, 'wb') as f:
         pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -121,14 +124,17 @@ class RemoteGenerator(Default):
     def __init__(self,
                  simulator_class, prior, summary,
                  hostname, username,
-                 simulator_args=None, simulator_kwargs=None,
+                 simulator_args=None, simulator_kwargs=None, save_every=None,
                  remote_python_executable=None, use_slurm=False, slurm_options=None,
-                 local_work_path=None, remote_work_path=None,
+                 local_work_path=None, remote_work_path=None, persistent=True,
                  seed=None):
         """
         Generator that creates an MPGenerator on a remote server and uses that
         to run simulations.
 
+        :param persistent: Whether to start a new job if the first one doesn't generate the necessary number of samples.
+            This can be useful when the remote host might cancel the job part-way through, combined with save_every.
+        :param save_every: Progress will be saved on the remote host every time this many samples is generated.
         :param simulator_class:
         :param prior:
         :param summary:
@@ -144,30 +150,45 @@ class RemoteGenerator(Default):
         self.simulator_class, self.hostname, self.username,\
             self.simulator_args, self.simulator_kwargs, \
             self.remote_python_executable, self.local_work_path,\
-            self.remote_work_path, self.use_slurm, self.slurm_options = \
+            self.remote_work_path, self.use_slurm, self.slurm_options, self.save_every, self.persistent = \
             simulator_class, hostname, username, simulator_args,\
             simulator_kwargs, remote_python_executable, local_work_path, \
-            remote_work_path, use_slurm, slurm_options
+            remote_work_path, use_slurm, slurm_options, save_every, persistent
 
-    def gen(self, n_samples, n_workers=None, **kwargs):
+    def gen(self, n_samples, n_workers=None, persistent=None, **kwargs):
         self.prior.reseed(self.gen_newseed())
         self.summary.reseed(self.gen_newseed())
 
-        return \
-            run_remote(self.simulator_class,
-                       self.prior,
-                       self.summary,
-                       n_samples,
-                       hostname=self.hostname,
-                       username=self.username,
-                       simulator_args=self.simulator_args,
-                       simulator_kwargs=self.simulator_kwargs,
-                       remote_python_executable=self.remote_python_executable,
-                       remote_work_path=self.remote_work_path,
-                       local_work_path=self.local_work_path,
-                       proposal=self.proposal,
-                       n_workers=n_workers,
-                       generator_seed=self.gen_newseed(),
-                       use_slurm=self.use_slurm,
-                       slurm_options=self.slurm_options,
-                       **kwargs)
+        if persistent is None:
+            persistent = self.persistent
+
+        samples_remaining, params, stats = n_samples, None, None
+        while samples_remaining > 0:
+            next_params, next_stats = run_remote(self.simulator_class,
+                                                  self.prior,
+                                                  self.summary,
+                                                  n_samples,
+                                                  hostname=self.hostname,
+                                                  username=self.username,
+                                                  simulator_args=self.simulator_args,
+                                                  simulator_kwargs=self.simulator_kwargs,
+                                                  remote_python_executable=self.remote_python_executable,
+                                                  remote_work_path=self.remote_work_path,
+                                                  local_work_path=self.local_work_path,
+                                                  proposal=self.proposal,
+                                                  n_workers=n_workers,
+                                                  generator_seed=self.gen_newseed(),
+                                                  use_slurm=self.use_slurm,
+                                                  save_every=self.save_every,
+                                                  slurm_options=self.slurm_options,
+                                                  **kwargs)
+            if params is None:
+                params, stats = next_params, next_stats
+            else:
+                params, stats = np.vstack((params, next_params)), np.vstack((stats, next_stats))
+            samples_remaining -= next_params.shape[0]
+
+            if not persistent:
+                break
+
+        return params, stats

@@ -137,7 +137,7 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66, run_diagnostics=False):
     assert np.unique(stats.size) == stats.size
 
 
-def dont_test_remotegen_slurm(n_samples=1000, n_params=2, seed=66,
+def dont_test_remotegen_slurm(n_samples=1000, n_params=2, seed=66, save_every=100,
                              hostname=None, username=None, clusters=None,
                              remote_python_executable=None, remote_work_path=None):
     assert type(hostname) is str and type(username) is str, "hostname and username must be provided"
@@ -162,6 +162,7 @@ def dont_test_remotegen_slurm(n_samples=1000, n_params=2, seed=66,
                            remote_python_executable=remote_python_executable,
                            remote_work_path=remote_work_path,
                            slurm_options=slurm_options,
+                           save_every=save_every,
                            seed=seed + 2)
     params, stats = g.gen(n_samples, verbose=False)
     return params, stats
