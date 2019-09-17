@@ -159,5 +159,6 @@ def dont_test_remotegen_slum(n_samples=1000, n_params=2, seed=66,
                            use_slurm=True,
                            remote_python_executable=remote_python_executable,
                            remote_work_path=remote_work_path,
+                           slurm_options=slurm_options,
                            seed=seed + 2)
     params, stats = g.gen(n_samples, verbose=False)

@@ -85,35 +85,24 @@ def run_remote(simulator_class,
         pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     # copy the data file to the remote host
-    result = subprocess.run(
-        ['scp', datafile_local,
-         '{0}@{1}:{2}'.format(username, hostname, datafile_remote)],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    assert result.returncode == 0, \
-        "failed to copy data file to remote host: {0}" \
-        .format(result.stderr.decode())
+    result = subprocess.run(['scp', datafile_local, '{0}@{1}:{2}'.format(username, hostname, datafile_remote)],
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    assert result.returncode == 0, "failed to copy data file to remote host: {0}".format(result.stderr.decode())
 
     # generate samples remotely
     python_commands = 'from delfi.generator.MPGenerator import ' \
         'mpgen_from_file; mpgen_from_file(\'{0}\')'.format(datafile_remote)
 
-    remote_command = '{0} -c \"{1}\"'.format(remote_python_executable,
-                                             python_commands)
+    remote_command = '{0} -c \"{1}\"'.format(remote_python_executable, python_commands)
 
     result = subprocess.run(['ssh', hostname, '-l', username, remote_command],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    assert result.returncode == 0, \
-        "failed to run code on remote host: {0}".format(result.stderr.decode())
+    assert result.returncode == 0, "failed to run code on remote host: {0}".format(result.stderr.decode())
 
     # copy samples back to local host
-    result = subprocess.run(
-        ['scp', '{0}@{1}:{2}'.format(username, hostname, samplefile_remote),
-         samplefile_local],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    assert result.returncode == 0, \
-        "failed to copy samples file from remote host: {0}" \
-        .format(result.stderr.decode())
+    result = subprocess.run(['scp', '{0}@{1}:{2}'.format(username, hostname, samplefile_remote), samplefile_local],
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    assert result.returncode == 0, "failed to copy samples file from remote host: {0}".format(result.stderr.decode())
 
     with open(samplefile_local, 'rb') as f:
         samples = pickle.load(f)
@@ -121,13 +110,9 @@ def run_remote(simulator_class,
     # clean up by deleting data/sample files on remote/local machines
     os.remove(datafile_local)
     os.remove(samplefile_local)
-    result = subprocess.run(['ssh', hostname, '-l', username,
-                             'rm {0} && rm {1}'.format(datafile_remote,
-                                                       samplefile_remote)],
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    assert result.returncode == 0, \
-        "failed to delete file(s) from remote host: {0}" \
-        .format(result.stderr.decode())
+    result = subprocess.run(['ssh', hostname, '-l', username, 'rm {0} && rm {1}'.format(datafile_remote,
+                             samplefile_remote)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    assert result.returncode == 0, "failed to delete file(s) from remote host: {0}".format(result.stderr.decode())
 
     return samples['params'], samples['stats']
 

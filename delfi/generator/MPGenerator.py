@@ -1,6 +1,7 @@
 import multiprocessing as mp
 import numpy as np
 import os
+import subprocess
 import pickle
 from delfi.generator.Default import Default
 from delfi.utils.progress import no_tqdm, progressbar
@@ -308,6 +309,12 @@ def default_slurm_options():
 
 
 def generate_slurm_script(filename):
+    '''
+    Save a slurm script to run mpgen_from_file through a SLURM job manager
+
+    :param filename:
+    :return:
+    '''
     with open(filename, 'rb') as f:
         data = pickle.load(f)
 
@@ -315,11 +322,13 @@ def generate_slurm_script(filename):
     if data['slurm_options'] is not None:
         slurm_options.update(data['slurm_options'])
     assert slurm_options['clusters'] is not None, "cluster(s) must be specified"
+    assert 'wait' not in slurm_options.keys() and 'W' not in slurm_options.keys(), "--wait/W always on, not options"
 
     slurm_script_file = os.path.splitext(filename)[0] + '_slurm.sh'
     with open(slurm_script_file, 'w') as f:
 
-        assert 'wait' not in slurm_options.keys() and 'W' not in slurm_options.keys(), "--wait is on by default, not optional"
+        f.write('#!/bin/bash\n')
+
         for key, val in slurm_options.items():
             if len(key) == 1:
                 prefix = '-'
@@ -327,17 +336,16 @@ def generate_slurm_script(filename):
             else:
                 prefix = '--'
                 postfix= '='
-            s = '#SBATCH {0}{1}\n'.format(prefix, key)
+            s = '#SBATCH {0}{1}'.format(prefix, key)
             if val is not None:
                 s += '{0}{1}'.format(postfix, val)
-            f.write(s)
+            f.write(s + '\n')
 
-        f.write('#SBATCH --wait')  # block execution until the job finishes
+        f.write('#SBATCH --wait\n')  # block execution until the job finishes
 
-        python_commands = \
-            'from delfi.generator.MPGenerator import mpgen_from_file;'\
+        python_commands = 'from delfi.generator.MPGenerator import mpgen_from_file;'\
             'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
-        f.write('srun {0} -c "{1}"'.format(data['python_executable'], python_commands))
+        f.write('srun {0} -c "{1}"\n'.format(data['python_executable'], python_commands))
 
     return slurm_options, slurm_script_file
 
@@ -384,7 +392,9 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):
 
         slurm_options, slurm_script_file = generate_slurm_script(filename)
         ntasks = int(slurm_options['ntasks-per-node']) * int(slurm_options['nodes'])
-        os.system('sbatch {0}'.format(slurm_script_file))
+
+        result = subprocess.run(['sbatch', slurm_script_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        assert result.returncode == 0, "failed to run slurm script: {0}".format(result.stderr.decode())
         # sbatch will now block until job is completed due to --wait flag
 
         # collect results from each task's file
