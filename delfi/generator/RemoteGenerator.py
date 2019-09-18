@@ -7,13 +7,15 @@ from delfi.generator.Default import Default
 
 
 def run_remote(simulator_class,
+               summary_class,
                prior,  # might still be relevant with proposals due to rejection
-               summary,
                n_samples,
                hostname,
                username,
                simulator_args=None,
                simulator_kwargs=None,
+               summary_args=None,
+               summary_kwargs=None,
                remote_python_executable=None,
                remote_work_path=None,
                local_work_path=None,
@@ -27,12 +29,14 @@ def run_remote(simulator_class,
     """
     Create a MPGenerator on a remote server and generate samples.
 
+    :param summary_kwargs:
+    :param summary_args:
+    :param summary_class:
     :param save_every:
     :param remote_python_executable:
     :param slurm_options:
     :param simulator_class:
     :param prior:
-    :param summary:
     :param n_samples:
     :param hostname:
     :param username:
@@ -75,9 +79,9 @@ def run_remote(simulator_class,
     samplefile_remote = os.path.join(remote_work_path,
                                      'remote_samples_{0}.pickle'.format(uu))
 
-    data = dict(simulator_class=simulator_class, simulator_args=simulator_args,
-                simulator_kwargs=simulator_kwargs, prior=prior, summary=summary,
-                proposal=proposal, n_samples=n_samples,
+    data = dict(simulator_class=simulator_class, simulator_args=simulator_args, simulator_kwargs=simulator_kwargs,
+                summary_class=summary_class, summary_args=summary_args, summary_kwargs=summary_kwargs,
+                prior=prior, proposal=proposal, n_samples=n_samples,
                 generator_seed=generator_seed,
                 n_workers=n_workers, generator_kwargs=generator_kwargs,
                 samplefile=samplefile_remote, use_slurm=use_slurm,
@@ -122,9 +126,10 @@ def run_remote(simulator_class,
 
 class RemoteGenerator(Default):
     def __init__(self,
-                 simulator_class, prior, summary,
+                 simulator_class, prior, summary_class,
                  hostname, username,
-                 simulator_args=None, simulator_kwargs=None, save_every=None,
+                 simulator_args=None, simulator_kwargs=None, summary_args=None, summary_kwargs=None,
+                 save_every=None,
                  remote_python_executable=None, use_slurm=False, slurm_options=None,
                  local_work_path=None, remote_work_path=None, persistent=True,
                  seed=None):
@@ -146,18 +151,20 @@ class RemoteGenerator(Default):
         :param remote_work_path:
         :param seed:
         """
-        super().__init__(model=None, prior=prior, summary=summary, seed=seed)
-        self.simulator_class, self.hostname, self.username,\
-            self.simulator_args, self.simulator_kwargs, \
+        super().__init__(model=None, prior=prior, summary=None, seed=seed)
+        self.simulator_class, self.summary_class, self.hostname, self.username,\
+            self.simulator_args, self.simulator_kwargs, self.summary_args, self.summary_kwargs, \
             self.remote_python_executable, self.local_work_path,\
             self.remote_work_path, self.use_slurm, self.slurm_options, self.save_every, self.persistent = \
-            simulator_class, hostname, username, simulator_args,\
-            simulator_kwargs, remote_python_executable, local_work_path, \
+            simulator_class, summary_class, hostname, username, \
+            simulator_args, simulator_kwargs, summary_args, summary_kwargs, \
+            remote_python_executable, local_work_path, \
             remote_work_path, use_slurm, slurm_options, save_every, persistent
 
     def gen(self, n_samples, n_workers=None, persistent=None, **kwargs):
         self.prior.reseed(self.gen_newseed())
-        self.summary.reseed(self.gen_newseed())
+        if self.proposal is not None:
+            self.proposal.reseed(self.gen_newseed())
 
         if persistent is None:
             persistent = self.persistent
@@ -166,12 +173,14 @@ class RemoteGenerator(Default):
         while samples_remaining > 0:
             next_params, next_stats = run_remote(self.simulator_class,
                                                  self.prior,
-                                                 self.summary,
+                                                 self.summary_class,
                                                  n_samples,
                                                  hostname=self.hostname,
                                                  username=self.username,
                                                  simulator_args=self.simulator_args,
                                                  simulator_kwargs=self.simulator_kwargs,
+                                                 summary_args=self.summary_args,
+                                                 summary_kwargs=self.summary_kwargs,
                                                  remote_python_executable=self.remote_python_executable,
                                                  remote_work_path=self.remote_work_path,
                                                  local_work_path=self.local_work_path,

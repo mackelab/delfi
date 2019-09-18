@@ -78,7 +78,6 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66, run_diagnostics=False):
     os.system seems to have no effect.
     """
     p = dd.Gaussian(m=np.zeros((n_params,)), S=np.eye(n_params), seed=seed)
-    s = ds.Identity(seed=seed + 1)
 
     simulator_kwargs = dict(dim=2)
 
@@ -110,7 +109,7 @@ def test_remotegen(n_samples=1000, n_params=2, seed=66, run_diagnostics=False):
 
     try:
         g = dg.RemoteGenerator(simulator_class=Gauss,
-                               prior=p, summary=s,
+                               prior=p, summary_class=ds.Identity,
                                hostname=hostname,
                                username=username,
                                simulator_kwargs=simulator_kwargs,
@@ -146,7 +145,6 @@ def dont_test_remotegen_slurm(n_samples=500, n_params=2, seed=66, save_every=200
     if it's run locally on a machine with key-based ssh-access to a SLURM cluster, as of 17.09.2019'''
 
     p = dd.Gaussian(m=np.zeros((n_params,)), S=np.eye(n_params), seed=seed)
-    s = ds.Identity(seed=seed + 1)
 
     simulator_kwargs = dict(dim=2)
 
@@ -156,7 +154,7 @@ def dont_test_remotegen_slurm(n_samples=500, n_params=2, seed=66, save_every=200
                      'nodes': 2}
 
     g = dg.RemoteGenerator(simulator_class=Gauss,
-                           prior=p, summary=s,
+                           prior=p, summary_class=ds.Identity,
                            hostname=hostname,
                            username=username,
                            simulator_kwargs=simulator_kwargs,
