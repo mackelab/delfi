@@ -172,8 +172,8 @@ class RemoteGenerator(Default):
         samples_remaining, params, stats = n_samples, None, None
         while samples_remaining > 0:
             next_params, next_stats = run_remote(self.simulator_class,
-                                                 self.prior,
                                                  self.summary_class,
+                                                 self.prior,
                                                  n_samples,
                                                  hostname=self.hostname,
                                                  username=self.username,
