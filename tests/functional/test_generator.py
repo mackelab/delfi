@@ -151,7 +151,9 @@ def dont_test_remotegen_slurm(n_samples=500, n_params=2, seed=66, save_every=200
     simulator_kwargs = dict(dim=2)
 
     slurm_options = {'clusters': clusters,
-                     'time': '0:10:00'}
+                     'time': '0:10:00',
+                     'ntasks-per-node': 2,
+                     'nodes': 2}
 
     g = dg.RemoteGenerator(simulator_class=Gauss,
                            prior=p, summary=s,

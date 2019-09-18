@@ -423,7 +423,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
             samplefile_this_task = sf + '_{0}'.format(tid) + se
             os.remove(samplefile_this_task)
 
-        outputfile = slurm_options['outputfile'].replace('%j', str(jobid))
+        outputfile = slurm_options['output'].replace('%j', str(jobid))
         if '%t' in outputfile:
             outputfiles = [outputfile.replace('%t', str(tid)) for tid in range(ntasks)]
         else:
