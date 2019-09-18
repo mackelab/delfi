@@ -351,7 +351,7 @@ def generate_slurm_script(filename):  # pragma: no cover
     return slurm_options, slurm_script_file
 
 
-def get_slurm_task_index():
+def get_slurm_task_index():  # pragma: no cover
     localid = int(os.getenv('SLURM_LOCALID'))
     return int(os.getenv('SLURM_GTIDS').split(',')[localid])
 
@@ -391,7 +391,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
         result = subprocess.run(['sbatch', slurm_script_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # sbatch will now block until job is completed due to --wait flag
         with open('test.txt', 'w') as f:
-            f.write(result.stdout().decode())
+            f.write(result.stdout.decode())
         if result.returncode != 0:  # e.g. job timed out
             sys.stderr.write('SLURM job terminated abnormally: {0}'.format(result.stderr.decode()))
 
