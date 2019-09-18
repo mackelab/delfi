@@ -417,7 +417,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
         with open(data['samplefile'], 'wb') as f:
             pickle.dump(dict(params=params, stats=stats), f, protocol=pickle.HIGHEST_PROTOCOL)
 
-        # remove task-specific sample files
+        #clean up all created files except the final samplefile:
         for tid in range(ntasks):
             sf, se = os.path.splitext(data['samplefile'])
             samplefile_this_task = sf + '_{0}'.format(tid) + se
@@ -428,6 +428,8 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
             sys.stderr.write('output file(s) not be removed, only %t is supported')
         else:
             os.remove(outputfile)
+
+        os.remove(slurm_script_file)
 
         return
 
