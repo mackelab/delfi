@@ -451,7 +451,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
               for s in simulator_seeds]
 
     summary_seed = rng.randint(0, 2 ** 31)
-    summary = data['summary'](*data['summary_args'], seed=summary_seed, **data['summary_kwargs'])
+    summary = data['summary_class'](*data['summary_args'], seed=summary_seed, **data['summary_kwargs'])
 
     g = MPGenerator(models, data['prior'], summary, seed=rng.randint(0, 2**31), verbose=False)
     g.proposal = data['proposal']
