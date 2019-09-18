@@ -56,6 +56,10 @@ def run_remote(simulator_class,
         simulator_args = []
     if simulator_kwargs is None:
         simulator_kwargs = dict()
+    if summary_args is None:
+        summary_args = []
+    if summary_kwargs is None:
+        summary_kwargs = dict()
     if remote_python_executable is None:
         remote_python_executable = 'python3'
     if remote_work_path is None:
