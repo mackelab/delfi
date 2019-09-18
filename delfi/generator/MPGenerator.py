@@ -304,7 +304,7 @@ def default_slurm_options():  # pragma: no cover
             'D': os.path.expanduser('~'),
             'ntasks-per-node': 1,
             'nodes': 1,
-            'output': os.path.join(os.path.expanduser('~'), '%j-%t.out')
+            'output': os.path.join(os.path.expanduser('~'), '%j.out')
             }
     return opts
 
@@ -424,18 +424,10 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
             os.remove(samplefile_this_task)
 
         outputfile = slurm_options['output'].replace('%j', str(jobid))
-        if '%t' in outputfile:
-            outputfiles = [outputfile.replace('%t', str(tid)) for tid in range(ntasks)]
+        if '%' in outputfile:
+            sys.stderr.write('output file(s) not be removed, only %t is supported')
         else:
-            outputfiles = [outputfile]
-        warned = False
-        for f in outputfiles:
-            if '%' in f:
-                if not warned:
-                    sys.stderr.write('cannot clean up output file(s), only %t and %j supported in filename')
-                    warned = True
-                continue
-            os.remove(f)
+            os.remove(outputfile)
 
         return
 
