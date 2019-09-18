@@ -390,10 +390,12 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
 
         result = subprocess.run(['sbatch', slurm_script_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # sbatch will now block until job is completed due to --wait flag
-        with open('test.txt', 'w') as f:
-            f.write(result.stdout.decode())
+        prefix = 'Submitted batch job '
+        L = [s for s in result.stdout.decode().split('\n') if s.startswith(prefix)]
+        assert len(L) == 1, "job was not submitted correctly"
+        jobid = int(L[0][len(prefix):].split(' ')[0])
         if result.returncode != 0:  # e.g. job timed out
-            sys.stderr.write('SLURM job terminated abnormally: {0}'.format(result.stderr.decode()))
+            sys.stderr.write('SLURM job {0} terminated abnormally: {1}'.format(jobid, result.stderr.decode()))
 
         # collect results from each task's file
         params, stats = None, None
@@ -421,7 +423,19 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
             samplefile_this_task = sf + '_{0}'.format(tid) + se
             os.remove(samplefile_this_task)
 
-        os.remove(slurm_script_file)
+        outputfile = slurm_options['outputfile'].replace('%j', str(jobid))
+        if '%t' in outputfile:
+            outputfiles = [outputfile.replace('%t', str(tid)) for tid in range(ntasks)]
+        else:
+            outputfiles = [outputfile]
+        warned = False
+        for f in outputfiles:
+            if '%' in f:
+                if not warned:
+                    sys.stderr.write('cannot clean up output file(s), only %t and %j supported in filename')
+                    warned = True
+                continue
+            os.remove(f)
 
         return
 
