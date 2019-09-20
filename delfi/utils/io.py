@@ -93,6 +93,7 @@ def run_function_from_file(file, function_name, *args, starting_path=None, **kwa
     :return:
     """
     assert isinstance(function_name, str)
+    assert os.path.exists(file), "file not found: {0}".format(file)
     if starting_path is not None:
         prev_dir = os.getcwd()
         os.chdir(starting_path)

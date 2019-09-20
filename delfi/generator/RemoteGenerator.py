@@ -135,7 +135,7 @@ class RemoteGenerator(Default):
                  simulator_args=None, simulator_kwargs=None, summary_args=None, summary_kwargs=None,
                  save_every=None,
                  remote_python_executable=None, use_slurm=False, slurm_options=None,
-                 local_work_path=None, remote_work_path=None, persistent=True,
+                 local_work_path=None, remote_work_path=None, persistent=False,
                  seed=None):
         """
         Generator that creates an MPGenerator on a remote server and uses that
