@@ -345,8 +345,8 @@ def generate_slurm_script(filename):  # pragma: no cover
                 s += '{0}{1}'.format(postfix, val)
             f.write(s + '\n')
 
-        f.write('source /etc/profile.d/modules.sh\n')  # for LRZ, may not be universal
         f.write('#SBATCH --wait\n')  # block execution until the job finishes
+        f.write('source /etc/profile.d/modules.sh\n')  # for LRZ, may not be universal
 
         python_commands = 'from delfi.generator.MPGenerator import mpgen_from_file;'\
             'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
