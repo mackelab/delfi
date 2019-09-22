@@ -347,7 +347,7 @@ def generate_slurm_script(filename):  # pragma: no cover
 
         python_commands = 'from delfi.generator.MPGenerator import mpgen_from_file;'\
             'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
-        f.write('srun {0} -c "{1}"\n'.format(data['python_executable'], python_commands))
+        f.write('mpiexec {0} -c "{1}"\n'.format(data['python_executable'], python_commands))
 
     return slurm_options, slurm_script_file
 
