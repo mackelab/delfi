@@ -441,19 +441,23 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
         n_workers = data['n_workers']
     if n_workers is None:
         n_workers = mp.cpu_count()
-
-    rng = np.random.RandomState(seed=generator_seed + 25)
-
     n_workers = np.minimum(n_workers, n_samples)
-    simulator_seeds = [rng.randint(0, 2 ** 31) for _ in range(n_workers)]
-    simulator_seeds = simulator_seeds[:n_workers]
-    models = [data['simulator_class'](*data['simulator_args'], seed=s, **data['simulator_kwargs'])
-              for s in simulator_seeds]
 
+    rng = np.random.RandomState(seed=generator_seed + 2500)
     summary_seed = rng.randint(0, 2 ** 31)
     summary = data['summary_class'](*data['summary_args'], seed=summary_seed, **data['summary_kwargs'])
 
-    g = MPGenerator(models, data['prior'], summary, seed=rng.randint(0, 2**31), verbose=False)
+    if n_workers > 1:
+        simulator_seeds = [rng.randint(0, 2 ** 31) for _ in range(n_workers)]
+
+        models = [data['simulator_class'](*data['simulator_args'], seed=s, **data['simulator_kwargs'])
+                  for s in simulator_seeds]
+        g = MPGenerator(models, data['prior'], summary, seed=rng.randint(0, 2**31), verbose=False)
+    else:
+        s = rng.randint(0, 2 ** 31)
+        model = data['simulator_class'](*data['simulator_args'], seed=s, **data['simulator_kwargs'])
+        g = Default(model, data['prior'], summary, seed=rng.randint(0, 2**31))
+
     g.proposal = data['proposal']
 
     samples_remaining, params, stats = n_samples, None, None
