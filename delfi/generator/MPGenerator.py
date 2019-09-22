@@ -374,6 +374,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
     if from_slurm:  # this function is running on a slurm node
 
         tid = get_slurm_task_index()
+        print('started task {0}\n'.format(tid))
         generator_seed = data['generator_seed'] + tid
         ntasks = int(os.getenv('SLURM_NTASKS'))
 
@@ -421,6 +422,8 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
         for tid in range(ntasks):
             sf, se = os.path.splitext(data['samplefile'])
             samplefile_this_task = sf + '_{0}'.format(tid) + se
+            if not os.path.exists(samplefile_this_task):
+                continue
             os.remove(samplefile_this_task)
 
         outputfile = slurm_options['output'].replace('%j', str(jobid))
@@ -446,6 +449,8 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
     rng = np.random.RandomState(seed=generator_seed + 2500)
     summary_seed = rng.randint(0, 2 ** 31)
     summary = data['summary_class'](*data['summary_args'], seed=summary_seed, **data['summary_kwargs'])
+    prior = data['prior']
+    prior.reseed(rng.randint(0, 2 ** 31))
 
     if n_workers > 1:
         simulator_seeds = [rng.randint(0, 2 ** 31) for _ in range(n_workers)]
