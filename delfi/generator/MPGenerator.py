@@ -360,7 +360,7 @@ def get_slurm_task_index():  # pragma: no cover
     return int(os.getenv('SLURM_GTIDS').split(',')[localid])
 
 
-def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no cover
+def mpgen_from_file(filename, n_workers=None, from_slurm=False, cleanup=True):  # pragma: no cover
     """
     Run simulations from a file using a multi-process generator, and save them in a file.
 
@@ -427,6 +427,9 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
         with open(data['samplefile'], 'wb') as f:
             pickle.dump(dict(params=params, stats=stats, time=elapsed_time, task_time=task_time), f,
                         protocol=pickle.HIGHEST_PROTOCOL)
+
+        if not cleanup:
+            return
 
         #clean up all created files except the final samplefile:
         for tid in range(ntasks):
