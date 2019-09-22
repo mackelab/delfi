@@ -305,9 +305,7 @@ def default_slurm_options():  # pragma: no cover
             'D': os.path.expanduser('~'),
             'ntasks-per-node': 1,
             'nodes': 1,
-            'output': os.path.join(os.path.expanduser('~'), '%j.out'),
-            'get-user-env ': None,
-            'export': 'NONE'
+            'output': os.path.join(os.path.expanduser('~'), '%j.out')
             }
     return opts
 
