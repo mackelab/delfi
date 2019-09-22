@@ -6,6 +6,7 @@ import subprocess
 import pickle
 from delfi.generator.Default import Default
 from delfi.utils.progress import no_tqdm, progressbar
+import time
 
 
 class Worker(mp.Process):
@@ -368,6 +369,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
     :param filename: file describing simulations to be run
     :return:
     """
+    start_time = time.time()
     with open(filename, 'rb') as f:
         data = pickle.load(f)
 
@@ -399,7 +401,7 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
             sys.stderr.write('SLURM job {0} terminated abnormally: {1}'.format(jobid, result.stderr.decode()))
 
         # collect results from each task's file
-        params, stats = None, None
+        params, stats, task_time = None, None, np.full(ntasks, np.nan)
         for tid in range(ntasks):
             sf, se = os.path.splitext(data['samplefile'])
             samplefile_this_task = sf + '_{0}'.format(tid) + se
@@ -412,11 +414,15 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
                     params, stats = samples['params'], samples['stats']
                 else:
                     params, stats = np.vstack((params, samples['params'])), np.vstack((stats, samples['stats']))
+                task_time[tid] = samples['time']
         assert params is not None, "failed to generate any samples"
+
+        elapsed_time = time.time() - start_time
 
         # save all samples in one file
         with open(data['samplefile'], 'wb') as f:
-            pickle.dump(dict(params=params, stats=stats), f, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle.dump(dict(params=params, stats=stats, time=elapsed_time, task_time=task_time), f,
+                        protocol=pickle.HIGHEST_PROTOCOL)
 
         #clean up all created files except the final samplefile:
         for tid in range(ntasks):
@@ -480,5 +486,6 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
             params, stats = np.vstack((params, next_params)), np.vstack((stats, next_stats))
         samples_remaining -= next_params.shape[0]
 
+        elapsed_time = time.time() - start_time
         with open(samplefile, 'wb') as f:
-            pickle.dump(dict(params=params, stats=stats), f, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle.dump(dict(params=params, stats=stats, time=elapsed_time), f, protocol=pickle.HIGHEST_PROTOCOL)

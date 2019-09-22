@@ -125,7 +125,8 @@ def run_remote(simulator_class,
                              samplefile_remote)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     assert result.returncode == 0, "failed to delete file(s) from remote host: {0}".format(result.stderr.decode())
 
-    return samples['params'], samples['stats']
+    task_time = None if 'task_time' not in samples.keys() else samples['task_time']
+    return samples['params'], samples['stats'], samples['time'], task_time
 
 
 class RemoteGenerator(Default):
@@ -164,6 +165,7 @@ class RemoteGenerator(Default):
             simulator_args, simulator_kwargs, summary_args, summary_kwargs, \
             remote_python_executable, local_work_path, \
             remote_work_path, use_slurm, slurm_options, save_every, persistent
+        self.time, self.task_time = None, None
 
     def gen(self, n_samples, n_workers=None, persistent=None, **kwargs):
         self.prior.reseed(self.gen_newseed())
@@ -175,26 +177,27 @@ class RemoteGenerator(Default):
 
         samples_remaining, params, stats = n_samples, None, None
         while samples_remaining > 0:
-            next_params, next_stats = run_remote(self.simulator_class,
-                                                 self.summary_class,
-                                                 self.prior,
-                                                 n_samples,
-                                                 hostname=self.hostname,
-                                                 username=self.username,
-                                                 simulator_args=self.simulator_args,
-                                                 simulator_kwargs=self.simulator_kwargs,
-                                                 summary_args=self.summary_args,
-                                                 summary_kwargs=self.summary_kwargs,
-                                                 remote_python_executable=self.remote_python_executable,
-                                                 remote_work_path=self.remote_work_path,
-                                                 local_work_path=self.local_work_path,
-                                                 proposal=self.proposal,
-                                                 n_workers=n_workers,
-                                                 generator_seed=self.gen_newseed(),
-                                                 use_slurm=self.use_slurm,
-                                                 save_every=self.save_every,
-                                                 slurm_options=self.slurm_options,
-                                                 **kwargs)
+            next_params, next_stats, time, task_time = run_remote(self.simulator_class,
+                                                                  self.summary_class,
+                                                                  self.prior,
+                                                                  n_samples,
+                                                                  hostname=self.hostname,
+                                                                  username=self.username,
+                                                                  simulator_args=self.simulator_args,
+                                                                  simulator_kwargs=self.simulator_kwargs,
+                                                                  summary_args=self.summary_args,
+                                                                  summary_kwargs=self.summary_kwargs,
+                                                                  remote_python_executable=self.remote_python_executable,
+                                                                  remote_work_path=self.remote_work_path,
+                                                                  local_work_path=self.local_work_path,
+                                                                  proposal=self.proposal,
+                                                                  n_workers=n_workers,
+                                                                  generator_seed=self.gen_newseed(),
+                                                                  use_slurm=self.use_slurm,
+                                                                  save_every=self.save_every,
+                                                                  slurm_options=self.slurm_options,
+                                                                  **kwargs)
+            self.time, self.task_time = time, task_time
             if params is None:
                 params, stats = next_params, next_stats
             else:
