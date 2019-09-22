@@ -376,7 +376,8 @@ def mpgen_from_file(filename, n_workers=None, from_slurm=False):  # pragma: no c
     if from_slurm:  # this function is running on a slurm node
 
         tid = get_slurm_task_index()
-        print('started task {0}\n'.format(tid))
+        ncpus = os.getenv('SLURM_JOB_CPUS_PER_NODE')
+        print('started task {0}, {1} cpus\n'.format(tid, ncpus))
         generator_seed = data['generator_seed'] + tid
         ntasks = int(os.getenv('SLURM_NTASKS'))
 
