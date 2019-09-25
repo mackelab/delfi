@@ -41,8 +41,15 @@ class Gamma(BaseDistribution):
     @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
         # univariate distribution only, i.e. ii=[0] in any case
+
+        # x should have a second dim with length 1, not more
+        x = np.atleast_2d(x)
+        assert x.shape[1] == 1, f'x needs second dim, {x.shape}'
+        assert not x.ndim > 2, f'no more than 2 dims in x: {x.ndim}'
+
         res = self._gamma.logpdf(x-self.offset) if log else self._gamma.pdf(x-self.offset)
-        return res.squeeze()
+        # reshape to (nbatch, )
+        return res.reshape(-1)
 
     @copy_ancestor_docstring
     def gen(self, n_samples=1, seed=None):
