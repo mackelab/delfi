@@ -231,8 +231,7 @@ class Gaussian(BaseDistribution):
                 raise ValueError('Rank deficiency in covariance matrix')
 
         res = lp if log else np.exp(lp)
-        # make sure nbatch is in first, ndim in second dimension. 
-        return res.reshape(-1, self.ndim)
+        return res
 
     @copy_ancestor_docstring
     def gen(self, n_samples=1):

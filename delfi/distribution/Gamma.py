@@ -41,13 +41,14 @@ class Gamma(BaseDistribution):
     @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
         # univariate distribution only, i.e. ii=[0] in any case
-        return self._gamma.logpdf(x-self.offset) if log else self._gamma.pdf(x-self.offset)
+        res = self._gamma.logpdf(x-self.offset) if log else self._gamma.pdf(x-self.offset)
+        return res.squeeze()
 
     @copy_ancestor_docstring
     def gen(self, n_samples=1, seed=None):
         # See BaseDistribution.py for docstring
-        
-        x = self.rng.gamma(shape=self.alpha, 
-                           scale=1./self.beta, 
+
+        x = self.rng.gamma(shape=self.alpha,
+                           scale=1./self.beta,
                            size=(n_samples, self.ndim)) + self.offset
         return x
