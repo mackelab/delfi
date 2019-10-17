@@ -23,9 +23,9 @@ def simplegaussprod(m1, S1, m2, S2):
     return m, S
 
 
-def init_all_gaussian(n_params=2, seed=42, inferenceobj=None, **inf_setup_opts):
-    model = Gauss(dim=n_params, seed=seed)
-    prior = dd.Gaussian(m=np.zeros((n_params, )), S=np.eye(n_params), seed=seed+1)
+def init_all_gaussian(n_params=2, seed=42, inferenceobj=None, Sfac=1.0, **inf_setup_opts):
+    model = Gauss(dim=n_params, seed=seed, noise_cov=0.1 * Sfac)
+    prior = dd.Gaussian(m=np.zeros((n_params, )), S=np.eye(n_params) * Sfac, seed=seed+1)
     s = ds.Identity(seed=seed+2)
     g = dg.Default(model=model, prior=prior, summary=s, seed=seed+3)
     obs = np.zeros((1, n_params))  # reseed generator etc. (?)
@@ -37,7 +37,7 @@ def init_all_gaussian(n_params=2, seed=42, inferenceobj=None, **inf_setup_opts):
     return res, m_true, S_true
 
 
-def check_gaussian_posterior(posterior, m_true, S_true, atol=0.05,
+def check_gaussian_posterior(posterior, m_true, S_true, atol_mean=0.05, atol_cov=0.05,
                              n_samples=10000):
     if isinstance(posterior, dd.MoG):
         posterior_gauss = posterior.project_to_gaussian()
@@ -52,8 +52,8 @@ def check_gaussian_posterior(posterior, m_true, S_true, atol=0.05,
     else:
         raise NotImplementedError
 
-    assert np.allclose(posterior_mean, m_true, atol=atol)
-    assert np.allclose(posterior_cov, S_true, atol=atol)
+    assert np.allclose(posterior_mean, m_true, atol=atol_mean)
+    assert np.allclose(posterior_cov, S_true, atol=atol_cov)
 
 
 def test_basic_inference(n_params=2, seed=42):
@@ -105,17 +105,18 @@ def test_apt_inference_mogprop(n_params=2, seed=47):
     check_gaussian_posterior(posterior, m_true, S_true)
 
 
-def test_apt_inference_gaussprop(n_params=2, seed=47):
-    inf_setup_opts = dict(n_components=2)
+def test_apt_inference_gaussprop(n_params=2, seed=47, Sfac=1000.0):
+    inf_setup_opts = dict(n_components=2, prior_norm=True)
     res, m_true, S_true = init_all_gaussian(seed=seed, n_params=n_params,
                                             inferenceobj=infer.APT,
+                                            Sfac=Sfac,
                                             **inf_setup_opts)
     # 3 rounds to test re-use sample reuse. by default prior samples not reused
     out = res.run(n_train=1000, n_rounds=3, proposal='gaussian',
                   train_on_all=True, silent_fail=False, print_each_epoch=True)
 
     posterior = res.predict(res.obs.reshape(1, -1))
-    check_gaussian_posterior(posterior, m_true, S_true)
+    check_gaussian_posterior(posterior, m_true, S_true, atol_mean=0.05 * np.sqrt(Sfac), atol_cov=0.05 * Sfac)
 
 
 def test_apt_inference_atomicprop_mdn(n_params=2, seed=47):
