@@ -24,7 +24,7 @@ class Default(BaseGenerator):
                         return 'resample'
 
                 elif isinstance(p, dd.Gamma):
-                    if np.any(param[:,ii] < p.offset):
+                    if np.any(param[:, ii] < p.offset):
                         return 'resample'
 
         return 'accept'

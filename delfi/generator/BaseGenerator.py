@@ -29,7 +29,7 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         self.prior = prior
         self.summary = summary
         self.proposal = None
-
+        self.seed = seed
         self.rng = np.random.RandomState(seed=seed)
 
     def gen_newseed(self):
@@ -51,7 +51,8 @@ class BaseGenerator(metaclass=ABCMetaDoc):
         self.rng.seed(seed=seed)
         self.seed = seed
         self.prior.reseed(self.gen_newseed())
-        self.model.reseed(self.gen_newseed())
+        if self.model is not None:
+            self.model.reseed(self.gen_newseed())
         if self.proposal is not None:
             self.proposal.reseed(self.gen_newseed())
 

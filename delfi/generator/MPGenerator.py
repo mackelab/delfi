@@ -1,10 +1,12 @@
-import abc
 import multiprocessing as mp
 import numpy as np
-
+import os
+import sys
+import subprocess
+import pickle
 from delfi.generator.Default import Default
-from delfi.utils.meta import ABCMetaDoc
 from delfi.utils.progress import no_tqdm, progressbar
+import time
 
 
 class Worker(mp.Process):
@@ -156,7 +158,7 @@ class MPGenerator(Default):
     def iterate_minibatches(self, params, minibatch=50):
         n_samples = len(params)
 
-        for i in range(0, n_samples - minibatch+1, minibatch):
+        for i in range(0, n_samples - minibatch + 1, minibatch):
             yield params[i:i + minibatch]
 
         rem_i = n_samples - (n_samples % minibatch)
@@ -190,7 +192,7 @@ class MPGenerator(Default):
         params = self.draw_params(n_samples=n_samples,
                                   skip_feedback=skip_feedback,
                                   prior_mixin=prior_mixin,
-                                  verbose = verbose)
+                                  verbose=verbose)
 
         return self.run_model(params, skip_feedback=skip_feedback, verbose=verbose, **kwargs)
 
@@ -220,7 +222,7 @@ class MPGenerator(Default):
                         done = True
                         break
 
-                    active_list.append((w,p))
+                    active_list.append((w, p))
                     self.log("Dispatching to worker (len = {})".format(len(params_batch)))
                     p.send(params_batch)
                     self.log("Done")
@@ -295,3 +297,201 @@ class MPGenerator(Default):
 
     def __del__(self):
         self.stop_workers()
+
+
+def default_slurm_options():  # pragma: no cover
+    opts = {'clusters': None,
+            'time': '1:00:00',
+            'D': os.path.expanduser('~'),
+            'ntasks-per-node': 1,
+            'nodes': 1,
+            'output': os.path.join(os.path.expanduser('~'), '%j.out')
+            }
+    return opts
+
+
+def generate_slurm_script(filename):  # pragma: no cover
+    """
+    Save a slurm script to run mpgen_from_file through a SLURM job manager
+
+    :param filename:
+    :return:
+    """
+    with open(filename, 'rb') as f:
+        data = pickle.load(f)
+
+    slurm_options = default_slurm_options()
+    if data['slurm_options'] is not None:
+        slurm_options.update(data['slurm_options'])
+    assert slurm_options['clusters'] is not None, "cluster(s) must be specified"
+    assert 'wait' not in slurm_options.keys() and 'W' not in slurm_options.keys(), "--wait/W always on, not options"
+
+    slurm_script_file = os.path.splitext(filename)[0] + '_slurm.sh'
+    with open(slurm_script_file, 'w') as f:
+
+        f.write('#!/bin/bash\n')
+
+        for key, val in slurm_options.items():
+            if len(key) == 1:
+                prefix = '-'
+                postfix = ' '
+            else:
+                prefix = '--'
+                postfix= '='
+            s = '#SBATCH {0}{1}'.format(prefix, key)
+            if val is not None:
+                s += '{0}{1}'.format(postfix, val)
+            f.write(s + '\n')
+
+        f.write('#SBATCH --wait\n')  # block execution until the job finishes
+        # f.write('source /etc/profile.d/modules.sh\n')  # for LRZ, may not be universal
+
+        python_commands = 'from delfi.generator.MPGenerator import mpgen_from_file;'\
+            'mpgen_from_file(\'{0}\', from_slurm=True)'.format(filename)
+        f.write('srun {0} -c "{1}"\n'.format(data['python_executable'], python_commands))
+
+    return slurm_options, slurm_script_file
+
+
+def get_slurm_task_index():  # pragma: no cover
+    localid = int(os.getenv('SLURM_LOCALID'))
+    return int(os.getenv('SLURM_GTIDS').split(',')[localid])
+
+
+def mpgen_from_file(filename, n_workers=None, from_slurm=False, cleanup=True):  # pragma: no cover
+    """
+    Run simulations from a file using a multi-process generator, and save them in a file.
+
+    This function can be used as a stand-alone utility, but is mainly meant to be called on a remote host over ssh by a
+    RemoteGenerator.
+
+    :param cleanup:
+    :param from_slurm:
+    :param n_workers:
+    :param filename: file describing simulations to be run
+    :return:
+    """
+    start_time = time.time()
+    with open(filename, 'rb') as f:
+        data = pickle.load(f)
+
+    if from_slurm:  # this function is running on a slurm node
+
+        tid = get_slurm_task_index()
+        ncpus = os.getenv('SLURM_JOB_CPUS_PER_NODE')
+        print('started task {0}, {1} cpus\n'.format(tid, ncpus))
+        generator_seed = data['generator_seed'] + tid
+        ntasks = int(os.getenv('SLURM_NTASKS'))
+
+        sf, se = os.path.splitext(data['samplefile'])
+        samplefile = sf + '_{0}'.format(tid) + se
+
+        samples_per_task = int(np.ceil(data['n_samples'] / ntasks))
+        n_samples = np.minimum((tid + 1) * samples_per_task, data['n_samples']) - tid * samples_per_task
+
+    elif data['use_slurm']:  # start a slurm job that will call this function once per task
+
+        slurm_options, slurm_script_file = generate_slurm_script(filename)
+        ntasks = int(slurm_options['ntasks-per-node']) * int(slurm_options['nodes'])
+
+        result = subprocess.run(['sbatch', slurm_script_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # sbatch will now block until job is completed due to --wait flag
+        prefix = 'Submitted batch job '
+        L = [s for s in result.stdout.decode().split('\n') if s.startswith(prefix)]
+        assert len(L) == 1, "job was not submitted correctly"
+        jobid = int(L[0][len(prefix):].split(' ')[0])
+        if result.returncode != 0:  # e.g. job timed out
+            sys.stderr.write('SLURM job {0} terminated abnormally: {1}'.format(jobid, result.stderr.decode()))
+
+        # collect results from each task's file
+        params, stats, task_time = None, None, np.full(ntasks, np.nan)
+        for tid in range(ntasks):
+            sf, se = os.path.splitext(data['samplefile'])
+            samplefile_this_task = sf + '_{0}'.format(tid) + se
+            if not os.path.exists(samplefile_this_task):
+                continue
+
+            with open(samplefile_this_task, 'rb') as f:
+                samples = pickle.load(f)
+                if params is None:
+                    params, stats = samples['params'], samples['stats']
+                else:
+                    params, stats = np.vstack((params, samples['params'])), np.vstack((stats, samples['stats']))
+                task_time[tid] = samples['time']
+        assert params is not None, "failed to generate any samples"
+
+        elapsed_time = time.time() - start_time
+
+        # save all samples in one file
+        with open(data['samplefile'], 'wb') as f:
+            pickle.dump(dict(params=params, stats=stats, time=elapsed_time, task_time=task_time), f,
+                        protocol=pickle.HIGHEST_PROTOCOL)
+
+        if not cleanup:
+            return
+
+        #clean up all created files except the final samplefile:
+        for tid in range(ntasks):
+            sf, se = os.path.splitext(data['samplefile'])
+            samplefile_this_task = sf + '_{0}'.format(tid) + se
+            if not os.path.exists(samplefile_this_task):
+                continue
+            os.remove(samplefile_this_task)
+
+        outputfile = slurm_options['output'].replace('%j', str(jobid))
+        if '%' in outputfile:
+            sys.stderr.write('output file(s) not be removed, only %t is supported')
+        else:
+            os.remove(outputfile)
+
+        os.remove(slurm_script_file)
+
+        return
+
+    else:  # non-SLURM: use a single generator for all the samples
+
+        n_samples, generator_seed, samplefile = data['n_samples'], data['generator_seed'], data['samplefile']
+
+    if n_workers is None:
+        n_workers = data['n_workers']
+    if n_workers is None:
+        n_workers = mp.cpu_count()
+    n_workers = np.minimum(n_workers, n_samples)
+
+    rng = np.random.RandomState(seed=generator_seed + 2500)
+    summary_seed = rng.randint(0, 2 ** 31)
+    summary = data['summary_class'](*data['summary_args'], seed=summary_seed, **data['summary_kwargs'])
+    prior = data['prior']
+    prior.reseed(rng.randint(0, 2 ** 31))
+
+    if n_workers > 1:
+        simulator_seeds = [rng.randint(0, 2 ** 31) for _ in range(n_workers)]
+
+        models = [data['simulator_class'](*data['simulator_args'], seed=s, **data['simulator_kwargs'])
+                  for s in simulator_seeds]
+        g = MPGenerator(models, data['prior'], summary, seed=rng.randint(0, 2**31), verbose=False)
+    else:
+        s = rng.randint(0, 2 ** 31)
+        model = data['simulator_class'](*data['simulator_args'], seed=s, **data['simulator_kwargs'])
+        g = Default(model, data['prior'], summary, seed=rng.randint(0, 2**31))
+
+    g.proposal = data['proposal']
+
+    samples_remaining, params, stats = n_samples, None, None
+    while samples_remaining > 0:
+
+        if data['save_every'] is not None:
+            next_batchsize = np.minimum(samples_remaining, data['save_every'])
+        else:
+            next_batchsize = samples_remaining
+
+        next_params, next_stats = g.gen(next_batchsize, **data['generator_kwargs'])
+        if params is None:
+            params, stats = next_params, next_stats
+        else:
+            params, stats = np.vstack((params, next_params)), np.vstack((stats, next_stats))
+        samples_remaining -= next_params.shape[0]
+
+        elapsed_time = time.time() - start_time
+        with open(samplefile, 'wb') as f:
+            pickle.dump(dict(params=params, stats=stats, time=elapsed_time), f, protocol=pickle.HIGHEST_PROTOCOL)
