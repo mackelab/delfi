@@ -99,7 +99,8 @@ def test_apt_inference_mogprop(n_params=2, seed=47):
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
     # note that train_on_all is not yet implemented for MoG proposals!
-    out = res.run(n_train=3000, n_rounds=2, proposal='mog', silent_fail=False, print_each_epoch=True)
+    out = res.run(n_train=3000, n_rounds=2, proposal='mog',
+                  train_on_all=True, silent_fail=False, print_each_epoch=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 

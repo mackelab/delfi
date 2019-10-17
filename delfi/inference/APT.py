@@ -208,13 +208,14 @@ class APT(BaseInference):
 
     def run_round(self, proposal=None, **kwargs):
 
-        self.proposal_used.append(proposal if self.round > 1 else 'prior')
+        proposal = proposal.lower() if self.round > 1 else 'prior'
+        self.proposal_used.append(proposal)
 
         if proposal == 'prior' or self.round == 1:
             return self.run_prior(**kwargs)
         elif proposal == 'gaussian':
             return self.run_gaussian(**kwargs)
-        elif proposal.lower() == 'mog':
+        elif proposal == 'mog':
             return self.run_MoG(**kwargs)
         elif proposal == 'atomic':
             return self.run_atomic(combined_loss=False, **kwargs)
@@ -263,12 +264,11 @@ class APT(BaseInference):
 
         # simulate data
         self.set_proposal(project_to_gaussian=True)
-        prop = self.generator.proposal
-        assert isinstance(prop, dd.Gaussian)
+        assert isinstance(self.generator.proposal, dd.Gaussian)
+        prop = self.generator.proposal.ztrans(self.params_mean, self.params_std)
+
         trn_data, n_train_round = self.gen(n_train)
 
-        # here we're just repeating the same fixed proposal, though we
-        # could also introduce some variety if we wanted.
         prop_m = np.expand_dims(prop.m, 0).repeat(n_train_round, axis=0)
         prop_P = np.expand_dims(prop.P, 0).repeat(n_train_round, axis=0)
         trn_data = (*trn_data, prop_m, prop_P)
@@ -284,8 +284,9 @@ class APT(BaseInference):
                     continue
                 # prior samples. the Gauss loss will reduce to the prior loss
                 if isinstance(self.generator.prior, dd.Gaussian):
-                    prop_m = self.generator.prior.mean
-                    prop_P = self.generator.prior.P
+                    prior = self.generator.prior.ztrans(self.params_mean, self.params_std)
+                    prop_m = prior.mean
+                    prop_P = prior.P
                 elif isinstance(self.generator.prior, dd.Uniform):
                     # model a uniform as an zero-precision Gaussian:
                     prop_m = np.zeros(self.generator.prior.ndim, dtype)
@@ -316,14 +317,67 @@ class APT(BaseInference):
 
         return log, trn_data
 
+    def run_MoG(self, n_train=100, epochs=100, minibatch=50, n_atoms=None, moo=None, train_on_all=False, round_cl=1,
+                stop_on_nan=False, monitor=None, verbose=False, print_each_epoch=False, reuse_prior_samples=True,
+                patience=20, monitor_every=None, **kwargs):
+
+        # simulate data
+        self.set_proposal(project_to_gaussian=False)
+        assert isinstance(self.generator.proposal, dd.MoG)
+        prop = self.generator.proposal.ztrans(self.params_mean, self.params_std)
+        ncomps = prop.n_components
+
+        trn_data, n_train_round = self.gen(n_train)
+        trn_data = (*trn_data, *MoG_prop_APT_training_vars(prop, n_train_round, ncomps))
+
+        self.trn_datasets.append(trn_data)
+
+        if train_on_all:
+            prev_datasets = []
+            for i, d in enumerate(self.trn_datasets):
+                if self.proposal_used[i] == 'mog':
+                    prev_datasets.append(d)
+                elif self.proposal_used == 'prior' and reuse_prior_samples:
+                    prior = self.generator.prior
+                    if not isinstance(prior, dd.Uniform):
+                        prior = prior.ztrans(self.params_mean, self.params_std)
+                    d = (*d, *MoG_prop_APT_training_vars(prior, n_train_round))
+                    prev_datasets.append(d)
+                elif self.proposal_used[i] == 'gaussian':
+                    params, stats, prop_m, prop_P = d
+                    if np.diff(prop_m, axis=0).any() or np.diff(prop_P, axis=0).any():
+                        continue  # reusing samples with proposals that changed within a round is not yet supported
+                    prop = dd.Gaussian(m=prop_m[0], P=prop_P[0])
+                    d = (params, stats, *MoG_prop_APT_training_vars(prop, n_train_round))
+                    prev_datasets.append(d)
+                else:  # can't re-use samples from this proposal
+                    continue
+
+            trn_data = combine_trn_datasets(prev_datasets)
+            n_train_round = trn_data[0].shape[0]
+
+        self.loss, trn_inputs = self.define_loss(n=n_train_round, round_cl=round_cl, proposal='mog')
+
+        t = Trainer(self.network,
+                    self.loss,
+                    trn_data=trn_data, trn_inputs=trn_inputs,
+                    seed=self.gen_newseed(),
+                    monitor=self.monitor_dict_from_names(monitor),
+                    **kwargs)
+
+        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose,
+                      print_each_epoch=print_each_epoch, stop_on_nan=stop_on_nan,
+                      patience=patience, monitor_every=monitor_every)
+
+        return log, trn_data
+
     def run_atomic(self, n_train=100, epochs=100, minibatch=50, n_atoms=10, moo='resample', train_on_all=False,
                    reuse_prior_samples=True, combined_loss=False, round_cl=1, stop_on_nan=False, monitor=None,
                    patience=20, monitor_every=None,
                    verbose=False, print_each_epoch=False, **kwargs):
 
         # activetrainer doesn't de-norm params before evaluating the prior
-        assert np.all(self.params_mean == 0.0) \
-               and np.all(self.params_std == 1.0), "prior_norm+atomic not OK"
+        assert np.all(self.params_mean == 0.0) and np.all(self.params_std == 1.0), "prior_norm + atomic not supported"
 
         assert minibatch > 1, "minimum minibatch size 2 for atomic proposals"
         if n_atoms is None:
@@ -370,52 +424,6 @@ class APT(BaseInference):
 
         return log, trn_data
 
-    def run_MoG(self, n_train=100, epochs=100, minibatch=50, n_atoms=None, moo=None, train_on_all=False, round_cl=1,
-                stop_on_nan=False, monitor=None, verbose=False, print_each_epoch=False, reuse_prior_samples=True,
-                patience=20, monitor_every=None, **kwargs):
-        assert not train_on_all, "train_on_all is not yet implemented for MoG "\
-                "proposals"
-
-        # simulate data
-        self.set_proposal(project_to_gaussian=False)
-        prop = self.generator.proposal
-        assert isinstance(prop, dd.MoG)
-        trn_data, n_train_round = self.gen(n_train)
-
-        # here we're just repeating the same fixed proposal, though we
-        # could also introduce some variety if we wanted.
-        nc = prop.n_components
-        prop_Pms = repnewax(np.stack([x.Pm for x in prop.xs], axis=0),
-                            n_train_round)
-        prop_Ps = repnewax(np.stack([x.P for x in prop.xs], axis=0),
-                           n_train_round)
-        prop_ldetPs = repnewax(np.stack([x.logdetP for x in prop.xs], axis=0),
-                               n_train_round)
-        prop_las = repnewax(np.log(prop.a), n_train_round)
-        prop_QFs = \
-            repnewax(np.stack([np.sum(x.Pm * x.m) for x in prop.xs], axis=0),
-                     n_train_round)
-
-        trn_data += (prop_Pms, prop_Ps, prop_ldetPs, prop_las,
-                     prop_QFs)
-        trn_data = tuple(trn_data)
-
-        self.loss, trn_inputs = self.define_loss(n=n_train_round,
-                                                 round_cl=round_cl,
-                                                 proposal='mog')
-        t = Trainer(self.network,
-                    self.loss,
-                    trn_data=trn_data, trn_inputs=trn_inputs,
-                    seed=self.gen_newseed(),
-                    monitor=self.monitor_dict_from_names(monitor),
-                    **kwargs)
-
-        log = t.train(epochs=self.epochs_round(epochs), minibatch=minibatch, verbose=verbose,
-                      print_each_epoch=print_each_epoch, stop_on_nan=stop_on_nan,
-                      patience=patience, monitor_every=monitor_every)
-
-        return log, trn_data
-
     def set_proposal(self, project_to_gaussian=False):
         # posterior estimate becomes new proposal prior
         if self.round == 0:
@@ -442,6 +450,8 @@ class APT(BaseInference):
             If None is passed, will default to self.verbose
         project_to_gaussian: bool
             Whether to always return Gaussian objects (instead of MoG)
+        n_train: int
+            Number of training samples
         """
         if 'verbose' in kwargs.keys():
             verbose = kwargs['verbose']
@@ -479,3 +489,27 @@ class APT(BaseInference):
             epochs_round = epochs
 
         return epochs_round
+
+
+def MoG_prop_APT_training_vars(prop, n_train_round, n_components):
+    if isinstance(prop, dd.Uniform):
+        prop_Pms = np.zeros((n_train_round, n_components, prop.ndim))
+        prop_Ps = np.zeros((n_train_round, n_components, prop.ndim, prop.ndim))
+        prop_ldetPs = np.zeros(n_train_round, n_components)
+        prop_las = np.full((n_train_round, n_components), np.log(1.0 / n_components))
+        prop_QFs = np.zeros(n_train_round, n_components)
+        return prop_Pms, prop_Ps, prop_ldetPs, prop_las, prop_QFs
+
+    if isinstance(prop, dd.Gaussian):
+        prop = dd.MoG(a=np.ones(1), xs=[prop])
+    assert isinstance(prop, dd.MoG), "input must be Gaussian, Uniform or MoG"
+    if prop.n_components == 1:
+        prop = dd.MoG(a=np.ones(n_components) / n_components, xs=[prop.xs[0] for _ in range(n_components)])
+
+    assert prop.n_components == n_components, "invalid number of components"
+    prop_Pms = repnewax(np.stack([x.Pm for x in prop.xs], axis=0), n_train_round)
+    prop_Ps = repnewax(np.stack([x.P for x in prop.xs], axis=0), n_train_round)
+    prop_ldetPs = repnewax(np.stack([x.logdetP for x in prop.xs], axis=0), n_train_round)
+    prop_las = repnewax(np.log(prop.a), n_train_round)
+    prop_QFs = repnewax(np.stack([np.sum(x.Pm * x.m) for x in prop.xs], axis=0), n_train_round)
+    return prop_Pms, prop_Ps, prop_ldetPs, prop_las, prop_QFs

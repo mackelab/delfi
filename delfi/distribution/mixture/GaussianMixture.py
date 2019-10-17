@@ -219,6 +219,11 @@ class MoG(BaseMixture):
         m, S = self.calc_mean_and_cov()
         return Gaussian(m=m, S=S, seed=self.seed)
 
+    def ztrans(self, mean, std):
+        """Z-transform"""
+        xs = [x.ztrans(mean, std) for x in self.xs]
+        return MoG(self.a, xs=xs, seed=self.seed)
+
     def ztrans_inv(self, mean, std):
         """Z-transform inverse"""
         xs = [x.ztrans_inv(mean, std) for x in self.xs]
