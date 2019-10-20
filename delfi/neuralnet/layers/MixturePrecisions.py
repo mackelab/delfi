@@ -104,8 +104,6 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
         if not self.rank is None:
             triu_mask[self.rank:] *= 0.
         diag_mask = np.eye(self.n_dim, dtype=dtype)
-        offdiag_mask = np.ones(self.n_dim, dtype=dtype) - \
-            np.eye(self.n_dim, dtype=dtype)
 
         if not self.svi or deterministic:
             zas_reshaped = [tt.reshape(tt.dot(input, mW) + mb, 
@@ -220,8 +218,6 @@ class MixtureHomoscedasticPrecisionsLayer(lasagne.layers.Layer):
         if not self.rank is None:
             triu_mask[self.rank:] *= 0.
         diag_mask = np.eye(self.n_dim, dtype=dtype)
-        offdiag_mask = np.ones(self.n_dim, dtype=dtype) - \
-            np.eye(self.n_dim, dtype=dtype)
 
         if not self.svi or deterministic:
             zas_reshaped = [tt.reshape(mb + 0.*tt.sum(input) , 
