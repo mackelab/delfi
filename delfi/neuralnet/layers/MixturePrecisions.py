@@ -124,23 +124,13 @@ class MixturePrecisionsLayer(lasagne.layers.Layer):
             zas_reshaped = [tt.reshape(
                 za, [-1, self.n_dim, self.n_dim]) for za in zas]
 
-        Us = [
-            triu_mask *
-            za +
-            diag_mask *
-            tt.exp(
-                diag_mask *
-                za) for za in zas_reshaped]
-        ldetUs = [tt.sum(tt.sum(diag_mask * za, axis=2), axis=1)
-                  for za in zas_reshaped]
+        Us = [triu_mask * za + diag_mask * tt.exp(diag_mask * za) for za in zas_reshaped]
+        ldetUs = [tt.sum(tt.sum(diag_mask * za, axis=2), axis=1) for za in zas_reshaped]
 
         # enforce lower bound on diagonal elements of the precision matrices
         if self.min_U_column_norms is not None:
-            U_column_norms = \
-                [tt.sqrt(tt.sum(U**2, axis=1)).reshape((-1, self.n_dim))
-                 for U in Us]
-            scale_factors = [tt.maximum(1.0, self.min_U_column_norms / Ucn)
-                             for Ucn in U_column_norms]
+            U_column_norms = [tt.sqrt(tt.sum(U**2, axis=1)).reshape((-1, self.n_dim)) for U in Us]
+            scale_factors = [tt.maximum(1.0, self.min_U_column_norms / Ucn) for Ucn in U_column_norms]
             Us = [U * sf.dimshuffle([0, 'x', 1]) for U, sf in zip(Us, scale_factors)]
 
         return {'Us': Us, 'ldetUs': ldetUs}

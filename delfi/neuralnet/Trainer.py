@@ -243,6 +243,7 @@ class Trainer:
 
                     # check for nan
                     if stop_on_nan and np.isnan(trn_loss):
+                        print('stopping due to NaN value on iteration {0}\n'.format(iter))
                         break_flag = True
                         break
 
