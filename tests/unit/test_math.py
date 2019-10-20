@@ -1,9 +1,10 @@
 import numpy as np
+import theano
 import delfi.utils.math as mm
 import delfi.utils.symbolic as sym
 from delfi.distribution import Gaussian
 from delfi.utils.bijection import named_bijection
-import theano
+from delfi.neuralnet.NeuralNet import dtype
 
 
 def test_gaussprodZ():
@@ -69,13 +70,13 @@ def test_bijections(dim=2, nsamples=1000, seed=1):
 
 
 def test_batched_matrix_ops(dim=4, nsamples=100):
-    A_pd = np.full((nsamples, dim, dim), np.nan)
-    A_nonsing = np.full((nsamples, dim, dim), np.nan)
-    L = np.full((nsamples, dim, dim), np.nan)
-    inv = np.full((nsamples, dim, dim), np.nan)
-    det = np.full(nsamples, np.nan)
+    A_pd = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    A_nonsing = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    L = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    inv = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    det = np.full(nsamples, np.nan, dtype=dtype)
     for i in range(nsamples):
-        L[i] = np.tril(np.random.rand(dim, dim), -1) + np.diag(np.exp(np.random.randn(dim)))
+        L[i] = np.tril(np.random.randn(dim, dim), -1) + np.diag(1.0 + np.exp(np.random.randn(dim)))
         A_pd[i] = np.dot(L[i], L[i].T)
         L2 = np.tril(np.random.rand(dim, dim), -1) + np.diag(np.exp(np.random.randn(dim)))
         L3 = np.tril(np.random.rand(dim, dim), -1) + np.diag(np.exp(np.random.randn(dim)))
