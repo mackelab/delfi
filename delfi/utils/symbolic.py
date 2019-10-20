@@ -1,5 +1,6 @@
 import theano
 import theano.tensor as tt
+import theano.tensor.slinalg as slinalg
 import numpy as np
 
 
@@ -66,6 +67,17 @@ def det_each(A, log=False):
     """
     D = batched_matrix_op(A, tt.nlinalg.Det(), 0)
     return tt.log(D) if log else D
+
+
+def cholesky_each(A):
+    """
+    Calculate cholesky factorizations for a set of positive definite matrices.
+
+    :param A: Array of input matrices. The rows and columns of each matrix must correspond to the last 2 dimensions of
+    A, which must be equal.
+    :return: cholesky factors
+    """
+    return batched_matrix_op(A, slinalg.Cholesky(), 2)
 
 
 def batched_matrix_op(A, Op, Op_output_ndim):
