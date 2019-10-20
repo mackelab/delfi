@@ -193,6 +193,8 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
         Loss function
     trn_inputs : list
         Tensors to be provided to the loss function during training
+    prior: delfi distribution
+        Prior distribution on parameters
     """
     assert mdn.density == 'mog'
     uniform_prior = isinstance(prior, dd.Uniform)

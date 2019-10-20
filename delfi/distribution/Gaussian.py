@@ -259,6 +259,24 @@ class Gaussian(BaseDistribution):
 
         return t
 
+    def ztrans(self, mean, std):
+        """Z-transform
+
+        Parameters
+        ----------
+        mean : array
+            Mean vector
+        std : array
+            Std vector
+
+        Returns
+        -------
+        Gaussian distribution
+        """
+        m = (self.m - mean) / std
+        S = self.S / np.outer(std, std)
+        return Gaussian(m=m, S=S, seed=self.seed)
+
     def ztrans_inv(self, mean, std):
         """Z-transform inverse
 
@@ -273,6 +291,6 @@ class Gaussian(BaseDistribution):
         -------
         Gaussian distribution
         """
-        m = std*self.m + mean
+        m = std * self.m + mean
         S = np.outer(std, std) * self.S
         return Gaussian(m=m, S=S, seed=self.seed)
