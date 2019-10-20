@@ -1,9 +1,9 @@
 import theano
 import theano.tensor as tt
 import delfi.distribution as dd
+import numpy as np
 from delfi.neuralnet.NeuralNet import NeuralNet, dtype
-from delfi.utils.symbolic import (tensorN, mog_LL, MyLogSumExp,
-                                  invert_each, det_each)
+from delfi.utils.symbolic import tensorN, mog_LL, MyLogSumExp, invert_each, det_each, cholesky_each
 
 
 def snpe_loss_prior_as_proposal(model, svi=False):
@@ -117,7 +117,13 @@ def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False):
     # (batch, mdn.n_components, ncprop, n_outputs, n_outputs)
     pp_Ps = Ps.dimshuffle(0, 1, 'x', 2, 3) + P_0s.dimshuffle(0, 'x', 1, 2, 3)
     pp_Ss = invert_each(pp_Ps)  # covariances of proposal posterior components
-    pp_ldetPs = det_each(pp_Ps, log=True)  # log determinants
+    # upper Cholesky factors for precisions of proposal posterior components
+    pp_Us = cholesky_each(pp_Ps).dimshuffle(0, 1, 2, 4, 3)  # cholesky_each returns lower factor
+    # log determinants of upper Cholesky factor for the precision of each proposal posterior component
+    pp_ldetUs = tt.sum(tt.log(tt.sum(pp_Us * np.eye(mdn.n_outputs), axis=4)), axis=3)
+    # log determinant of each proposal posterior component's precision:
+    pp_ldetPs = 2.0 * pp_ldetUs
+
     # precision times mean for each proposal posterior component:
     pp_Pms = Pms.dimshuffle(0, 1, 'x', 2) + Pm_0s.dimshuffle(0, 'x', 1, 2)
     # mean of proposal posterior components:
@@ -220,16 +226,21 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
 
     # precisions of proposal posterior components:
     pp_Ps = [P + P_0 for P in Ps]
+    # upper Cholesky factors for precisions of proposal posterior components
+    pp_Us = [cholesky_each(P).dimshuffle(0, 2, 1) for P in pp_Ps]  # cholesky_each returns lower factor
+    # log determinants of upper Cholesky factor for the precision of each proposal posterior component
+    pp_ldetUs = [tt.sum(tt.log(tt.sum(U * np.eye(mdn.n_outputs), axis=2)), axis=1) for U in pp_Us]
+    # log determinant of each proposal posterior component's precision:
+    pp_ldetPs = [2.0 * ldetU for ldetU in pp_ldetUs]
+
     # covariances of proposal posterior components:
     pp_Ss = [invert_each(P) for P in pp_Ps]
-    # log determinant of each proposal posterior component's precision:
-    pp_ldetPs = [det_each(P, log=True) for P in pp_Ps]
     # precision times mean for each proposal posterior component:
     pp_Pms = [Pm + Pm_0 for Pm in Pms]
     # mean of proposal posterior components:
     pp_ms = [tt.batched_dot(S, Pm) for S, Pm in zip(pp_Ss, pp_Pms)]
     # quadratic form defined by each pp_P evaluated at each pp_m
-    pp_QFs = [tt.sum(m * P, axis=1) for m, P in zip(pp_ms, pp_Pms)]
+    pp_QFs = [tt.sum(m * Pm, axis=1) for m, Pm in zip(pp_ms, pp_Pms)]
 
     # normalization constants for integrals of Gaussian product-quotients
     # (for Gaussian proposals) or Gaussian products (for uniform priors)
@@ -249,7 +260,7 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
     pp_las = tt.stack(pp_lZs, axis=1) + tt.log(a)
     pp_las = pp_las - MyLogSumExp(pp_las, axis=1)
 
-    loss = -tt.mean(mog_LL(mdn.params, pp_las, pp_ms, pp_Ps, pp_ldetPs))
+    loss = -tt.mean(mog_LL(mdn.params, pp_las, pp_ms, pp_Us, pp_ldetUs, from_cholesky=True))
 
     # collect extra input variables to be provided for each training data point
     trn_inputs = [mdn.params, mdn.stats, prop_m, prop_P]
