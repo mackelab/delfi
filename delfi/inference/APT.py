@@ -86,17 +86,22 @@ class APT(BaseInference):
         combined_loss : bool
             Whether to include prior likelihood terms in addition to atomic
         """
+        prior = self.generator.prior
+        if isinstance(prior, dd.Gaussian) or isinstance(prior, dd.MoG):
+            prior = prior.ztrans(self.params_mean, self.params_std)
+
         if proposal == 'prior':  # using prior as proposal
             loss, trn_inputs = snpe_loss_prior_as_proposal(self.network,
                                                            svi=self.svi)
         elif proposal == 'gaussian':
             assert isinstance(self.generator.proposal, dd.Gaussian)
             loss, trn_inputs = apt_loss_gaussian_proposal(self.network,
-                                                          self.generator.prior,
+                                                          prior,
                                                           svi=self.svi)
         elif proposal.lower() == 'mog':
+            assert isinstance(self.generator.proposal, dd.MoG)
             loss, trn_inputs = apt_loss_MoG_proposal(self.network,
-                                                     self.generator.prior,
+                                                     prior,
                                                      svi=self.svi)
         elif proposal == 'atomic':
             loss, trn_inputs = \
