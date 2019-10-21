@@ -113,7 +113,8 @@ def test_apt_inference_gaussprop(n_params=2, seed=47, Sfac=1000.0):
                                             **inf_setup_opts)
     # 3 rounds to test re-use sample reuse. by default prior samples not reused
     out = res.run(n_train=1000, n_rounds=3, proposal='gaussian',
-                  train_on_all=True, silent_fail=False, print_each_epoch=True)
+                  train_on_all=True, silent_fail=False, print_each_epoch=True,
+                  reuse_prior_samples=True)
 
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true, atol_mean=0.05 * np.sqrt(Sfac), atol_cov=0.05 * Sfac)
