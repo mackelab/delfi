@@ -224,14 +224,30 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
         P_0 = P_0 - prior.P
         Pm_0 = Pm_0 - prior.Pm
 
-    # precisions of proposal posterior components:
+    # precisions of proposal posterior components (before numerical conditioning step)
     pp_Ps = [P + P_0 for P in Ps]
-    # upper Cholesky factors for precisions of proposal posterior components
-    pp_Us = [cholesky_each(P).dimshuffle(0, 2, 1) for P in pp_Ps]  # cholesky_each returns lower factor
-    # log determinants of upper Cholesky factor for the precision of each proposal posterior component
-    pp_ldetUs = [tt.sum(tt.log(tt.sum(U * np.eye(mdn.n_outputs), axis=2)), axis=1) for U in pp_Us]
-    # log determinant of each proposal posterior component's precision:
-    pp_ldetPs = [2.0 * ldetU for ldetU in pp_ldetUs]
+
+    # get square roots of diagonal entries of posterior proposal precision components, which are equal to the L2 norms
+    # of the Cholesky factor columns for the same matrix. we'll use these to improve the numerical conditioning of pp_Ps
+    ds = [tt.sum(pp_P * np.eye(mdn.n_outputs), axis=2) for pp_P in pp_Ps]
+    # normalize the estimate of each true posterior component according to the corresponding elements of d:
+    # first normalize the Cholesky factor of the true posterior component estimate
+    Us_normed = [U / d.dimshuffle(0, 'x', 1) for U, d in zip(Us, ds)]
+    # then normalize the propsal. the resulting list is the same proposal, differently normalized for each component of
+    # the true posterior
+    P_0s_normed = [(P_0 / d.dimshuffle(0, 'x', 1)) / d.dimshuffle(0, 1, 'x') for d in ds]
+    pp_Ps_normed = [tt.batched_dot(U_normed.dimshuffle(0, 2, 1), U_normed) + P_0_normed
+                    for U_normed, P_0_normed in zip(Us_normed, P_0s_normed)]
+    # lower Cholesky factors for normalized precisions of proposal posterior components
+    pp_Ls_normed = [cholesky_each(pp_P_normed) for pp_P_normed in pp_Ps_normed]
+    # log determinants of lower Cholesky factors for normalized precisions of proposal posterior components
+    pp_ldetLs_normed = [tt.sum(tt.log(tt.sum(pp_L_normed * np.eye(mdn.n_outputs), axis=2)), axis=1)
+                        for pp_L_normed in pp_Ls_normed]
+    # precisions of proposal posterior components (now well-conditioned)
+    pp_Ps = [d.dimshuffle(0, 1, 'x') * pp_P_normed * d.dimshuffle(0, 'x', 1) for pp_P_normed, d in zip(pp_Ps_normed, ds)]
+    # log determinants of proposal posterior precisions
+    pp_ldetPs = [2.0 * (tt.sum(tt.log(d), axis=1) + pp_ldetL_normed)
+                 for d, pp_ldetL_normed in zip(ds, pp_ldetLs_normed)]
 
     # covariances of proposal posterior components:
     pp_Ss = [invert_each(P) for P in pp_Ps]
@@ -260,7 +276,7 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
     pp_las = tt.stack(pp_lZs, axis=1) + tt.log(a)
     pp_las = pp_las - MyLogSumExp(pp_las, axis=1)
 
-    loss = -tt.mean(mog_LL(mdn.params, pp_las, pp_ms, pp_Us, pp_ldetUs, from_cholesky=True))
+    loss = -tt.mean(mog_LL(mdn.params, pp_las, pp_ms, pp_Ps, pp_ldetPs))
 
     # collect extra input variables to be provided for each training data point
     trn_inputs = [mdn.params, mdn.stats, prop_m, prop_P]
@@ -323,7 +339,7 @@ def apt_mdn_loss_atomic_proposal(mdn, svi=False, combined_loss=False):
     # compute per-component log-densities and log-normalizers
     lprobs_comps = [M[:,0] + ldetU for M, ldetU in zip(Ms, ldetUs)]
     lZ_comps = [MyLogSumExp(M,axis=1).squeeze() + ldetU
-            for M,ldetU in zip(Ms, ldetUs)]    # sum over all proposal thetas
+            for M,ldetU in zip(Ms, ldetUs)]  # sum over all proposal thetas
 
     # compute overall log-densities and log-normalizers across components
     lq = MyLogSumExp(tt.stack(lprobs_comps, axis=1) + tt.log(a), axis=1)
