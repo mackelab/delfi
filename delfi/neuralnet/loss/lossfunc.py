@@ -229,13 +229,13 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
 
     # get square roots of diagonal entries of posterior proposal precision components, which are equal to the L2 norms
     # of the Cholesky factor columns for the same matrix. we'll use these to improve the numerical conditioning of pp_Ps
-    ds = [tt.sum(pp_P * np.eye(mdn.n_outputs), axis=2) for pp_P in pp_Ps]
+    ds = [tt.sqrt(tt.sum(pp_P * np.eye(mdn.n_outputs), axis=2)) for pp_P in pp_Ps]
     # normalize the estimate of each true posterior component according to the corresponding elements of d:
-    # first normalize the Cholesky factor of the true posterior component estimate
+    # first normalize the Cholesky factor of the true posterior component estimate...
     Us_normed = [U / d.dimshuffle(0, 'x', 1) for U, d in zip(Us, ds)]
     # then normalize the propsal. the resulting list is the same proposal, differently normalized for each component of
     # the true posterior
-    P_0s_normed = [(P_0 / d.dimshuffle(0, 'x', 1)) / d.dimshuffle(0, 1, 'x') for d in ds]
+    P_0s_normed = [P_0 / (d.dimshuffle(0, 'x', 1) * d.dimshuffle(0, 1, 'x')) for d in ds]
     pp_Ps_normed = [tt.batched_dot(U_normed.dimshuffle(0, 2, 1), U_normed) + P_0_normed
                     for U_normed, P_0_normed in zip(Us_normed, P_0s_normed)]
     # lower Cholesky factors for normalized precisions of proposal posterior components
@@ -244,7 +244,8 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
     pp_ldetLs_normed = [tt.sum(tt.log(tt.sum(pp_L_normed * np.eye(mdn.n_outputs), axis=2)), axis=1)
                         for pp_L_normed in pp_Ls_normed]
     # precisions of proposal posterior components (now well-conditioned)
-    pp_Ps = [d.dimshuffle(0, 1, 'x') * pp_P_normed * d.dimshuffle(0, 'x', 1) for pp_P_normed, d in zip(pp_Ps_normed, ds)]
+    pp_Ps = [d.dimshuffle(0, 1, 'x') * pp_P_normed * d.dimshuffle(0, 'x', 1)
+             for pp_P_normed, d in zip(pp_Ps_normed, ds)]
     # log determinants of proposal posterior precisions
     pp_ldetPs = [2.0 * (tt.sum(tt.log(d), axis=1) + pp_ldetL_normed)
                  for d, pp_ldetL_normed in zip(ds, pp_ldetLs_normed)]
