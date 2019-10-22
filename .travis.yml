@@ -32,7 +32,6 @@ install:
   - python setup.py install
   - eval $(ssh-agent -s)
 script:
-  - echo $PWD
   - PYTHONPATH=$PWD:$PYTHONPATH travis_wait 30 pytest --cov=delfi;
   - travis-sphinx build -n -s docs/
 after_success:

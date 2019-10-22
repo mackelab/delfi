@@ -4,6 +4,7 @@ from delfi.inference.BaseInference import BaseInference
 from delfi.neuralnet.Trainer import Trainer
 from delfi.neuralnet.loss.regularizer import svi_kl_init, svi_kl_zero
 
+
 class SNPEB(BaseInference):
     def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
                  convert_to_T=3, reg_lambda=0.01, prior_mixin=0, kernel=None, seed=None, verbose=True,

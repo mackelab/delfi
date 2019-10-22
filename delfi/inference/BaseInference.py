@@ -173,8 +173,7 @@ class BaseInference(metaclass=ABCMetaDoc):
             b.set_value(np.zeros_like(b.get_value()))
 
     def conditional_norm(self, fcv=0.8, tmu=None, tSig=None, h=None):
-        """ Normalizes current network output at observed summary statistics
-
+        """Normalizes current network output at observed summary statistics
 
         Parameters
         ----------
@@ -186,7 +185,6 @@ class BaseInference(metaclass=ABCMetaDoc):
             Target mean.
         tSig: array
             Target covariance.
-
         """
 
         # avoid CDELFI.predict() attempt to analytically correct for proposal
@@ -225,7 +223,7 @@ class BaseInference(metaclass=ABCMetaDoc):
 
         # first we need the center of means
         def idx_MoG(x):
-            return x.name[:5]=='means'
+            return x.name[:5] == 'means'
         mu_ = np.zeros_like(mog.xs[0].m)
         for w, b in zip(filter(idx_MoG, self.network.mps_wp),
                         filter(idx_MoG, self.network.mps_bp)):
