@@ -98,9 +98,9 @@ def test_apt_inference_mogprop(n_params=2, seed=47):
     res, m_true, S_true = init_all_gaussian(seed=seed, n_params=n_params,
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
-    out = res.run(n_train=3000, n_rounds=2, proposal='mog',
-                  train_on_all=False, silent_fail=False, print_each_epoch=True,
-                  reuse_prior_samples=False)
+    out = res.run(n_train=1000, n_rounds=2, proposal='mog',
+                  train_on_all=True, silent_fail=False, print_each_epoch=True,
+                  reuse_prior_samples=True)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 

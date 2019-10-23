@@ -42,7 +42,7 @@ def snpeb_loss(model, svi=False):
     return loss, trn_inputs
 
 
-def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False):
+def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False, add_prior_precision=True):
     """Define loss function for training with a MoG proposal, allowing
     the proposal distribution to be different for each sample. The proposal
     means, precisions and weights are passed along with the stats and params.
@@ -81,6 +81,7 @@ def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False):
         mdn.get_mog_tensors(return_extras=True, svi=svi)
     # convert mixture vars from lists of tensors to single tensors, of sizes:
     las = tt.log(a)
+    Us = tt.stack(Us, axis=3).dimshuffle(0, 3, 1, 2)
     Ps = tt.stack(Ps, axis=3).dimshuffle(0, 3, 1, 2)
     Pms = tt.stack(Pms, axis=2).dimshuffle(0, 2, 1)
     ldetPs = tt.stack(ldetPs, axis=1)
@@ -106,7 +107,7 @@ def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False):
     # calculate corrections to precisions (P_0s) and precisions * means (Pm_0s)
     P_0s = prop_Ps
     Pm_0s = prop_Pms
-    if not uniform_prior:  # Gaussian prior
+    if not uniform_prior and not add_prior_precision:  # Gaussian prior
         P_0s = P_0s - prior.P
         Pm_0s = Pm_0s - prior.Pm
 
@@ -116,14 +117,36 @@ def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False):
     # component of the true posterior appear first. The shape of pp_Ps is
     # (batch, mdn.n_components, ncprop, n_outputs, n_outputs)
     pp_Ps = Ps.dimshuffle(0, 1, 'x', 2, 3) + P_0s.dimshuffle(0, 'x', 1, 2, 3)
-    pp_Ss = invert_each(pp_Ps)  # covariances of proposal posterior components
-    # upper Cholesky factors for precisions of proposal posterior components
-    pp_Us = cholesky_each(pp_Ps).dimshuffle(0, 1, 2, 4, 3)  # cholesky_each returns lower factor
-    # log determinants of upper Cholesky factor for the precision of each proposal posterior component
-    pp_ldetUs = tt.sum(tt.log(tt.sum(pp_Us * np.eye(mdn.n_outputs), axis=4)), axis=3)
-    # log determinant of each proposal posterior component's precision:
-    pp_ldetPs = 2.0 * pp_ldetUs
+    spp = pp_Ps.shape
 
+    # get square roots of diagonal entries of posterior proposal precision components, which are equal to the L2 norms
+    # of the Cholesky factor columns for the same matrix. we'll use these to improve the numerical conditioning of pp_Ps
+    ds = tt.sqrt(tt.sum(pp_Ps * np.eye(mdn.n_outputs), axis=4))
+    Ds = ds.dimshuffle(0, 1, 2, 'x', 3) * ds.dimshuffle(0, 1, 2, 3, 'x')
+    # normalize the estimate of each true posterior component according to the corresponding elements of d:
+    # first normalize the Cholesky factor of the true posterior component estimate, separately for each pairing of
+    # proposal and true posterior components...
+    Us_normed = Us.dimshuffle(0, 1, 'x', 2, 3) / ds.dimshuffle(0, 1, 2, 'x', 3)
+    # then normalize the propsal. the resulting list is the same proposal, differently normalized for each component of
+    # the true posterior
+    P_0s_normed = P_0s.dimshuffle(0, 'x', 1, 2, 3) / Ds
+
+    # reshape temporarily so there's just one batch dimension
+    Us_normed_R = Us_normed.reshape((-1, mdn.n_outputs, mdn.n_outputs))
+    Ps_normed_R = tt.batched_dot(Us_normed_R.dimshuffle(0, 2, 1), Us_normed_R)
+    Ps_normed = Ps_normed_R.reshape(spp)
+
+    pp_Ps_normed = Ps_normed + P_0s_normed
+    # lower Cholesky factors for normalized precisions of proposal posterior components
+    pp_Ls_normed = cholesky_each(pp_Ps_normed)
+    # log determinants of lower Cholesky factors for normalized precisions of proposal posterior components
+    pp_ldetLs_normed = tt.sum(tt.log(tt.sum(pp_Ls_normed * np.eye(mdn.n_outputs), axis=4)), axis=3)
+    # precisions of proposal posterior components (now well-conditioned)
+    pp_Ps = pp_Ps_normed * Ds
+    # log determinants of proposal posterior precisions
+    pp_ldetPs = 2.0 * (tt.sum(tt.log(ds), axis=3) + pp_ldetLs_normed)
+    # covariance matrices
+    pp_Ss = invert_each(pp_Ps)  # covariances of proposal posterior components
     # precision times mean for each proposal posterior component:
     pp_Pms = Pms.dimshuffle(0, 1, 'x', 2) + Pm_0s.dimshuffle(0, 'x', 1, 2)
     # mean of proposal posterior components:
@@ -175,7 +198,7 @@ def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False):
     return loss, trn_inputs
 
 
-def apt_loss_gaussian_proposal(mdn, prior, svi=False):
+def apt_loss_gaussian_proposal(mdn, prior, svi=False, add_prior_precision=True):
     """Define loss function for training with a Gaussian proposal, allowing
     the proposal distribution to be different for each sample. The proposal
     mean and precision are passed along with the stats and params.
@@ -220,7 +243,7 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False):
     # calculate corrections to precision (P_0) and precision * mean (Pm_0)
     P_0 = prop_P
     Pm_0 = tt.sum(prop_P * prop_m.dimshuffle(0, 'x', 1), axis=2)
-    if not uniform_prior:  # Gaussian prior
+    if not uniform_prior and not add_prior_precision:  # Gaussian prior
         P_0 = P_0 - prior.P
         Pm_0 = Pm_0 - prior.Pm
 

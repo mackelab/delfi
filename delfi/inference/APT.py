@@ -14,6 +14,7 @@ from delfi.utils.data import repnewax, combine_trn_datasets
 class APT(BaseInference):
     def __init__(self, generator, obs=None, prior_norm=False,
                  pilot_samples=100, reg_lambda=0.01, seed=None, verbose=True,
+                 add_prior_precision=True,
                  **kwargs):
         """APT
         Core idea is to parameterize the true posterior, and calculate the
@@ -40,6 +41,8 @@ class APT(BaseInference):
             If provided, random number generator will be seeded
         verbose : bool
             Controls whether or not progressbars are shown
+        add_prior_precision: bool
+            Whether to add the prior precision to each posterior compoenent for Gauss/MoG proposals
         kwargs : additional keyword arguments
             Additional arguments for the NeuralNet instance, including:
                 n_hiddens : list of ints
@@ -66,9 +69,21 @@ class APT(BaseInference):
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
 
+        self.add_prior_precision = add_prior_precision
         self.reg_lambda = reg_lambda
         self.exception_info = (None, None, None)
         self.trn_datasets, self.proposal_used = [], []
+
+    def predict(self, *args, **kwargs):
+        p = super().predict(*args, **kwargs)
+
+        # add the prior precision to each posterior component if needed
+        if self.add_prior_precision and self.round > 0 and isinstance(self.generator.prior, dd.Gaussian) and \
+                self.proposal_used[-1] in ['gaussian', 'mog']:
+            assert self.network.density == 'mog' and isinstance(p, dd.MoG)
+            p = dd.MoG(a=p.a, xs=[dd.Gaussian(m=x.m, P=x.P + self.generator.prior.P, seed=x.seed) for x in p.xs])
+
+        return p
 
     def define_loss(self, n, round_cl=1, proposal='gaussian',
                     combined_loss=False):
@@ -91,18 +106,18 @@ class APT(BaseInference):
             prior = prior.ztrans(self.params_mean, self.params_std)
 
         if proposal == 'prior':  # using prior as proposal
-            loss, trn_inputs = snpe_loss_prior_as_proposal(self.network,
-                                                           svi=self.svi)
+            loss, trn_inputs = snpe_loss_prior_as_proposal(self.network, svi=self.svi)
+
         elif proposal == 'gaussian':
+            assert self.network.density == 'mog'
             assert isinstance(self.generator.proposal, dd.Gaussian)
-            loss, trn_inputs = apt_loss_gaussian_proposal(self.network,
-                                                          prior,
-                                                          svi=self.svi)
+            loss, trn_inputs = apt_loss_gaussian_proposal(self.network, prior, svi=self.svi,
+                                                          add_prior_precision=self.add_prior_precision)
         elif proposal.lower() == 'mog':
+            assert self.network.density == 'mog'
             assert isinstance(self.generator.proposal, dd.MoG)
-            loss, trn_inputs = apt_loss_MoG_proposal(self.network,
-                                                     prior,
-                                                     svi=self.svi)
+            loss, trn_inputs = apt_loss_MoG_proposal(self.network, prior, svi=self.svi,
+                                                     add_prior_precision=self.add_prior_precision)
         elif proposal == 'atomic':
             loss, trn_inputs = \
                 apt_loss_atomic_proposal(self.network, svi=self.svi,
@@ -330,10 +345,9 @@ class APT(BaseInference):
         self.set_proposal(project_to_gaussian=False)
         assert isinstance(self.generator.proposal, dd.MoG)
         prop = self.generator.proposal.ztrans(self.params_mean, self.params_std)
-        ncomps = prop.n_components
 
         trn_data, n_train_round = self.gen(n_train)
-        trn_data = (*trn_data, *MoG_prop_APT_training_vars(prop, n_train_round, ncomps))
+        trn_data = (*trn_data, *MoG_prop_APT_training_vars(prop, n_train_round, prop.n_components))
 
         self.trn_datasets.append(trn_data)
 
@@ -469,7 +483,6 @@ class APT(BaseInference):
         n_train_round = trn_data[0].shape[0]  # may have decreased (rejection)
 
         return trn_data, n_train_round
-
 
     def n_train_round(self, n_train):
         # number of training examples for this round
