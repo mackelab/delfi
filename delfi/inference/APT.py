@@ -14,7 +14,7 @@ from delfi.utils.data import repnewax, combine_trn_datasets
 class APT(BaseInference):
     def __init__(self, generator, obs=None, prior_norm=False,
                  pilot_samples=100, reg_lambda=0.01, seed=None, verbose=True,
-                 add_prior_precision=True,
+                 add_prior_precision=True, Ptol=None,
                  **kwargs):
         """APT
         Core idea is to parameterize the true posterior, and calculate the
@@ -42,7 +42,9 @@ class APT(BaseInference):
         verbose : bool
             Controls whether or not progressbars are shown
         add_prior_precision: bool
-            Whether to add the prior precision to each posterior compoenent for Gauss/MoG proposals
+            Whether to add the prior precision to each posterior component for Gauss/MoG proposals
+        Ptol: float
+            Quantity added to the diagonal entries of the precision matrix for each Gaussian posterior component
         kwargs : additional keyword arguments
             Additional arguments for the NeuralNet instance, including:
                 n_hiddens : list of ints
@@ -69,6 +71,7 @@ class APT(BaseInference):
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
 
+        self.Ptol = np.finfo(dtype).resolution if Ptol is None else Ptol
         self.add_prior_precision = add_prior_precision
         self.reg_lambda = reg_lambda
         self.exception_info = (None, None, None)
@@ -77,11 +80,13 @@ class APT(BaseInference):
     def predict(self, *args, **kwargs):
         p = super().predict(*args, **kwargs)
 
-        # add the prior precision to each posterior component if needed
-        if self.add_prior_precision and self.round > 0 and isinstance(self.generator.prior, dd.Gaussian) and \
-                self.proposal_used[-1] in ['gaussian', 'mog']:
+        if self.round > 0 and self.proposal_used[-1] in ['gaussian', 'mog']:
             assert self.network.density == 'mog' and isinstance(p, dd.MoG)
-            p = dd.MoG(a=p.a, xs=[dd.Gaussian(m=x.m, P=x.P + self.generator.prior.P, seed=x.seed) for x in p.xs])
+            P_offset = np.eye(p.ndim) * self.Ptol
+            # add the prior precision to each posterior component if needed
+            if self.add_prior_precision and isinstance(self.generator.prior, dd.Gaussian):
+                P_offset += self.generator.prior.P
+            p = dd.MoG(a=p.a, xs=[dd.Gaussian(m=x.m, P=x.P + P_offset, seed=x.seed) for x in p.xs])
 
         return p
 

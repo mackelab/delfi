@@ -42,7 +42,7 @@ def snpeb_loss(model, svi=False):
     return loss, trn_inputs
 
 
-def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False, add_prior_precision=True):
+def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False, add_prior_precision=True, Ptol=1e-7):
     """Define loss function for training with a MoG proposal, allowing
     the proposal distribution to be different for each sample. The proposal
     means, precisions and weights are passed along with the stats and params.
@@ -136,7 +136,7 @@ def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False, add
     Ps_normed_R = tt.batched_dot(Us_normed_R.dimshuffle(0, 2, 1), Us_normed_R)
     Ps_normed = Ps_normed_R.reshape(spp)
 
-    pp_Ps_normed = Ps_normed + P_0s_normed
+    pp_Ps_normed = Ps_normed + P_0s_normed + np.eye(mdn.n_outputs) * Ptol
     # lower Cholesky factors for normalized precisions of proposal posterior components
     pp_Ls_normed = cholesky_each(pp_Ps_normed)
     # log determinants of lower Cholesky factors for normalized precisions of proposal posterior components
@@ -198,7 +198,7 @@ def apt_loss_MoG_proposal(mdn, prior, n_proposal_components=None, svi=False, add
     return loss, trn_inputs
 
 
-def apt_loss_gaussian_proposal(mdn, prior, svi=False, add_prior_precision=True):
+def apt_loss_gaussian_proposal(mdn, prior, svi=False, add_prior_precision=True, Ptol=1e-7):
     """Define loss function for training with a Gaussian proposal, allowing
     the proposal distribution to be different for each sample. The proposal
     mean and precision are passed along with the stats and params.
@@ -259,7 +259,7 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False, add_prior_precision=True):
     # then normalize the propsal. the resulting list is the same proposal, differently normalized for each component of
     # the true posterior
     P_0s_normed = [P_0 / (d.dimshuffle(0, 'x', 1) * d.dimshuffle(0, 1, 'x')) for d in ds]
-    pp_Ps_normed = [tt.batched_dot(U_normed.dimshuffle(0, 2, 1), U_normed) + P_0_normed
+    pp_Ps_normed = [tt.batched_dot(U_normed.dimshuffle(0, 2, 1), U_normed) + P_0_normed + np.eye(mdn.n_outputs) * Ptol
                     for U_normed, P_0_normed in zip(Us_normed, P_0s_normed)]
     # lower Cholesky factors for normalized precisions of proposal posterior components
     pp_Ls_normed = [cholesky_each(pp_P_normed) for pp_P_normed in pp_Ps_normed]
@@ -286,8 +286,7 @@ def apt_loss_gaussian_proposal(mdn, prior, svi=False, add_prior_precision=True):
     # (for Gaussian proposals) or Gaussian products (for uniform priors)
     # Note we drop a "constant" (for each sample, w.r.t trained params) term of
     #
-    # 0.5 * (prop_ldetP - prior_ldetP +
-    # tensorQF(prior.P, prior.m) - tensorQF(prop_P, prop_m))
+    # 0.5 * (prop_ldetP - prior_ldetP + tensorQF(prior.P, prior.m) - tensorQF(prop_P, prop_m))
     #
     # since we're going to normalize the pp mixture coefficients sum to 1
     pp_lZs = [0.5 * (ldetP - pp_ldetP - QF + pp_QF)
