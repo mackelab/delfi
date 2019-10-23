@@ -495,6 +495,10 @@ class APT(BaseInference):
 
         return epochs_round
 
+    def reset(self, seed=None):
+        super().reset(seed=seed)
+        self.trn_datasets, self.proposal_used = [], []
+
 
 def MoG_prop_APT_training_vars(prop, n_train_round, n_components):
     if isinstance(prop, dd.Uniform):
