@@ -112,7 +112,7 @@ def test_apt_inference_gaussprop(n_params=2, seed=47, Sfac=1000.0):
                                             Sfac=Sfac,
                                             **inf_setup_opts)
     # 3 rounds to test sample reuse. by default prior samples not reused
-    out = res.run(n_train=1000, n_rounds=3, proposal='gaussian',
+    out = res.run(n_train=1500, n_rounds=3, proposal='gaussian',
                   train_on_all=True, silent_fail=False, print_each_epoch=True,
                   reuse_prior_samples=True)
 
@@ -190,7 +190,6 @@ def test_inference_apt_maf_rnn(n_steps=2, dim_per_t=2, seed=42):
 def test_inference_apt_maf_cnn(rows=2, cols=2, seed=42):
     if theano.config.device == 'cpu':
         return  # need a gpu
-
     # we're going to reshape a Gaussian observation to be an image
     # this will test the code but a better test would involve correlated x_i.
     # one option would be to try using a very small blob model

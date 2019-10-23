@@ -156,6 +156,7 @@ class APT(BaseInference):
 
     def run(self, n_rounds=1, proposal='gaussian', silent_fail=True, **kwargs):
         """Run algorithm
+
         Parameters
         ----------
         n_train : int or list of ints

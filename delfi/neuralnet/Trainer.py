@@ -111,7 +111,7 @@ class Trainer:
             self.do_validation = True
 
             n_trn = int((1 - val_frac) * self.n_trn_data)
-            self.val_data = [ data[n_trn:] for data in trn_data].copy() # copy() might be  overly prudent
+            self.val_data = [ data[n_trn:] for data in trn_data].copy()  # copy() might be overly prudent
             self.trn_data = [ data[:n_trn] for data in trn_data].copy()
 
             # assemble extra inputs *once* for validation data
