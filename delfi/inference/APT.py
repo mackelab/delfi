@@ -125,8 +125,7 @@ class APT(BaseInference):
                                                      add_prior_precision=self.add_prior_precision)
         elif proposal == 'atomic':
             loss, trn_inputs = \
-                apt_loss_atomic_proposal(self.network, svi=self.svi,
-                                         combined_loss=combined_loss)
+                apt_loss_atomic_proposal(self.network, svi=self.svi, combined_loss=combined_loss)
         else:
             raise NotImplemented()
 

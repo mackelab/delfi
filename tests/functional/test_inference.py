@@ -125,8 +125,8 @@ def test_apt_inference_atomicprop_mdn(n_params=2, seed=47):
     res, m_true, S_true = init_all_gaussian(seed=seed, n_params=n_params,
                                             inferenceobj=infer.APT,
                                             **inf_setup_opts)
-    out = res.run(n_train=1000, n_rounds=2, proposal='atomic', n_atoms=10,
-                  train_on_all=True, silent_fail=False, print_each_epoch=True)
+    out = res.run(n_train=1020, n_rounds=2, proposal='atomic', n_atoms=10,
+                  train_on_all=True, silent_fail=False, print_each_epoch=True, verbose=True, val_frac=0.05)
     posterior = res.predict(res.obs.reshape(1, -1))
     check_gaussian_posterior(posterior, m_true, S_true)
 

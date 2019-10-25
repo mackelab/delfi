@@ -319,12 +319,10 @@ def apt_loss_atomic_proposal(model, svi=False, combined_loss=False):
     """
 
     if model.density == 'mog':
-        return apt_mdn_loss_atomic_proposal(model, svi=svi,
-                                                combined_loss=combined_loss)
+        return apt_mdn_loss_atomic_proposal(model, svi=svi, combined_loss=combined_loss)
     elif model.density == 'maf':
         assert not svi, 'SVI not supported for MAFs'
-        return apt_maf_loss_atomic_proposal(model, svi=svi,
-                                                combined_loss=combined_loss)
+        return apt_maf_loss_atomic_proposal(model, svi=svi, combined_loss=combined_loss)
 
 
 def apt_mdn_loss_atomic_proposal(mdn, svi=False, combined_loss=False):
