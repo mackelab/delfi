@@ -44,8 +44,8 @@ class Gamma(BaseDistribution):
 
         # x should have a second dim with length 1, not more
         x = np.atleast_2d(x)
-        assert x.shape[1] == 1, f'x needs second dim, {x.shape}'
-        assert not x.ndim > 2, f'no more than 2 dims in x: {x.ndim}'
+        assert x.shape[1] == 1, 'x needs second dim'
+        assert not x.ndim > 2, 'no more than 2 dims in x'
 
         res = self._gamma.logpdf(x-self.offset) if log else self._gamma.pdf(x-self.offset)
         # reshape to (nbatch, )
