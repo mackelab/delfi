@@ -1,5 +1,6 @@
 import theano
 import theano.tensor as tt
+import theano.tensor.slinalg as slinalg
 import numpy as np
 
 
@@ -68,7 +69,18 @@ def det_each(A, log=False):
     return tt.log(D) if log else D
 
 
-def batched_matrix_op(A, Op, Op_output_ndim):
+def cholesky_each(A):
+    """
+    Calculate cholesky factorizations for a set of positive definite matrices.
+
+    :param A: Array of input matrices. The rows and columns of each matrix must correspond to the last 2 dimensions of
+    A, which must be equal.
+    :return: cholesky factors
+    """
+    return batched_matrix_op(A, slinalg.Cholesky(), 2)
+
+
+def batched_matrix_op(A, Op, Op_output_ndim, allow_gc=False):
     """
     Apply a unary operator to a set of matrices stored in an N-D array (N > 2).
     The rows and columns of each matrix must correspond to the last 2
@@ -77,7 +89,7 @@ def batched_matrix_op(A, Op, Op_output_ndim):
     """
     sB = (tt.prod(A.shape[:-2]), A.shape[-2], A.shape[-1])
     B = A.reshape(sB, ndim=3)
-    OpB, _ = theano.scan(fn=lambda X: Op(X), allow_gc=False, sequences=B)
+    OpB, _ = theano.scan(fn=lambda X: Op(X), allow_gc=allow_gc, sequences=B)
     ndim_out = (A.ndim - 2) + Op_output_ndim
     sOpA = tt.join(0, A.shape[:-2], OpB.shape[1:])
     return OpB.reshape(sOpA, ndim=ndim_out)
@@ -113,8 +125,8 @@ def tensorQF(A, x):
 
 def tensorQF_chol(U, x):
     """
-    Symbollicaly evaluate quadratic form with matrix dot(U^T, U) on vector x.
-    This will usually be called on a U resulting from a Cholesky factorzation.
+    Symbolicaly evaluate quadratic form with matrix dot(U^T, U) on vector x.
+    This will usually be called on a U resulting from a Cholesky factorization.
     See tensorQF for further details.
     """
     return tt.sum(tt.sum(x.dimshuffle([0, 'x', 1]) * U, axis=2) ** 2, axis=1)

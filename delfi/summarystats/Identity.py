@@ -6,9 +6,9 @@ from delfi.summarystats.BaseSummaryStats import BaseSummaryStats
 class Identity(BaseSummaryStats):
     """Just apply the identity instead of reducing data.
     Parameters
-        ----------
-        idx : list or array of int or bool
-            Set of data indices to use us sufficient statistics (None for all).
+    ----------
+    idx : list or array of int or bool
+        Set of data indices to use us sufficient statistics (None for all).
     """
 
     def __init__(self, seed=None, idx=None):

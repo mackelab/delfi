@@ -14,6 +14,7 @@ from delfi.utils.data import repnewax, combine_trn_datasets
 class APT(BaseInference):
     def __init__(self, generator, obs=None, prior_norm=False,
                  pilot_samples=100, reg_lambda=0.01, seed=None, verbose=True,
+                 add_prior_precision=True, Ptol=None,
                  **kwargs):
         """APT
         Core idea is to parameterize the true posterior, and calculate the
@@ -40,6 +41,10 @@ class APT(BaseInference):
             If provided, random number generator will be seeded
         verbose : bool
             Controls whether or not progressbars are shown
+        add_prior_precision: bool
+            Whether to add the prior precision to each posterior component for Gauss/MoG proposals
+        Ptol: float
+            Quantity added to the diagonal entries of the precision matrix for each Gaussian posterior component
         kwargs : additional keyword arguments
             Additional arguments for the NeuralNet instance, including:
                 n_hiddens : list of ints
@@ -66,9 +71,24 @@ class APT(BaseInference):
         if np.any(np.isnan(self.obs)):
             raise ValueError("Observed data contains NaNs")
 
+        self.Ptol = np.finfo(dtype).resolution if Ptol is None else Ptol
+        self.add_prior_precision = add_prior_precision
         self.reg_lambda = reg_lambda
         self.exception_info = (None, None, None)
         self.trn_datasets, self.proposal_used = [], []
+
+    def predict(self, *args, **kwargs):
+        p = super().predict(*args, **kwargs)
+
+        if self.round > 0 and self.proposal_used[-1] in ['gaussian', 'mog']:
+            assert self.network.density == 'mog' and isinstance(p, dd.MoG)
+            P_offset = np.eye(p.ndim) * self.Ptol
+            # add the prior precision to each posterior component if needed
+            if self.add_prior_precision and isinstance(self.generator.prior, dd.Gaussian):
+                P_offset += self.generator.prior.P
+            p = dd.MoG(a=p.a, xs=[dd.Gaussian(m=x.m, P=x.P + P_offset, seed=x.seed) for x in p.xs])
+
+        return p
 
     def define_loss(self, n, round_cl=1, proposal='gaussian',
                     combined_loss=False):
@@ -86,22 +106,26 @@ class APT(BaseInference):
         combined_loss : bool
             Whether to include prior likelihood terms in addition to atomic
         """
+        prior = self.generator.prior
+        if isinstance(prior, dd.Gaussian) or isinstance(prior, dd.MoG):
+            prior = prior.ztrans(self.params_mean, self.params_std)
+
         if proposal == 'prior':  # using prior as proposal
-            loss, trn_inputs = snpe_loss_prior_as_proposal(self.network,
-                                                           svi=self.svi)
+            loss, trn_inputs = snpe_loss_prior_as_proposal(self.network, svi=self.svi)
+
         elif proposal == 'gaussian':
+            assert self.network.density == 'mog'
             assert isinstance(self.generator.proposal, dd.Gaussian)
-            loss, trn_inputs = apt_loss_gaussian_proposal(self.network,
-                                                          self.generator.prior,
-                                                          svi=self.svi)
+            loss, trn_inputs = apt_loss_gaussian_proposal(self.network, prior, svi=self.svi,
+                                                          add_prior_precision=self.add_prior_precision)
         elif proposal.lower() == 'mog':
-            loss, trn_inputs = apt_loss_MoG_proposal(self.network,
-                                                     self.generator.prior,
-                                                     svi=self.svi)
+            assert self.network.density == 'mog'
+            assert isinstance(self.generator.proposal, dd.MoG)
+            loss, trn_inputs = apt_loss_MoG_proposal(self.network, prior, svi=self.svi,
+                                                     add_prior_precision=self.add_prior_precision)
         elif proposal == 'atomic':
             loss, trn_inputs = \
-                apt_loss_atomic_proposal(self.network, svi=self.svi,
-                                         combined_loss=combined_loss)
+                apt_loss_atomic_proposal(self.network, svi=self.svi, combined_loss=combined_loss)
         else:
             raise NotImplemented()
 
@@ -131,6 +155,7 @@ class APT(BaseInference):
 
     def run(self, n_rounds=1, proposal='gaussian', silent_fail=True, **kwargs):
         """Run algorithm
+
         Parameters
         ----------
         n_train : int or list of ints
@@ -325,10 +350,9 @@ class APT(BaseInference):
         self.set_proposal(project_to_gaussian=False)
         assert isinstance(self.generator.proposal, dd.MoG)
         prop = self.generator.proposal.ztrans(self.params_mean, self.params_std)
-        ncomps = prop.n_components
 
         trn_data, n_train_round = self.gen(n_train)
-        trn_data = (*trn_data, *MoG_prop_APT_training_vars(prop, n_train_round, ncomps))
+        trn_data = (*trn_data, *MoG_prop_APT_training_vars(prop, n_train_round, prop.n_components))
 
         self.trn_datasets.append(trn_data)
 
@@ -465,7 +489,6 @@ class APT(BaseInference):
 
         return trn_data, n_train_round
 
-
     def n_train_round(self, n_train):
         # number of training examples for this round
         if type(n_train) == list:
@@ -489,6 +512,10 @@ class APT(BaseInference):
             epochs_round = epochs
 
         return epochs_round
+
+    def reset(self, seed=None):
+        super().reset(seed=seed)
+        self.trn_datasets, self.proposal_used = [], []
 
 
 def MoG_prop_APT_training_vars(prop, n_train_round, n_components):

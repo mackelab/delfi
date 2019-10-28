@@ -19,7 +19,7 @@ SNPE-A
   :members:
 
 SNPE-B
-````
+``````
 .. autoclass:: delfi.inference.SNPEB
   :show-inheritance:
   :inherited-members:

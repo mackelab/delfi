@@ -1,7 +1,10 @@
 import numpy as np
+import theano
 import delfi.utils.math as mm
+import delfi.utils.symbolic as sym
 from delfi.distribution import Gaussian
 from delfi.utils.bijection import named_bijection
+from delfi.neuralnet.NeuralNet import dtype
 
 
 def test_gaussprodZ():
@@ -64,3 +67,38 @@ def test_bijections(dim=2, nsamples=1000, seed=1):
         assert np.allclose(x[0], finv(y[0]), atol=1e-8)
         assert np.allclose(f_jac_logD(x), -finv_jac_logD(y), atol=1e-8)
         assert np.allclose(f_jac_logD(x[0]), -finv_jac_logD(y[0]), atol=1e-8)
+
+
+def test_batched_matrix_ops(dim=4, nsamples=100):
+    A_pd = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    A_nonsing = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    L = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    inv = np.full((nsamples, dim, dim), np.nan, dtype=dtype)
+    det = np.full(nsamples, np.nan, dtype=dtype)
+    for i in range(nsamples):
+        L[i] = np.tril(np.random.randn(dim, dim), -1) + np.diag(1.0 + np.exp(np.random.randn(dim)))
+        A_pd[i] = np.dot(L[i], L[i].T)
+        L2 = np.tril(np.random.rand(dim, dim), -1) + np.diag(np.exp(np.random.randn(dim)))
+        L3 = np.tril(np.random.rand(dim, dim), -1) + np.diag(np.exp(np.random.randn(dim)))
+        A_nonsing[i] = np.dot(np.dot(L2, A_pd[i]), L3.T)
+        inv[i] = np.linalg.inv(A_nonsing[i])
+        det[i] = np.linalg.det(A_nonsing[i])
+
+    tA = sym.tensorN(3)
+    f_choleach = theano.function(inputs=[tA], outputs=sym.cholesky_each(tA))
+    f_inveach = theano.function(inputs=[tA], outputs=sym.invert_each(tA))
+    f_deteach = theano.function(inputs=[tA], outputs=sym.det_each(tA))
+
+    symL = f_choleach(A_pd)
+    symdet = f_deteach(A_nonsing)
+    syminv = f_inveach(A_nonsing)
+
+    assert np.allclose(symL, L, atol=1e-8)
+    assert np.allclose(symdet, det, atol=1e-8)
+    assert np.allclose(syminv, inv, atol=1e-8)
+
+    try:
+        f_choleach(A_nonsing)  # try Cholesky factorizing some non-symmetric matrices
+    except Exception as e:
+        assert isinstance(e, np.linalg.linalg.LinAlgError), \
+            "unexpected error when trying Cholesky factorization of non-symmetric matrix"

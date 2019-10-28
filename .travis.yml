@@ -30,9 +30,9 @@ install:
   - echo -e "\n[blas]\nldflags = -lopenblas\n" >> ~/.theanorc
   - pip install -r requirements.txt
   - python setup.py install
-script:
   - eval $(ssh-agent -s)
-  - PYTHONPATH=$PWD:$PYTHONPATH pytest --cov=delfi;
+script:
+  - PYTHONPATH=$PWD:$PYTHONPATH travis_wait 30 pytest --cov=delfi;
   - travis-sphinx build -n -s docs/
 after_success:
   - coveralls

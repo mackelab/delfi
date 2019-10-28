@@ -12,7 +12,7 @@ dtype = theano.config.floatX
 
 def block_circulant(x):
     
-    n,d = x.shape
+    n, d = x.shape
     b = x.itemsize
     
     y = as_strided(np.tile(x.flatten(), 2),
@@ -23,10 +23,8 @@ def block_circulant(x):
 
 
 class Trainer:
-    def __init__(self, network, loss, trn_data, trn_inputs,
-                 step=lu.adam, lr=0.001, lr_decay=1.0, max_norm=0.1,
-                 monitor=None, val_frac=0., assemble_extra_inputs=None,
-                 seed=None):
+    def __init__(self, network, loss, trn_data, trn_inputs, step=lu.adam, lr=0.001, lr_decay=1.0, max_norm=0.1,
+                 monitor=None, val_frac=0.0, assemble_extra_inputs=None, seed=None):
         """Construct and configure the trainer
 
         The trainer takes as inputs a neural network, a loss function and
@@ -106,37 +104,34 @@ class Trainer:
 
         self.assemble_extra_inputs = assemble_extra_inputs
 
-        if not (val_frac == 0.):
+        self.do_validation = val_frac > 0
 
-            self.do_validation = True
+        if self.do_validation:
 
             n_trn = int((1 - val_frac) * self.n_trn_data)
-            self.val_data = [ data[n_trn:] for data in trn_data].copy() # copy() might be  overly prudent
-            self.trn_data = [ data[:n_trn] for data in trn_data].copy()
-
-            # assemble extra inputs *once* for validation data
-            if self.assemble_extra_inputs is not None:
-                self.val_data = self.assemble_extra_inputs(tuple(self.val_data))                
-
-            # prepare validation data
-            self.val_inputs = [theano.shared(data.astype(dtype), borrow=True)
-                               for data in self.val_data]
+            self.val_data = [data[n_trn:] for data in trn_data].copy()  # copy() might be overly prudent
+            self.trn_data = [data[:n_trn] for data in trn_data].copy()
 
             # compile theano function for validation
-            self.validate = theano.function(
-                inputs=[],
-                outputs=self.loss,
-                givens=list(zip(self.trn_inputs, self.val_inputs))
-            )
-
+            self.eval_loss = theano.function(inputs=self.trn_inputs, outputs=self.loss)
             self.best_val_loss = np.inf
-
-        else:
-
-            self.do_validation = False
 
         # initialize variables
         self.loss = float('inf')
+
+    def calc_validation_loss(self, minibatch, strict_batch_size):
+        s, L, n_val, n_batches_used = 0, 0.0, self.val_data[0].shape[0], 0.0  # n_batches_used can be fractional
+
+        while s < n_val and (not strict_batch_size or s + minibatch <= n_val):
+            e = np.minimum(s + minibatch, n_val)
+            next_batch = tuple([x[s:e] for x in self.trn_data])
+            if self.assemble_extra_inputs is not None:
+                next_batch = self.assemble_extra_inputs(next_batch)
+            L += self.eval_loss(*next_batch) * (s - e) / minibatch
+            n_batches_used += (s - e) / minibatch
+            s += minibatch
+
+        return L / n_batches_used
 
     def train(self,
               epochs=250,
@@ -185,6 +180,12 @@ class Trainer:
         minibatch = self.n_trn_data if minibatch is None else minibatch
         if minibatch > self.n_trn_data:
             minibatch = self.n_trn_data
+
+        if self.do_validation and strict_batch_size:
+            assert self.val_data[0].shape[0] >= minibatch, "not enough validation samples for a minibatch"
+            if self.val_data[0].shape[0] % minibatch != 0 and verbose:
+                print('{0} validation samples not a multiple of minibatch size {1}, some samples will be wasted'.
+                      format(self.val_data[0].shape[0], minibatch))
 
         maxiter = int(self.n_trn_data / minibatch + 0.5) * epochs
 
@@ -243,6 +244,7 @@ class Trainer:
 
                     # check for nan
                     if stop_on_nan and np.isnan(trn_loss):
+                        print('stopping due to NaN value on iteration {0}\n'.format(iter))
                         break_flag = True
                         break
 
@@ -253,7 +255,7 @@ class Trainer:
                         # do validation if we've passed a multiple of monitor_every epochs
                         if iter == 0 or \
                                 np.floor(epoch_frac / monitor_every) != np.floor(prev_epoch_frac / monitor_every):
-                            val_loss = self.validate()
+                            val_loss = self.calc_validation_loss(minibatch, strict_batch_size)
                             trn_outputs['val_loss'].append(val_loss)
                             trn_outputs['val_loss_iter'].append(iter)
                             patience_left -= 1
