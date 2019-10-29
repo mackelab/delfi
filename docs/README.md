@@ -7,7 +7,7 @@ The documentation is available at: <http://mackelab.org/delfi>
 
 To build the docs you will need to:
 ```bash
-pip install mkdocs-material markdown-include
+pip install mkdocs-material markdown-include mknotebooks
 ```
 
 You can build the docs locally by running in this subfolder:
