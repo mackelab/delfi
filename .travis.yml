@@ -24,7 +24,9 @@ install:
   - source activate testenv
   - export PATH=$HOME/.local/bin:$PATH
   - pip install pep8 pytest-pep8 python-coveralls pytest-cov==2.5.0
-  - pip install mkdocs-material markdown-include mknotebooks
+  - pip install mkdocs-material markdown-include
+  - pip install nbconvert
+  - pip install mknotebooks
   - pip install theano
   - echo -e "\n[blas]\nldflags = -lopenblas\n" >> ~/.theanorc
   - pip install -r requirements.txt
