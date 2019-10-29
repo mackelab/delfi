@@ -540,7 +540,7 @@ def samples_nd(samples, points=[], **kwargs):
         },
 
         # matplotlib style
-        'style': os.path.join(os.path.dirname(__file__), '.matplotlibrc'),
+        'style': os.path.join(os.path.dirname(__file__), 'matplotlibrc'),
 
         # other options
         'fig_size': (10, 10),
