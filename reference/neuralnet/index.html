@@ -1,0 +1,1809 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
+    
+    
+      
+        <title>Neural Networks - DELFI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.30686662.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.a8b3c06d.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#3f51b5">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../../static/global.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#neural-networks" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DELFI" class="md-header-nav__button md-logo">
+          
+            <img src="../../static/logo.svg" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              DELFI
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Neural Networks
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main" role="main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DELFI" class="md-nav__button md-logo">
+      
+        <img src="../../static/logo.svg" width="48" height="48">
+      
+    </a>
+    DELFI
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../install/" title="Installation" class="md-nav__link">
+      Installation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/quickstart/" title="Quickstart" class="md-nav__link">
+      Quickstart
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../distributions/" title="Distributions" class="md-nav__link">
+      Distributions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../generator/" title="Generator" class="md-nav__link">
+      Generator
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../inference/" title="Inference" class="md-nav__link">
+      Inference
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Neural Networks
+      </label>
+    
+    <a href="./" title="Neural Networks" class="md-nav__link md-nav__link--active">
+      Neural Networks
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#NeuralNet" class="md-nav__link">
+    NeuralNet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ConditionalMaskedAutoregressiveFlow" class="md-nav__link">
+    ConditionalMaskedAutoregressiveFlow
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../utils/" title="Utilities" class="md-nav__link">
+      Utilities
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../credits/" title="Credits" class="md-nav__link">
+      Credits
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#NeuralNet" class="md-nav__link">
+    NeuralNet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ConditionalMaskedAutoregressiveFlow" class="md-nav__link">
+    ConditionalMaskedAutoregressiveFlow
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="http://github.com/mackelab/delfi/edit/master/docs/reference/neuralnet.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="neural-networks">Neural Networks<a class="headerlink" href="#neural-networks" title="Permanent link">&para;</a></h1>
+<p><code>delfi</code> includes multiple density estimators, including:</p>
+<h2 id="NeuralNet"><strong>NeuralNet</strong><code class="codehilite"><span class="k">class</span></code><a class="headerlink" href="#NeuralNet" title="Permanent link">&para;</a></h2>
+<h3 data-toc-label="__init__" id="__init__"><em>NeuralNet</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_bypass</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="s1">&#39;mog&#39;</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">impute_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_filters</span><span class="o">=</span><span class="p">(),</span> <span class="n">filter_sizes</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">pool_sizes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_rnn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">density_opts</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Initialize a mixture density network with custom layers
+
+Parameters
+----------
+n_inputs : int
+    Total input dimensionality (data/summary stats)
+n_outputs : int
+    Dimensionality of output (simulator parameters)
+input_shape : tuple
+    Size to which data are reshaped before CNN or RNN
+n_bypass : int
+    Number of elements at end of input which bypass CNN or RNN
+density : string
+    Type of density condition on the network, can be &#39;mog&#39; or &#39;maf&#39;
+n_components : int
+    Number of components of the mixture density
+n_filters : list of ints
+    Number of filters  per convolutional layer
+n_hiddens : list of ints
+    Number of hidden units per fully connected layer
+n_rnn : None or int
+    Number of RNN units
+impute_missing : bool
+    If set to True, learns replacement value for NaNs, otherwise those
+    inputs are set to zero
+seed : int or None
+    If provided, random number generator will be seeded
+density_opts : dict
+    Options for the density estimator
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>  1
+<span class="special">  2</span>
+  3
+<span class="special">  4</span>
+  5
+<span class="special">  6</span>
+  7
+<span class="special">  8</span>
+  9
+<span class="special"> 10</span>
+ 11
+<span class="special"> 12</span>
+ 13
+<span class="special"> 14</span>
+ 15
+<span class="special"> 16</span>
+ 17
+<span class="special"> 18</span>
+ 19
+<span class="special"> 20</span>
+ 21
+<span class="special"> 22</span>
+ 23
+<span class="special"> 24</span>
+ 25
+<span class="special"> 26</span>
+ 27
+<span class="special"> 28</span>
+ 29
+<span class="special"> 30</span>
+ 31
+<span class="special"> 32</span>
+ 33
+<span class="special"> 34</span>
+ 35
+<span class="special"> 36</span>
+ 37
+<span class="special"> 38</span>
+ 39
+<span class="special"> 40</span>
+ 41
+<span class="special"> 42</span>
+ 43
+<span class="special"> 44</span>
+ 45
+<span class="special"> 46</span>
+ 47
+<span class="special"> 48</span>
+ 49
+<span class="special"> 50</span>
+ 51
+<span class="special"> 52</span>
+ 53
+<span class="special"> 54</span>
+ 55
+<span class="special"> 56</span>
+ 57
+<span class="special"> 58</span>
+ 59
+<span class="special"> 60</span>
+ 61
+<span class="special"> 62</span>
+ 63
+<span class="special"> 64</span>
+ 65
+<span class="special"> 66</span>
+ 67
+<span class="special"> 68</span>
+ 69
+<span class="special"> 70</span>
+ 71
+<span class="special"> 72</span>
+ 73
+<span class="special"> 74</span>
+ 75
+<span class="special"> 76</span>
+ 77
+<span class="special"> 78</span>
+ 79
+<span class="special"> 80</span>
+ 81
+<span class="special"> 82</span>
+ 83
+<span class="special"> 84</span>
+ 85
+<span class="special"> 86</span>
+ 87
+<span class="special"> 88</span>
+ 89
+<span class="special"> 90</span>
+ 91
+<span class="special"> 92</span>
+ 93
+<span class="special"> 94</span>
+ 95
+<span class="special"> 96</span>
+ 97
+<span class="special"> 98</span>
+ 99
+<span class="special">100</span>
+101
+<span class="special">102</span>
+103
+<span class="special">104</span>
+105
+<span class="special">106</span>
+107
+<span class="special">108</span>
+109
+<span class="special">110</span>
+111
+<span class="special">112</span>
+113
+<span class="special">114</span>
+115
+<span class="special">116</span>
+117
+<span class="special">118</span>
+119
+<span class="special">120</span>
+121
+<span class="special">122</span>
+123
+<span class="special">124</span>
+125
+<span class="special">126</span>
+127
+<span class="special">128</span>
+129
+<span class="special">130</span>
+131
+<span class="special">132</span>
+133
+<span class="special">134</span>
+135
+<span class="special">136</span>
+137
+<span class="special">138</span>
+139
+<span class="special">140</span>
+141
+<span class="special">142</span>
+143</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">n_bypass</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">density</span><span class="o">=</span><span class="s1">&#39;mog&#39;</span><span class="p">,</span>
+             <span class="n">n_hiddens</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">impute_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">n_filters</span><span class="o">=</span><span class="p">(),</span> <span class="n">filter_sizes</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">pool_sizes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+             <span class="n">n_rnn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="o">**</span><span class="n">density_opts</span><span class="p">):</span>
+
+
+    <span class="k">if</span> <span class="n">n_rnn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_filters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    <span class="k">assert</span> <span class="n">isint</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">)</span> <span class="ow">and</span> <span class="n">isint</span><span class="p">(</span><span class="n">n_outputs</span><span class="p">)</span>\
+        <span class="ow">and</span> <span class="n">n_inputs</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_outputs</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="n">density</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">impute_missing</span> <span class="o">=</span> <span class="n">impute_missing</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_hiddens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">n_hiddens</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span> <span class="o">=</span> <span class="n">n_outputs</span><span class="p">,</span> <span class="n">n_inputs</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_bypass</span> <span class="o">=</span> <span class="n">n_bypass</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_rnn</span> <span class="o">=</span> <span class="n">n_rnn</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_filters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_sizes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span><span class="p">,</span> <span class="n">n_cnn</span> <span class="o">=</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="n">n_filters</span><span class="p">),</span> <span class="n">filter_sizes</span><span class="p">,</span> <span class="n">pool_sizes</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_filters</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_sizes</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_sizes</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cnn</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_sizes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">n_cnn</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cnn</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">n_cnn</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">iws</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="s1">&#39;iws&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span>
+    <span class="n">lasagne</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_inputs</span><span class="p">,)</span> <span class="k">if</span> <span class="n">input_shape</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">input_shape</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bypass</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span>
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+
+    <span class="c1"># params: output placeholder (batch, self.n_outputs)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">tensorN</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># stats : input placeholder, (batch, self.n_inputs)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">tensorN</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;stats&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># compose layers</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="c1"># input layer, None indicates batch size not fixed at compile time</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">InputLayer</span><span class="p">(</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span><span class="p">),</span> <span class="n">input_var</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">)</span>
+
+    <span class="c1"># learn replacement values</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">impute_missing</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">dl</span><span class="o">.</span><span class="n">ImputeMissingLayer</span><span class="p">(</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span>
+                                  <span class="n">n_inputs</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span><span class="p">,))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">dl</span><span class="o">.</span><span class="n">ReplaceMissingLayer</span><span class="p">(</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span>
+                                   <span class="n">n_inputs</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span><span class="p">,))</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bypass</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_rnn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_cnn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">last_layer</span> <span class="o">=</span> <span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">bypass_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bypass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span><span class="p">)</span>
+        <span class="n">direct_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bypass</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;bypass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">SliceLayer</span><span class="p">(</span><span class="n">last_layer</span><span class="p">,</span> <span class="n">bypass_slice</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;direct&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">SliceLayer</span><span class="p">(</span><span class="n">last_layer</span><span class="p">,</span> <span class="n">direct_slice</span><span class="p">)</span>
+
+    <span class="c1"># reshape inputs prior to RNN or CNN step</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_rnn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_cnn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_filters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># 1 channel</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_rnn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>  <span class="c1"># time, dim</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>  <span class="c1"># channel, row, col</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span>
+
+        <span class="c1"># last layer is &#39;missing&#39; or &#39;direct&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;reshape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">ReshapeLayer</span><span class="p">(</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span> <span class="n">rs</span><span class="p">)</span>
+
+    <span class="c1"># recurrent neural net, input: (batch, sequence_length, num_inputs)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_rnn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;rnn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">GRULayer</span><span class="p">(</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span> <span class="n">n_rnn</span><span class="p">,</span>
+                                        <span class="n">only_return_final</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># convolutional net, input: (batch, channels, rows, columns)</span>
+    <span class="k">if</span> <span class="n">n_cnn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cnn</span><span class="p">):</span>  <span class="c1"># add layers</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">padding</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_sizes</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">padding</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;conv_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">Conv2DLayer</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">incoming</span><span class="o">=</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span>
+                <span class="n">num_filters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_filters</span><span class="p">[</span><span class="n">l</span><span class="p">],</span>
+                <span class="n">filter_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_sizes</span><span class="p">[</span><span class="n">l</span><span class="p">],</span>
+                <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">pad</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+                <span class="n">untie_biases</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">W</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">GlorotUniform</span><span class="p">(),</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="mf">0.</span><span class="p">),</span>
+                <span class="n">nonlinearity</span><span class="o">=</span><span class="n">lnl</span><span class="o">.</span><span class="n">rectify</span><span class="p">,</span>
+                <span class="n">flip_filters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">convolution</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">nnet</span><span class="o">.</span><span class="n">conv2d</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;pool_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">MaxPool2DLayer</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">incoming</span><span class="o">=</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span>
+                    <span class="n">pool_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pool_sizes</span><span class="p">[</span><span class="n">l</span><span class="p">],</span>
+                    <span class="n">stride</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">ignore_border</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># flatten</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;flatten&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">FlattenLayer</span><span class="p">(</span>
+        <span class="n">incoming</span><span class="o">=</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span>
+        <span class="n">outdim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># incorporate bypass inputs</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bypass</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_rnn</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_cnn</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;bypass_merge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ConcatLayer</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;bypass&#39;</span><span class="p">],</span> <span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;mog&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_mdn</span><span class="p">(</span><span class="o">**</span><span class="n">density_opts</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;maf&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_maf</span><span class="p">(</span><span class="o">**</span><span class="n">density_opts</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">compile_funs</span><span class="p">()</span>  <span class="c1"># theano functions</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="compile_funs" id="compile_funs"><em>NeuralNet</em>.<strong>compile_funs</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Compiles theano functions
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">compile_funs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_lprobs</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+        <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">],</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lprobs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_dlprobs</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+        <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">],</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dlprobs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;mog&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_comps</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">comps</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_dcomps</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dcomps</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;maf&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_maf_input</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maf_input</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="eval_comps" id="eval_comps"><em>NeuralNet</em>.<strong>eval_comps</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Evaluate the parameters of all mixture components at given inputs
+
+Parameters
+----------
+stats : np.array
+    rows are input locations
+deterministic : bool
+    if True, mean weights are used for Bayesian network
+
+Returns
+-------
+mixing coefficients, means and scale matrices
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span>
+7</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">eval_comps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;mog&#39;</span>
+    <span class="k">if</span> <span class="n">deterministic</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_dcomps</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_comps</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">))</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="eval_lprobs" id="eval_lprobs"><em>NeuralNet</em>.<strong>eval_lprobs</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Evaluate log probabilities for given input-output pairs.
+
+Parameters
+----------
+params : np.array
+stats : np.array
+deterministic : bool
+    if True, mean weights are used for Bayesian network
+
+Returns
+-------
+log probabilities : log p(params|stats)
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">eval_lprobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">deterministic</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_dlprobs</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_lprobs</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">))</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="gen_newseed" id="gen_newseed"><em>NeuralNet</em>.<strong>gen_newseed</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Generates a new random seed
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gen_newseed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="get_density" id="get_density"><em>NeuralNet</em>.<strong>get_density</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">stats</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;mog&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mog</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="n">deterministic</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;maf&#39;</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">deterministic</span>
+        <span class="n">cmaf_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_eval_maf_input</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MAFconditional</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cmaf</span><span class="p">,</span> <span class="n">cmaf_inputs</span><span class="o">=</span><span class="n">cmaf_input</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">makecopy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">()))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="get_loss" id="get_loss"><em>NeuralNet</em>.<strong>get_loss</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">tt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iws</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lprobs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="get_mog" id="get_mog"><em>NeuralNet</em>.<strong>get_mog</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Return the conditional MoG at location x
+
+Parameters
+----------
+stats : np.array
+    single input location
+deterministic : bool
+    if True, mean weights are used for Bayesian network
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_mog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;mog&#39;</span>
+    <span class="k">assert</span> <span class="n">stats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;x.shape[0] needs to be 1&#39;</span>
+
+    <span class="n">comps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_comps</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">deterministic</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">comps</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ms</span> <span class="o">=</span> <span class="p">[</span><span class="n">comps</span><span class="p">[</span><span class="s1">&#39;m&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)]</span>
+    <span class="n">Us</span> <span class="o">=</span> <span class="p">[</span><span class="n">comps</span><span class="p">[</span><span class="s1">&#39;U&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">dd</span><span class="o">.</span><span class="n">MoG</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span> <span class="n">Us</span><span class="o">=</span><span class="n">Us</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="get_mog_tensors" id="get_mog_tensors"><em>NeuralNet</em>.<strong>get_mog_tensors</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">svi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_extras</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_mog_tensors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">svi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_extras</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">==</span> <span class="s1">&#39;mog&#39;</span>
+    <span class="k">if</span> <span class="n">svi</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Us</span><span class="p">,</span> <span class="n">ldetUs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Us</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ldetUs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Us</span><span class="p">,</span> <span class="n">ldetUs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">da</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dUs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dldetUs</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">return_extras</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Us</span><span class="p">,</span> <span class="n">ldetUs</span>
+
+    <span class="c1"># precisions of posterior components:</span>
+    <span class="n">Ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">tt</span><span class="o">.</span><span class="n">batched_dot</span><span class="p">(</span><span class="n">U</span><span class="o">.</span><span class="n">dimshuffle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">U</span><span class="p">)</span> <span class="k">for</span> <span class="n">U</span> <span class="ow">in</span> <span class="n">Us</span><span class="p">]</span>
+    <span class="c1"># log determinants of posterior component precisions</span>
+    <span class="n">ldetPs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ldetU</span> <span class="k">for</span> <span class="n">ldetU</span> <span class="ow">in</span> <span class="n">ldetUs</span><span class="p">]</span>
+    <span class="c1"># precision times mean for each posterior component:</span>
+    <span class="n">Pms</span> <span class="o">=</span> <span class="p">[</span><span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">dimshuffle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+           <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">P</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="n">Ps</span><span class="p">)]</span>
+    <span class="c1"># calculate tensorQF(P, m):</span>
+    <span class="n">QFs</span> <span class="o">=</span> <span class="p">[</span><span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">Pm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">Pm</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="n">Pms</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">ms</span><span class="p">,</span> <span class="n">Us</span><span class="p">,</span> <span class="n">ldetUs</span><span class="p">,</span> <span class="n">Ps</span><span class="p">,</span> <span class="n">ldetPs</span><span class="p">,</span> <span class="n">Pms</span><span class="p">,</span> <span class="n">QFs</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="init_maf" id="init_maf"><em>NeuralNet</em>.<strong>init_maf</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_mades</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maf_actfun</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">output_order</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">maf_mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>:param n_mades:
+:param batch_norm:
+:param output_order:
+:param maf_mode:
+:param unused_kwargs:
+:return:
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_maf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_mades</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maf_actfun</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span>
+             <span class="n">output_order</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">maf_mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
+             <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">batch_norm</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># why?</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_mades</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_order</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maf_mode</span> <span class="o">=</span> \
+        <span class="n">n_mades</span><span class="p">,</span> <span class="n">batch_norm</span><span class="p">,</span> <span class="n">output_order</span><span class="p">,</span> <span class="n">maf_mode</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maf_actfun</span> <span class="o">=</span> <span class="n">maf_actfun</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">unused_kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CMAF ignoring unused input </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="c1"># get previous output/params</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maf_input</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">))</span>
+    <span class="n">prev_params</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">))</span>
+    <span class="n">input_shape_cmaf</span> <span class="o">=</span> <span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">)</span><span class="o">.</span><span class="n">output_shape</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_shape_cmaf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>  <span class="c1"># (batch, input_dim)</span>
+    <span class="n">n_inputs_cmaf</span> <span class="o">=</span> <span class="n">input_shape_cmaf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">rng_maf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">cmaf</span> <span class="o">=</span> <span class="n">ConditionalMaskedAutoregressiveFlow</span><span class="p">(</span>
+        <span class="n">n_inputs</span><span class="o">=</span><span class="n">n_inputs_cmaf</span><span class="p">,</span>  <span class="n">n_outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span><span class="p">,</span>
+        <span class="n">n_hiddens</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hiddens</span><span class="p">,</span> <span class="n">act_fun</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maf_actfun</span><span class="p">,</span>
+        <span class="n">n_mades</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_mades</span><span class="p">,</span> <span class="n">batch_norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">,</span>
+        <span class="n">output_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_order</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maf_mode</span><span class="p">,</span>
+        <span class="nb">input</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maf_input</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng_maf</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">aps</span> <span class="o">=</span> <span class="n">prev_params</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmaf</span><span class="o">.</span><span class="n">parms</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">lprobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmaf</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># model log-likelihood</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dlprobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lprobs</span>  <span class="c1"># svi not possible</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="init_mdn" id="init_mdn"><em>NeuralNet</em>.<strong>init_mdn</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">svi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mdn_actfun</span><span class="o">=&lt;</span><span class="n">function</span> <span class="n">tanh</span> <span class="n">at</span> <span class="mh">0x129be5710</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">homoscedastic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_precisions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>:param svi: bool
+    Whether to use SVI version or not
+:param n_components: int
+:param rank: int
+:param homoscedastic: bool
+:param unused_kwargs: dict
+:param mdn_actfun: lasagne nonlinearity
+    activation function for hidden units
+:param min_precisions: minimum values for diagonal elements of precision
+    matrix for all components (usually taken to be prior precisions)
+:return: None
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35
+<span class="special">36</span>
+37
+<span class="special">38</span>
+39
+<span class="special">40</span>
+41
+<span class="special">42</span>
+43
+<span class="special">44</span>
+45
+<span class="special">46</span>
+47
+<span class="special">48</span>
+49
+<span class="special">50</span>
+51
+<span class="special">52</span>
+53
+<span class="special">54</span>
+55
+<span class="special">56</span>
+57
+<span class="special">58</span>
+59
+<span class="special">60</span>
+61
+<span class="special">62</span>
+63
+<span class="special">64</span>
+65
+<span class="special">66</span>
+67
+<span class="special">68</span>
+69
+<span class="special">70</span>
+71
+<span class="special">72</span>
+73
+<span class="special">74</span>
+75
+<span class="special">76</span>
+77
+<span class="special">78</span>
+79
+<span class="special">80</span>
+81
+<span class="special">82</span>
+83
+<span class="special">84</span>
+85
+<span class="special">86</span>
+87
+<span class="special">88</span>
+89
+<span class="special">90</span>
+91</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_mdn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">svi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">mdn_actfun</span><span class="o">=</span><span class="n">lnl</span><span class="o">.</span><span class="n">tanh</span><span class="p">,</span> <span class="n">homoscedastic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_precisions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">svi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdn_actfun</span><span class="p">,</span>\
+        <span class="bp">self</span><span class="o">.</span><span class="n">homoscedastic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_precisions</span> <span class="o">=</span> \
+        <span class="n">svi</span><span class="p">,</span> <span class="n">n_components</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">mdn_actfun</span><span class="p">,</span> <span class="n">homoscedastic</span><span class="p">,</span> <span class="n">min_precisions</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">unused_kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MDN ignoring unused input </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="c1"># hidden layers</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hiddens</span><span class="p">)):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;hidden_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">dl</span><span class="o">.</span><span class="n">FullyConnectedLayer</span><span class="p">(</span>
+            <span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span> <span class="n">n_units</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hiddens</span><span class="p">[</span><span class="n">l</span><span class="p">],</span>
+            <span class="n">actfun</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mdn_actfun</span><span class="p">,</span>
+            <span class="n">svi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">svi</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;h&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">last_hidden</span> <span class="o">=</span> <span class="n">last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">)</span>
+    <span class="c1"># mixture layers</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;mixture_weights&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dl</span><span class="o">.</span><span class="n">MixtureWeightsLayer</span><span class="p">(</span><span class="n">last_hidden</span><span class="p">,</span>
+        <span class="n">n_units</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="n">actfun</span><span class="o">=</span><span class="n">lnl</span><span class="o">.</span><span class="n">softmax</span><span class="p">,</span> <span class="n">svi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">svi</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weights&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;mixture_means&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dl</span><span class="o">.</span><span class="n">MixtureMeansLayer</span><span class="p">(</span><span class="n">last_hidden</span><span class="p">,</span>
+        <span class="n">n_components</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span><span class="p">,</span> <span class="n">svi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">svi</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;means&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">homoscedastic</span><span class="p">:</span>
+        <span class="n">PrecisionsLayer</span> <span class="o">=</span> <span class="n">dl</span><span class="o">.</span><span class="n">MixtureHomoscedasticPrecisionsLayer</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">PrecisionsLayer</span> <span class="o">=</span> <span class="n">dl</span><span class="o">.</span><span class="n">MixturePrecisionsLayer</span>
+    <span class="c1"># why is homoscedastic an input to the layer init?</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;mixture_precisions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PrecisionsLayer</span><span class="p">(</span><span class="n">last_hidden</span><span class="p">,</span>
+        <span class="n">n_components</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span><span class="p">,</span> <span class="n">svi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">svi</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;precisions&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="n">homoscedastic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">homoscedastic</span><span class="p">,</span>
+        <span class="n">min_precisions</span><span class="o">=</span><span class="n">min_precisions</span><span class="p">)</span>
+
+    <span class="n">last_mog</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;mixture_weights&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;mixture_means&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">[</span><span class="s1">&#39;mixture_precisions&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># mixture parameters</span>
+    <span class="c1"># a : weights, matrix with shape (batch, n_components)</span>
+    <span class="c1"># ms : means, list of len n_components with (batch, n_dim, n_dim)</span>
+    <span class="c1"># Us : precision factors, n_components list with (batch, n_dim, n_dim)</span>
+    <span class="c1"># ldetUs : log determinants of precisions, n_comp list with (batch, )</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">precision_out</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span>
+                                                   <span class="n">deterministic</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Us</span> <span class="o">=</span> <span class="n">precision_out</span><span class="p">[</span><span class="s1">&#39;Us&#39;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ldetUs</span> <span class="o">=</span> <span class="n">precision_out</span><span class="p">[</span><span class="s1">&#39;ldetUs&#39;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">comps</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">},</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;m&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">ms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)},</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;U&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">Us</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)}}</span>
+
+    <span class="c1"># log probability of y given the mixture distribution</span>
+    <span class="c1"># lprobs_comps : log probs per component, list of len n_components with (batch, )</span>
+    <span class="c1"># probs : log probs of mixture, (batch, )</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">lprobs_comps</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">dimshuffle</span><span class="p">(</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">U</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">ldetU</span>
+        <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">ldetU</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Us</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ldetUs</span><span class="p">)]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">lprobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyLogSumExp</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lprobs_comps</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">tt</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                   <span class="o">-</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+    <span class="c1"># the quantities from above again, but with deterministic=True</span>
+    <span class="c1"># --- in the svi case, this will disable injection of randomness;</span>
+    <span class="c1"># the mean of weights is used instead</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">da</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dms</span><span class="p">,</span> <span class="n">dprecision_out</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span>
+                                                      <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dUs</span> <span class="o">=</span> <span class="n">dprecision_out</span><span class="p">[</span><span class="s1">&#39;Us&#39;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dldetUs</span> <span class="o">=</span> <span class="n">dprecision_out</span><span class="p">[</span><span class="s1">&#39;ldetUs&#39;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dcomps</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">da</span><span class="p">},</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;m&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">dms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)},</span>
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;U&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">dUs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">)}}</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">dlprobs_comps</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">dimshuffle</span><span class="p">(</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">U</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">ldetU</span>
+        <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">ldetU</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dUs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dldetUs</span><span class="p">)]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dlprobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyLogSumExp</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dlprobs_comps</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">tt</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">da</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> \
+                    <span class="o">-</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+    <span class="c1"># parameters of network</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">aps</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last_mog</span><span class="p">)</span>  <span class="c1"># all parameters</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mps</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># means</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sps</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span> <span class="n">sp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># log stds</span>
+
+    <span class="c1"># weight and bias parameter sets as separate lists</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mps_wp</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sps_wp</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span> <span class="n">sp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mps_bp</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span> <span class="n">mp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sps_bp</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="n">last_mog</span><span class="p">,</span> <span class="n">sp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="reseed" id="reseed"><em>NeuralNet</em>.<strong>reseed</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Reseeds the network&#39;s RNG
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">reseed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h2 id="ConditionalMaskedAutoregressiveFlow"><strong>ConditionalMaskedAutoregressiveFlow</strong><code class="codehilite"><span class="k">class</span></code><a class="headerlink" href="#ConditionalMaskedAutoregressiveFlow" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span>Implements a Conditional Masked Autoregressive Flow.
+</pre></div>
+
+<h3 data-toc-label="__init__" id="__init__"><em>ConditionalMaskedAutoregressiveFlow</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="p">,</span> <span class="n">act_fun</span><span class="p">,</span> <span class="n">n_mades</span><span class="p">,</span> <span class="n">batch_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_order</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=&lt;</span><span class="n">module</span> <span class="s1">&#39;numpy.random&#39;</span> <span class="kn">from</span> <span class="s1">&#39;/Users/jm/opt/anaconda3/envs/ind/lib/python3.7/site-packages/numpy/random/__init__.py&#39;</span><span class="o">&gt;</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Constructor.
+:param n_inputs: number of (conditional) inputs
+:param n_outputs: number of outputs
+:param n_hiddens: list with number of hidden units for each hidden layer
+:param act_fun: name of activation function
+:param n_mades: number of mades in the flow
+:param batch_norm: whether to use batch normalization between mades in the flow
+:param output_order: order of outputs of last made
+:param mode: strategy for assigning degrees to hidden nodes: can be &#39;random&#39; or &#39;sequential&#39;
+:param input: theano variable to serve as input; if None, a new variable is created
+:param output: theano variable to serve as output; if None, a new variable is created
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35
+<span class="special">36</span>
+37
+<span class="special">38</span>
+39
+<span class="special">40</span>
+41
+<span class="special">42</span>
+43
+<span class="special">44</span>
+45
+<span class="special">46</span>
+47
+<span class="special">48</span>
+49
+<span class="special">50</span>
+51
+<span class="special">52</span>
+53
+<span class="special">54</span>
+55
+<span class="special">56</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="p">,</span> <span class="n">act_fun</span><span class="p">,</span> <span class="n">n_mades</span><span class="p">,</span> <span class="n">batch_norm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_order</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">):</span>
+
+
+    <span class="c1"># save input arguments</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span> <span class="o">=</span> <span class="n">n_inputs</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span> <span class="o">=</span> <span class="n">n_outputs</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_hiddens</span> <span class="o">=</span> <span class="n">n_hiddens</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">act_fun</span> <span class="o">=</span> <span class="n">act_fun</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_mades</span> <span class="o">=</span> <span class="n">n_mades</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span> <span class="o">=</span> <span class="n">batch_norm</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span> <span class="k">if</span> <span class="nb">input</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">input</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span> <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">output</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parms</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">mades</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logdet_dudy</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_mades</span><span class="p">):</span>
+
+        <span class="c1"># create a new made</span>
+        <span class="n">made</span> <span class="o">=</span> <span class="n">mades</span><span class="o">.</span><span class="n">ConditionalGaussianMade</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="p">,</span> <span class="n">act_fun</span><span class="p">,</span> <span class="n">output_order</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mades</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">made</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parms</span> <span class="o">+=</span> <span class="n">made</span><span class="o">.</span><span class="n">parms</span>
+        <span class="n">output_order</span> <span class="o">=</span> <span class="n">output_order</span> <span class="k">if</span> <span class="n">output_order</span> <span class="o">==</span> <span class="s1">&#39;random&#39;</span> <span class="k">else</span> <span class="n">made</span><span class="o">.</span><span class="n">output_order</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># inverse autoregressive transform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">made</span><span class="o">.</span><span class="n">u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logdet_dudy</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">made</span><span class="o">.</span><span class="n">logp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># batch normalization</span>
+        <span class="k">if</span> <span class="n">batch_norm</span><span class="p">:</span>
+            <span class="n">bn</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">y</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parms</span> <span class="o">+=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parms</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logdet_dudy</span> <span class="o">+=</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">log_gamma</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">v</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bn</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">output_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mades</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">output_order</span>
+
+    <span class="c1"># log likelihoods</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">n_outputs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">logdet_dudy</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;L&#39;</span>
+
+    <span class="c1"># train objective</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">trn_loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">tt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">trn_loss</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;trn_loss&#39;</span>
+
+    <span class="c1"># theano evaluation functions, will be compiled when first needed</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_lprob_f</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_grad_f</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_score_f</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_us_f</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="calc_random_numbers" id="calc_random_numbers"><em>ConditionalMaskedAutoregressiveFlow</em>.<strong>calc_random_numbers</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Given a dataset, calculate the random numbers used internally to generate the dataset.
+:param xy: a pair (x, y) of numpy arrays, where x rows are inputs and y rows are outputs
+:return: numpy array, rows are corresponding random numbers
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">calc_random_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
+
+
+    <span class="c1"># compile theano function, if haven&#39;t already done so</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_us_f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_us_f</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span>
+        <span class="p">)</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">one_datapoint</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">misc</span><span class="o">.</span><span class="n">prepare_cond_input</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_us_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">one_datapoint</span> <span class="k">else</span> <span class="n">u</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="eval" id="eval"><em>ConditionalMaskedAutoregressiveFlow</em>.<strong>eval</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Evaluate log probabilities for given input-output pairs.
+:param xy: a pair (x, y) where x rows are inputs and y rows are outputs
+:param log: whether to return probabilities in the log domain
+:return: log probabilities: log p(y|x)
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+
+    <span class="c1"># compile theano function, if haven&#39;t already done so</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_lprob_f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_lprob_f</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span>
+            <span class="n">givens</span><span class="o">=</span><span class="p">[(</span><span class="n">bn</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">bn</span><span class="o">.</span><span class="n">bm</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">bn</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="n">bn</span><span class="o">.</span><span class="n">bv</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">one_datapoint</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">misc</span><span class="o">.</span><span class="n">prepare_cond_input</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">lprob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_lprob_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">lprob</span> <span class="o">=</span> <span class="n">lprob</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">one_datapoint</span> <span class="k">else</span> <span class="n">lprob</span>
+
+    <span class="k">return</span> <span class="n">lprob</span> <span class="k">if</span> <span class="n">log</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lprob</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="gen" id="gen"><em>ConditionalMaskedAutoregressiveFlow</em>.<strong>gen</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=&lt;</span><span class="n">module</span> <span class="s1">&#39;numpy.random&#39;</span> <span class="kn">from</span> <span class="s1">&#39;/Users/jm/opt/anaconda3/envs/ind/lib/python3.7/site-packages/numpy/random/__init__.py&#39;</span><span class="o">&gt;</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Generate samples, by propagating random numbers through each made, after conditioning on input x.
+:param x: input vector
+:param n_samples: number of samples, 1 if None
+:param u: random numbers to use in generating samples; if None, new random numbers are drawn
+:return: samples
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="p">):</span>
+
+
+    <span class="k">if</span> <span class="n">n_samples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">u</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:],</span> <span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_outputs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u</span>
+
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;batch_norm&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">made</span><span class="p">,</span> <span class="n">bn</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mades</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">eval_inv</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">made</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">made</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mades</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">made</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">y</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="grad_log_p" id="grad_log_p"><em>ConditionalMaskedAutoregressiveFlow</em>.<strong>grad_log_p</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Evaluate the gradient of the log probability wrt the output, for given input-output pairs.
+:param xy: a pair (x, y) where x rows are inputs and y rows are outputs
+:return: gradient d/dy log p(y|x)
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">grad_log_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
+
+
+    <span class="c1"># compile theano function, if haven&#39;t already done so</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;eval_grad_f&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_grad_f</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+            <span class="n">givens</span><span class="o">=</span><span class="p">[(</span><span class="n">bn</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">bn</span><span class="o">.</span><span class="n">bm</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">bn</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="n">bn</span><span class="o">.</span><span class="n">bv</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">one_datapoint</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">misc</span><span class="o">.</span><span class="n">prepare_cond_input</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_grad_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">one_datapoint</span> <span class="k">else</span> <span class="n">grad</span>
+
+    <span class="k">return</span> <span class="n">grad</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="reset_theano_functions" id="reset_theano_functions"><em>ConditionalMaskedAutoregressiveFlow</em>.<strong>reset_theano_functions</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Resets theano functions, so that they are compiled again when needed.
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">reset_theano_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_lprob_f</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_grad_f</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_score_f</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">eval_us_f</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">made</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mades</span><span class="p">:</span>
+        <span class="n">made</span><span class="o">.</span><span class="n">reset_theano_functions</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">bn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">:</span>
+        <span class="n">bn</span><span class="o">.</span><span class="n">reset_theano_functions</span><span class="p">()</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="score" id="score"><em>ConditionalMaskedAutoregressiveFlow</em>.<strong>score</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Evaluate the gradient of the log probability wrt the input, for given input-output pairs.
+:param xy: a pair (x, y) where x rows are inputs and y rows are outputs
+:return: gradient d/dx log p(y|x)
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
+
+
+    <span class="c1"># compile theano function, if haven&#39;t already done so</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_score_f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_score_f</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="n">tt</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">),</span>
+            <span class="n">givens</span><span class="o">=</span><span class="p">[(</span><span class="n">bn</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">bn</span><span class="o">.</span><span class="n">bm</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">bn</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="n">bn</span><span class="o">.</span><span class="n">bv</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bns</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">one_datapoint</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">misc</span><span class="o">.</span><span class="n">prepare_cond_input</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">grads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_score_f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">grads</span> <span class="o">=</span> <span class="n">grads</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">one_datapoint</span> <span class="k">else</span> <span class="n">grads</span>
+
+    <span class="k">return</span> <span class="n">grads</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../inference/" title="Inference" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Inference
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../utils/" title="Utilities" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Utilities
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/mackelab/delfi" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.ac79c3b0.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
+      
+        <script src="../../static/katex.js"></script>
+      
+    
+  </body>
+</html>

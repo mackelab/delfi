@@ -1,0 +1,1729 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
+    
+    
+      
+        <title>Generator - DELFI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.30686662.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.a8b3c06d.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#3f51b5">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../../static/global.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#generator" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DELFI" class="md-header-nav__button md-logo">
+          
+            <img src="../../static/logo.svg" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              DELFI
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Generator
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main" role="main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DELFI" class="md-nav__button md-logo">
+      
+        <img src="../../static/logo.svg" width="48" height="48">
+      
+    </a>
+    DELFI
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../install/" title="Installation" class="md-nav__link">
+      Installation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/quickstart/" title="Quickstart" class="md-nav__link">
+      Quickstart
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../distributions/" title="Distributions" class="md-nav__link">
+      Distributions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Generator
+      </label>
+    
+    <a href="./" title="Generator" class="md-nav__link md-nav__link--active">
+      Generator
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#Default" class="md-nav__link">
+    Default
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#MPGenerator" class="md-nav__link">
+    MPGenerator
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../inference/" title="Inference" class="md-nav__link">
+      Inference
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../neuralnet/" title="Neural Networks" class="md-nav__link">
+      Neural Networks
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../utils/" title="Utilities" class="md-nav__link">
+      Utilities
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../credits/" title="Credits" class="md-nav__link">
+      Credits
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#Default" class="md-nav__link">
+    Default
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#MPGenerator" class="md-nav__link">
+    MPGenerator
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="http://github.com/mackelab/delfi/edit/master/docs/reference/generator.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="generator">Generator<a class="headerlink" href="#generator" title="Permanent link">&para;</a></h1>
+<p><code>delfi</code> comes with several generator objects; the default generator and a multi-processing version.</p>
+<h2 id="Default"><strong>Default</strong><code class="codehilite"><span class="k">class</span></code><a class="headerlink" href="#Default" title="Permanent link">&para;</a></h2>
+<h3 data-toc-label="__init__" id="__init__"><em>Default</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Generator
+
+Parameters
+----------
+model : Simulator instance
+    Forward model
+prior : Distribution or Mixture instance
+    Prior over parameters
+summary : SummaryStats instance
+    Summary statistics
+
+Attributes
+----------
+proposal : None or Distribution or Mixture instance
+    Proposal prior over parameters. If specified, will generate
+    samples given parameters drawn from proposal distribution rather
+    than samples drawn from prior when `gen` is called.
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span>
+7
+<span class="special">8</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="n">summary</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="_feedback_forward_model" id="_feedback_forward_model"><em>Default</em>.<strong>_feedback_forward_model</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Feedback step after forward model ran
+
+Parameters
+----------
+data : np.array
+    Data
+
+Returns
+-------
+response : str
+    Supported responses are in [&#39;accept&#39;, &#39;discard&#39;]
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="nd">@copy_ancestor_docstring</span>
+<span class="k">def</span> <span class="nf">_feedback_forward_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="c1"># See BaseGenerator for docstring</span>
+    <span class="k">return</span> <span class="s1">&#39;accept&#39;</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="_feedback_proposed_param" id="_feedback_proposed_param"><em>Default</em>.<strong>_feedback_proposed_param</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Feedback step after parameter has been proposed
+
+Parameters
+----------
+param : np.array
+    Parameter
+
+Returns
+-------
+response : str
+    Supported responses are in [&#39;accept&#39;, &#39;resample&#39;]
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="nd">@copy_ancestor_docstring</span>
+<span class="k">def</span> <span class="nf">_feedback_proposed_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+    <span class="c1"># See BaseGenerator for docstring</span>
+
+    <span class="c1"># if prior is uniform, reject samples outside of bounds</span>
+    <span class="c1"># samples might be drawn outside bounds due to proposal</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="ow">or</span> \
+           <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">upper</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;resample&#39;</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">IndependentJoint</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">dists</span><span class="p">):</span>
+            <span class="n">ii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">dist_index_eachdim</span> <span class="o">==</span> <span class="n">j</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="ow">or</span> \
+                   <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p</span><span class="o">.</span><span class="n">upper</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="s1">&#39;resample&#39;</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Gamma</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="s1">&#39;resample&#39;</span>
+
+    <span class="k">return</span> <span class="s1">&#39;accept&#39;</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="_feedback_summary_stats" id="_feedback_summary_stats"><em>Default</em>.<strong>_feedback_summary_stats</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sum_stats</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Feedback step after summary stats were computed
+
+Parameters
+----------
+sum_stats : np.array
+    Summary stats
+
+Returns
+-------
+response : str
+    Supported responses are in [&#39;accept&#39;, &#39;discard&#39;]
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="nd">@copy_ancestor_docstring</span>
+<span class="k">def</span> <span class="nf">_feedback_summary_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sum_stats</span><span class="p">):</span>
+    <span class="c1"># See BaseGenerator for docstring</span>
+    <span class="k">return</span> <span class="s1">&#39;accept&#39;</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="draw_params" id="draw_params"><em>Default</em>.<strong>draw_params</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">leave_pbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">leave_pbar</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">no_tqdm</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="n">leave_pbar</span><span class="p">)</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;Draw parameters &#39;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">+=</span> <span class="n">verbose</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+
+    <span class="c1"># collect valid parameter vectors from the prior</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of parameter vectors</span>
+    <span class="k">with</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n_samples</span><span class="p">:</span>
+            <span class="c1"># sample parameter</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">random_sample</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">prior_mixin</span><span class="p">:</span>
+                <span class="n">proposed_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># dim params,</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">proposed_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># check if parameter vector is valid</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feedback_proposed_param</span><span class="p">(</span><span class="n">proposed_param</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">or</span> <span class="n">skip_feedback</span><span class="p">:</span>
+                <span class="c1"># add valid param vector to list</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proposed_param</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;resample&#39;</span><span class="p">:</span>
+                <span class="c1"># continue without increment on i or updating the bar</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;response not supported&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">params</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="gen" id="gen"><em>Default</em>.<strong>gen</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">keep_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">leave_pbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Draw parameters and run forward model
+
+Parameters
+----------
+n_samples : int
+    Number of samples
+n_reps: int
+    Number of repetitions per parameter sample
+skip_feedback: bool
+    If True, feedback checks on params, data and sum stats are skipped
+verbose : bool or str
+    If False, will not display progress bars. If a string is passed,
+    it will be appended to the description of the progress bar.
+
+Returns
+-------
+params : n_samples x n_reps x n_params
+    Parameters
+stats : n_samples x n_reps x n_summary
+    Summary statistics of data
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35
+<span class="special">36</span>
+37
+<span class="special">38</span>
+39
+<span class="special">40</span>
+41
+<span class="special">42</span>
+43</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">keep_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">leave_pbar</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;n_reps &gt; 1 is not yet supported&#39;</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_params</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+                              <span class="n">skip_feedback</span><span class="o">=</span><span class="n">skip_feedback</span><span class="p">,</span>
+                              <span class="n">prior_mixin</span><span class="o">=</span><span class="n">prior_mixin</span><span class="p">,</span>
+                              <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                              <span class="n">leave_pbar</span><span class="o">=</span><span class="n">leave_pbar</span><span class="p">)</span>
+
+    <span class="c1"># Run forward model for params (in batches)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">no_tqdm</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">leave</span><span class="o">=</span><span class="n">leave_pbar</span><span class="p">)</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;Run simulations &#39;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">+=</span> <span class="n">verbose</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+
+    <span class="n">final_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">final_stats</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of summary stats</span>
+    <span class="k">with</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">params_batch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_minibatches</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">):</span>
+            <span class="c1"># run forward model for all params, each n_reps times</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">params_batch</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">n_reps</span><span class="p">,</span> <span class="n">pbar</span><span class="o">=</span><span class="n">pbar</span><span class="p">)</span>
+
+            <span class="n">stats</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_batch</span><span class="p">(</span><span class="n">params_batch</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span><span class="n">skip_feedback</span><span class="o">=</span><span class="n">skip_feedback</span><span class="p">)</span>
+            <span class="n">final_params</span> <span class="o">+=</span> <span class="n">params</span>
+            <span class="n">final_stats</span> <span class="o">+=</span> <span class="n">stats</span>
+
+    <span class="c1"># TODO: for n_reps &gt; 1 duplicate params; reshape stats array</span>
+
+    <span class="c1"># n_samples x dim theta</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">final_params</span><span class="p">)</span>
+
+    <span class="c1"># n_samples x dim summary stats</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">final_stats</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_stats</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">params</span><span class="p">,</span> <span class="n">stats</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="gen_newseed" id="gen_newseed"><em>Default</em>.<strong>gen_newseed</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Generates a new random seed
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gen_newseed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="iterate_minibatches" id="iterate_minibatches"><em>Default</em>.<strong>iterate_minibatches</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span>
+7
+<span class="special">8</span>
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">iterate_minibatches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="n">minibatch</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">minibatch</span><span class="p">]</span>
+
+    <span class="n">rem_i</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">%</span> <span class="n">minibatch</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rem_i</span> <span class="o">!=</span> <span class="n">n_samples</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">params</span><span class="p">[</span><span class="n">rem_i</span><span class="p">:]</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="process_batch" id="process_batch"><em>Default</em>.<strong>process_batch</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params_batch</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35
+<span class="special">36</span>
+37</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">process_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params_batch</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span><span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">ret_stats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ret_params</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># for every datum in data, check validity</span>
+    <span class="n">params_data_valid</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of params with valid data</span>
+    <span class="n">data_valid</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of lists containing n_reps dicts with data</span>
+
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">datum</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params_batch</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="c1"># check validity</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feedback_forward_model</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">or</span> <span class="n">skip_feedback</span><span class="p">:</span>
+            <span class="n">data_valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+            <span class="c1"># if data is accepted, accept the param as well</span>
+            <span class="n">params_data_valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;discard&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;response not supported&#39;</span><span class="p">)</span>
+
+    <span class="c1"># for every data in data, calculate summary stats</span>
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">datum</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params_data_valid</span><span class="p">,</span> <span class="n">data_valid</span><span class="p">):</span>
+        <span class="c1"># calculate summary statistics</span>
+        <span class="n">sum_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">calc</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>  <span class="c1"># n_reps x dim stats</span>
+
+        <span class="c1"># check validity</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feedback_summary_stats</span><span class="p">(</span><span class="n">sum_stats</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">or</span> <span class="n">skip_feedback</span><span class="p">:</span>
+            <span class="n">ret_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sum_stats</span><span class="p">)</span>
+            <span class="c1"># if sum stats is accepted, accept the param as well</span>
+            <span class="n">ret_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;discard&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;response not supported&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret_stats</span><span class="p">,</span> <span class="n">ret_params</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="reseed" id="reseed"><em>Default</em>.<strong>reseed</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Carries out the following operations, in order:
+1) Reseeds the master RNG for the generator object, using the input seed
+2) Reseeds the prior from the master RNG. This may cause additional
+distributions to be reseeded using the prior&#39;s RNG (e.g. if the prior is
+a mixture)
+3) Reseeds the simulator RNG, from the master RNG
+4) Reseeds the proposal, if present
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span>
+7
+<span class="special">8</span>
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">reseed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h2 id="MPGenerator"><strong>MPGenerator</strong><code class="codehilite"><span class="k">class</span></code><a class="headerlink" href="#MPGenerator" title="Permanent link">&para;</a></h2>
+<h3 data-toc-label="__del__" id="__del__"><em>MPGenerator</em>.<strong>__del__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">stop_workers</span><span class="p">()</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="__init__" id="__init__"><em>MPGenerator</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">rej</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Generator
+
+Parameters
+----------
+model : Simulator instance
+    Forward model
+prior : Distribution or Mixture instance
+    Prior over parameters
+summary : SummaryStats instance
+    Summary statistics
+rej : Function
+    Rejection kernel
+
+Attributes
+----------
+proposal : None or Distribution or Mixture instance
+    Proposal prior over parameters. If specified, will generate
+    samples given parameters drawn from proposal distribution rather
+    than samples drawn from prior when `gen` is called.
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span>
+7</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">rej</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="n">summary</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">rej</span> <span class="o">=</span> <span class="n">rej</span> <span class="k">if</span> <span class="n">rej</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">default_MPGenerator_rej</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">models</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="_feedback_forward_model" id="_feedback_forward_model"><em>MPGenerator</em>.<strong>_feedback_forward_model</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Feedback step after forward model ran
+
+Parameters
+----------
+data : np.array
+    Data
+
+Returns
+-------
+response : str
+    Supported responses are in [&#39;accept&#39;, &#39;discard&#39;]
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="nd">@copy_ancestor_docstring</span>
+<span class="k">def</span> <span class="nf">_feedback_forward_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="c1"># See BaseGenerator for docstring</span>
+    <span class="k">return</span> <span class="s1">&#39;accept&#39;</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="_feedback_proposed_param" id="_feedback_proposed_param"><em>MPGenerator</em>.<strong>_feedback_proposed_param</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Feedback step after parameter has been proposed
+
+Parameters
+----------
+param : np.array
+    Parameter
+
+Returns
+-------
+response : str
+    Supported responses are in [&#39;accept&#39;, &#39;resample&#39;]
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="nd">@copy_ancestor_docstring</span>
+<span class="k">def</span> <span class="nf">_feedback_proposed_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+    <span class="c1"># See BaseGenerator for docstring</span>
+
+    <span class="c1"># if prior is uniform, reject samples outside of bounds</span>
+    <span class="c1"># samples might be drawn outside bounds due to proposal</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="ow">or</span> \
+           <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">upper</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;resample&#39;</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">IndependentJoint</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">dists</span><span class="p">):</span>
+            <span class="n">ii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">dist_index_eachdim</span> <span class="o">==</span> <span class="n">j</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="ow">or</span> \
+                   <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p</span><span class="o">.</span><span class="n">upper</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="s1">&#39;resample&#39;</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Gamma</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">param</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">p</span><span class="o">.</span><span class="n">offset</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="s1">&#39;resample&#39;</span>
+
+    <span class="k">return</span> <span class="s1">&#39;accept&#39;</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="_feedback_summary_stats" id="_feedback_summary_stats"><em>MPGenerator</em>.<strong>_feedback_summary_stats</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sum_stats</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Feedback step after summary stats were computed
+Parameters
+----------
+sum_stats : np.array
+    Summary stats
+Returns
+-------
+response : str
+    Supported responses are in [&#39;accept&#39;, &#39;discard&#39;]
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">_feedback_summary_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sum_stats</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rej</span><span class="p">(</span><span class="n">sum_stats</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;accept&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;discard&#39;</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="draw_params" id="draw_params"><em>MPGenerator</em>.<strong>draw_params</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">leave_pbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">leave_pbar</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">no_tqdm</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="n">leave_pbar</span><span class="p">)</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;Draw parameters &#39;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">+=</span> <span class="n">verbose</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+
+    <span class="c1"># collect valid parameter vectors from the prior</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of parameter vectors</span>
+    <span class="k">with</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n_samples</span><span class="p">:</span>
+            <span class="c1"># sample parameter</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">random_sample</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">prior_mixin</span><span class="p">:</span>
+                <span class="n">proposed_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># dim params,</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">proposed_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># check if parameter vector is valid</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feedback_proposed_param</span><span class="p">(</span><span class="n">proposed_param</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">or</span> <span class="n">skip_feedback</span><span class="p">:</span>
+                <span class="c1"># add valid param vector to list</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proposed_param</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;resample&#39;</span><span class="p">:</span>
+                <span class="c1"># continue without increment on i or updating the bar</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;response not supported&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">params</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="filter_data" id="filter_data"><em>MPGenerator</em>.<strong>filter_data</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">filter_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">skip_feedback</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="p">,</span> <span class="n">params</span>
+
+    <span class="n">ret_stats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ret_params</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">stat</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feedback_summary_stats</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;accept&#39;</span><span class="p">:</span>
+            <span class="n">ret_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
+            <span class="n">ret_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;discard&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;response not supported&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret_stats</span><span class="p">,</span> <span class="n">ret_params</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="gen" id="gen"><em>MPGenerator</em>.<strong>gen</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Draw parameters and run forward model
+
+Parameters
+----------
+n_samples : int
+    Number of samples
+n_reps: int
+    Number of repetitions per parameter sample
+skip_feedback: bool
+    If True, feedback checks on params, data and sum stats are skipped
+verbose : bool or str
+    If False, will not display progress bars. If a string is passed,
+    it will be appended to the description of the progress bar.
+
+Returns
+-------
+params : n_samples x n_reps x n_params
+    Parameters
+stats : n_samples x n_reps x n_summary
+    Summary statistics of data
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;n_reps &gt; 1 is not yet supported&#39;</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_params</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+                              <span class="n">skip_feedback</span><span class="o">=</span><span class="n">skip_feedback</span><span class="p">,</span>
+                              <span class="n">prior_mixin</span><span class="o">=</span><span class="n">prior_mixin</span><span class="p">,</span>
+                              <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_model</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="n">skip_feedback</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="gen_newseed" id="gen_newseed"><em>MPGenerator</em>.<strong>gen_newseed</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Generates a new random seed
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">gen_newseed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="iterate_minibatches" id="iterate_minibatches"><em>MPGenerator</em>.<strong>iterate_minibatches</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span>
+7
+<span class="special">8</span>
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">iterate_minibatches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="n">minibatch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">minibatch</span><span class="p">]</span>
+
+    <span class="n">rem_i</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">%</span> <span class="n">minibatch</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rem_i</span> <span class="o">!=</span> <span class="n">n_samples</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">params</span><span class="p">[</span><span class="n">rem_i</span><span class="p">:]</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="log" id="log"><em>MPGenerator</em>.<strong>log</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parent: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="process_batch" id="process_batch"><em>MPGenerator</em>.<strong>process_batch</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params_batch</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35
+<span class="special">36</span>
+37</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">process_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params_batch</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span><span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">ret_stats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ret_params</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># for every datum in data, check validity</span>
+    <span class="n">params_data_valid</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of params with valid data</span>
+    <span class="n">data_valid</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of lists containing n_reps dicts with data</span>
+
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">datum</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params_batch</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="c1"># check validity</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feedback_forward_model</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">or</span> <span class="n">skip_feedback</span><span class="p">:</span>
+            <span class="n">data_valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+            <span class="c1"># if data is accepted, accept the param as well</span>
+            <span class="n">params_data_valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;discard&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;response not supported&#39;</span><span class="p">)</span>
+
+    <span class="c1"># for every data in data, calculate summary stats</span>
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">datum</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params_data_valid</span><span class="p">,</span> <span class="n">data_valid</span><span class="p">):</span>
+        <span class="c1"># calculate summary statistics</span>
+        <span class="n">sum_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">calc</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>  <span class="c1"># n_reps x dim stats</span>
+
+        <span class="c1"># check validity</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_feedback_summary_stats</span><span class="p">(</span><span class="n">sum_stats</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;accept&#39;</span> <span class="ow">or</span> <span class="n">skip_feedback</span><span class="p">:</span>
+            <span class="n">ret_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sum_stats</span><span class="p">)</span>
+            <span class="c1"># if sum stats is accepted, accept the param as well</span>
+            <span class="n">ret_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;discard&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;response not supported&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret_stats</span><span class="p">,</span> <span class="n">ret_params</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="reseed" id="reseed"><em>MPGenerator</em>.<strong>reseed</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span></code></h3>
+<div class="codehilite"><pre><span></span>Carries out the following operations, in order:
+1) Reseeds the master RNG for the generator object, using the input seed
+2) Reseeds the prior from the master RNG. This may cause additional
+distributions to be reseeded using the prior&#39;s RNG (e.g. if the prior is
+a mixture)
+3) Reseeds the simulator RNG, from the master RNG
+4) Reseeds the proposal, if present
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>1
+<span class="special">2</span>
+3
+<span class="special">4</span>
+5
+<span class="special">6</span>
+7
+<span class="special">8</span>
+9</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">reseed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proposal</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">())</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="run_model" id="run_model"><em>MPGenerator</em>.<strong>run_model</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19
+<span class="special">20</span>
+21
+<span class="special">22</span>
+23
+<span class="special">24</span>
+25
+<span class="special">26</span>
+27
+<span class="special">28</span>
+29
+<span class="special">30</span>
+31
+<span class="special">32</span>
+33
+<span class="special">34</span>
+35
+<span class="special">36</span>
+37
+<span class="special">38</span>
+39
+<span class="special">40</span>
+41
+<span class="special">42</span>
+43
+<span class="special">44</span>
+45
+<span class="special">46</span>
+47
+<span class="special">48</span>
+49
+<span class="special">50</span>
+51
+<span class="special">52</span>
+53
+<span class="special">54</span>
+55
+<span class="special">56</span>
+57
+<span class="special">58</span>
+59</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># Run forward model for params (in batches)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">no_tqdm</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;Run simulations &#39;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">+=</span> <span class="n">verbose</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">start_workers</span><span class="p">()</span>
+    <span class="n">final_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">final_stats</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of summary stats</span>
+    <span class="n">minibatches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_minibatches</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">)</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">with</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+            <span class="n">active_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipes</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">params_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">minibatches</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                    <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+                <span class="n">active_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Dispatching to worker (len = </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params_batch</span><span class="p">)))</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">params_batch</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+
+            <span class="n">n_remaining</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">active_list</span><span class="p">)</span>
+            <span class="k">while</span> <span class="n">n_remaining</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Listening to worker&quot;</span><span class="p">)</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Received int&quot;</span><span class="p">)</span>
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Received results&quot;</span><span class="p">)</span>
+                    <span class="n">stats</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_data</span><span class="p">(</span><span class="o">*</span><span class="n">msg</span><span class="p">,</span> <span class="n">skip_feedback</span><span class="o">=</span><span class="n">skip_feedback</span><span class="p">)</span>
+                    <span class="n">final_stats</span> <span class="o">+=</span> <span class="n">stats</span>
+                    <span class="n">final_params</span> <span class="o">+=</span> <span class="n">params</span>
+                    <span class="n">n_remaining</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Warning: Received unknown message of type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">msg</span><span class="p">)))</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">stop_workers</span><span class="p">()</span>
+
+    <span class="c1"># TODO: for n_reps &gt; 1 duplicate params; reshape stats array</span>
+
+    <span class="c1"># n_samples x n_reps x dim theta</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">final_params</span><span class="p">)</span>
+
+    <span class="c1"># n_samples x n_reps x dim summary stats</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">final_stats</span><span class="p">)</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">params</span><span class="p">,</span> <span class="n">stats</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="start_workers" id="start_workers"><em>MPGenerator</em>.<strong>start_workers</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">start_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">pipes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pipe</span><span class="p">(</span><span class="n">duplex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">workers</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Worker</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="n">pipes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">high</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">))</span> <span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pipes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pipes</span> <span class="p">]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting workers&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">:</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+<h3 data-toc-label="stop_workers" id="stop_workers"><em>MPGenerator</em>.<strong>stop_workers</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code></h3>
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+<span class="special"> 2</span>
+ 3
+<span class="special"> 4</span>
+ 5
+<span class="special"> 6</span>
+ 7
+<span class="special"> 8</span>
+ 9
+<span class="special">10</span>
+11
+<span class="special">12</span>
+13
+<span class="special">14</span>
+15
+<span class="special">16</span>
+17
+<span class="special">18</span>
+19</pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">stop_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">workers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Closing&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipes</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Closing pipe&quot;</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Joining process&quot;</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">workers</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pipes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../distributions/" title="Distributions" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Distributions
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../inference/" title="Inference" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Inference
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/mackelab/delfi" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.ac79c3b0.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
+      
+        <script src="../../static/katex.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1318 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
+    
+    
+      
+        <title>Utilities - DELFI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.30686662.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.a8b3c06d.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#3f51b5">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../../static/global.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#utilities" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DELFI" class="md-header-nav__button md-logo">
+          
+            <img src="../../static/logo.svg" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              DELFI
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Utilities
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main" role="main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DELFI" class="md-nav__button md-logo">
+      
+        <img src="../../static/logo.svg" width="48" height="48">
+      
+    </a>
+    DELFI
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../install/" title="Installation" class="md-nav__link">
+      Installation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/quickstart/" title="Quickstart" class="md-nav__link">
+      Quickstart
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../distributions/" title="Distributions" class="md-nav__link">
+      Distributions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../generator/" title="Generator" class="md-nav__link">
+      Generator
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../inference/" title="Inference" class="md-nav__link">
+      Inference
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../neuralnet/" title="Neural Networks" class="md-nav__link">
+      Neural Networks
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Utilities
+      </label>
+    
+    <a href="./" title="Utilities" class="md-nav__link md-nav__link--active">
+      Utilities
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#samples_nd" class="md-nav__link">
+    samples_nd
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../credits/" title="Credits" class="md-nav__link">
+      Credits
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#samples_nd" class="md-nav__link">
+    samples_nd
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="http://github.com/mackelab/delfi/edit/master/docs/reference/utils.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="utilities">Utilities<a class="headerlink" href="#utilities" title="Permanent link">&para;</a></h1>
+<p><code>delfi</code> comes with some utility functions, e.g. for plotting, documented below.</p>
+<h2 id="samples_nd"><strong>samples_nd</strong><code class="codehilite"><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code><a class="headerlink" href="#samples_nd" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span>Plot samples and points
+
+See `opts` below for available keyword arguments.
+</pre></div>
+
+<details class="info"><summary>Source Code</summary><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span>  1
+<span class="special">  2</span>
+  3
+<span class="special">  4</span>
+  5
+<span class="special">  6</span>
+  7
+<span class="special">  8</span>
+  9
+<span class="special"> 10</span>
+ 11
+<span class="special"> 12</span>
+ 13
+<span class="special"> 14</span>
+ 15
+<span class="special"> 16</span>
+ 17
+<span class="special"> 18</span>
+ 19
+<span class="special"> 20</span>
+ 21
+<span class="special"> 22</span>
+ 23
+<span class="special"> 24</span>
+ 25
+<span class="special"> 26</span>
+ 27
+<span class="special"> 28</span>
+ 29
+<span class="special"> 30</span>
+ 31
+<span class="special"> 32</span>
+ 33
+<span class="special"> 34</span>
+ 35
+<span class="special"> 36</span>
+ 37
+<span class="special"> 38</span>
+ 39
+<span class="special"> 40</span>
+ 41
+<span class="special"> 42</span>
+ 43
+<span class="special"> 44</span>
+ 45
+<span class="special"> 46</span>
+ 47
+<span class="special"> 48</span>
+ 49
+<span class="special"> 50</span>
+ 51
+<span class="special"> 52</span>
+ 53
+<span class="special"> 54</span>
+ 55
+<span class="special"> 56</span>
+ 57
+<span class="special"> 58</span>
+ 59
+<span class="special"> 60</span>
+ 61
+<span class="special"> 62</span>
+ 63
+<span class="special"> 64</span>
+ 65
+<span class="special"> 66</span>
+ 67
+<span class="special"> 68</span>
+ 69
+<span class="special"> 70</span>
+ 71
+<span class="special"> 72</span>
+ 73
+<span class="special"> 74</span>
+ 75
+<span class="special"> 76</span>
+ 77
+<span class="special"> 78</span>
+ 79
+<span class="special"> 80</span>
+ 81
+<span class="special"> 82</span>
+ 83
+<span class="special"> 84</span>
+ 85
+<span class="special"> 86</span>
+ 87
+<span class="special"> 88</span>
+ 89
+<span class="special"> 90</span>
+ 91
+<span class="special"> 92</span>
+ 93
+<span class="special"> 94</span>
+ 95
+<span class="special"> 96</span>
+ 97
+<span class="special"> 98</span>
+ 99
+<span class="special">100</span>
+101
+<span class="special">102</span>
+103
+<span class="special">104</span>
+105
+<span class="special">106</span>
+107
+<span class="special">108</span>
+109
+<span class="special">110</span>
+111
+<span class="special">112</span>
+113
+<span class="special">114</span>
+115
+<span class="special">116</span>
+117
+<span class="special">118</span>
+119
+<span class="special">120</span>
+121
+<span class="special">122</span>
+123
+<span class="special">124</span>
+125
+<span class="special">126</span>
+127
+<span class="special">128</span>
+129
+<span class="special">130</span>
+131
+<span class="special">132</span>
+133
+<span class="special">134</span>
+135
+<span class="special">136</span>
+137
+<span class="special">138</span>
+139
+<span class="special">140</span>
+141
+<span class="special">142</span>
+143
+<span class="special">144</span>
+145
+<span class="special">146</span>
+147
+<span class="special">148</span>
+149
+<span class="special">150</span>
+151
+<span class="special">152</span>
+153
+<span class="special">154</span>
+155
+<span class="special">156</span>
+157
+<span class="special">158</span>
+159
+<span class="special">160</span>
+161
+<span class="special">162</span>
+163
+<span class="special">164</span>
+165
+<span class="special">166</span>
+167
+<span class="special">168</span>
+169
+<span class="special">170</span>
+171
+<span class="special">172</span>
+173
+<span class="special">174</span>
+175
+<span class="special">176</span>
+177
+<span class="special">178</span>
+179
+<span class="special">180</span>
+181
+<span class="special">182</span>
+183
+<span class="special">184</span>
+185
+<span class="special">186</span>
+187
+<span class="special">188</span>
+189
+<span class="special">190</span>
+191
+<span class="special">192</span>
+193
+<span class="special">194</span>
+195
+<span class="special">196</span>
+197
+<span class="special">198</span>
+199
+<span class="special">200</span>
+201
+<span class="special">202</span>
+203
+<span class="special">204</span>
+205
+<span class="special">206</span>
+207
+<span class="special">208</span>
+209
+<span class="special">210</span>
+211
+<span class="special">212</span>
+213
+<span class="special">214</span>
+215
+<span class="special">216</span>
+217
+<span class="special">218</span>
+219
+<span class="special">220</span>
+221
+<span class="special">222</span>
+223
+<span class="special">224</span>
+225
+<span class="special">226</span>
+227
+<span class="special">228</span>
+229
+<span class="special">230</span>
+231
+<span class="special">232</span>
+233
+<span class="special">234</span>
+235
+<span class="special">236</span>
+237
+<span class="special">238</span>
+239
+<span class="special">240</span>
+241
+<span class="special">242</span>
+243
+<span class="special">244</span>
+245
+<span class="special">246</span>
+247
+<span class="special">248</span>
+249
+<span class="special">250</span>
+251
+<span class="special">252</span>
+253
+<span class="special">254</span>
+255
+<span class="special">256</span>
+257
+<span class="special">258</span>
+259
+<span class="special">260</span>
+261
+<span class="special">262</span>
+263
+<span class="special">264</span>
+265
+<span class="special">266</span>
+267
+<span class="special">268</span>
+269
+<span class="special">270</span>
+271
+<span class="special">272</span>
+273
+<span class="special">274</span>
+275
+<span class="special">276</span>
+277
+<span class="special">278</span>
+279
+<span class="special">280</span>
+281
+<span class="special">282</span>
+283
+<span class="special">284</span>
+285
+<span class="special">286</span>
+287
+<span class="special">288</span>
+289
+<span class="special">290</span>
+291
+<span class="special">292</span>
+293
+<span class="special">294</span>
+295
+<span class="special">296</span>
+297
+<span class="special">298</span>
+299
+<span class="special">300</span>
+301
+<span class="special">302</span>
+303
+<span class="special">304</span>
+305
+<span class="special">306</span>
+307
+<span class="special">308</span>
+309
+<span class="special">310</span>
+311
+<span class="special">312</span>
+313
+<span class="special">314</span>
+315
+<span class="special">316</span>
+317
+<span class="special">318</span>
+319
+<span class="special">320</span>
+321
+<span class="special">322</span>
+323
+<span class="special">324</span>
+325
+<span class="special">326</span>
+327
+<span class="special">328</span>
+329
+<span class="special">330</span>
+331
+<span class="special">332</span>
+333
+<span class="special">334</span>
+335
+<span class="special">336</span>
+337
+<span class="special">338</span>
+339
+<span class="special">340</span>
+341
+<span class="special">342</span>
+343
+<span class="special">344</span>
+345
+<span class="special">346</span>
+347
+<span class="special">348</span>
+349
+<span class="special">350</span>
+351
+<span class="special">352</span>
+353
+<span class="special">354</span>
+355
+<span class="special">356</span>
+357
+<span class="special">358</span>
+359
+<span class="special">360</span>
+361
+<span class="special">362</span>
+363
+<span class="special">364</span>
+365
+<span class="special">366</span>
+367
+<span class="special">368</span>
+369
+<span class="special">370</span>
+371
+<span class="special">372</span>
+373
+<span class="special">374</span>
+375
+<span class="special">376</span>
+377
+<span class="special">378</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">samples_nd</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="n">opts</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># what to plot on triagonal and diagonal subplots</span>
+        <span class="s1">&#39;upper&#39;</span><span class="p">:</span> <span class="s1">&#39;hist&#39;</span><span class="p">,</span>   <span class="c1"># hist/scatter/None</span>
+        <span class="s1">&#39;diag&#39;</span><span class="p">:</span> <span class="s1">&#39;hist&#39;</span><span class="p">,</span>    <span class="c1"># hist/None</span>
+        <span class="c1">#&#39;lower&#39;: None,     # hist/scatter/None  # TODO: implement</span>
+
+        <span class="c1"># title and legend</span>
+        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+
+        <span class="c1"># labels</span>
+        <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">[],</span>         <span class="c1"># for dimensions</span>
+        <span class="s1">&#39;labels_points&#39;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># for points</span>
+        <span class="s1">&#39;labels_samples&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="c1"># for samples</span>
+
+        <span class="c1"># colors</span>
+        <span class="s1">&#39;samples_colors&#39;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;points_colors&#39;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+
+        <span class="c1"># subset</span>
+        <span class="s1">&#39;subset&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+
+        <span class="c1"># axes limits</span>
+        <span class="s1">&#39;limits&#39;</span><span class="p">:</span> <span class="p">[],</span>
+
+        <span class="c1"># ticks</span>
+        <span class="s1">&#39;ticks&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;tickformatter&#39;</span><span class="p">:</span> <span class="n">mpl</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">FormatStrFormatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;tick_labels&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+
+        <span class="c1"># options for hist</span>
+        <span class="s1">&#39;hist_diag&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
+            <span class="s1">&#39;bins&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;histtype&#39;</span><span class="p">:</span> <span class="s1">&#39;step&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;hist_offdiag&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1">#&#39;edgecolor&#39;: &#39;none&#39;,</span>
+            <span class="c1">#&#39;linewidth&#39;: 0.0,</span>
+            <span class="s1">&#39;bins&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="p">},</span>
+
+        <span class="c1"># options for kde</span>
+        <span class="s1">&#39;kde_diag&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;bw_method&#39;</span><span class="p">:</span> <span class="s1">&#39;scott&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bins&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;kde_offdiag&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;bw_method&#39;</span><span class="p">:</span> <span class="s1">&#39;scott&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bins&#39;</span><span class="p">:</span> <span class="mi">25</span>
+        <span class="p">},</span>
+
+        <span class="c1"># options for contour</span>
+        <span class="s1">&#39;contour_offdiag&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.68</span><span class="p">]</span>
+        <span class="p">},</span>
+
+        <span class="c1"># options for scatter</span>
+        <span class="s1">&#39;scatter_offdiag&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s1">&#39;edgecolor&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;rasterized&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">},</span>
+
+        <span class="c1"># options for plot</span>
+        <span class="s1">&#39;plot_offdiag&#39;</span><span class="p">:</span> <span class="p">{},</span>
+
+        <span class="c1"># formatting points (scale, markers)</span>
+        <span class="s1">&#39;points_diag&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;points_offdiag&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;markersize&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="p">},</span>
+
+        <span class="c1"># matplotlib style</span>
+        <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;matplotlibrc&#39;</span><span class="p">),</span>
+
+        <span class="c1"># other options</span>
+        <span class="s1">&#39;fig_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="s1">&#39;fig_bg_colors&#39;</span><span class="p">:</span>
+            <span class="p">{</span><span class="s1">&#39;upper&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="s1">&#39;diag&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="s1">&#39;lower&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+        <span class="s1">&#39;fig_subplots_adjust&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;subplots&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;despine&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;title_format&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;fontsize&#39;</span><span class="p">:</span> <span class="mi">16</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="c1"># TODO: add color map support</span>
+    <span class="c1"># TODO: automatically determine good bin sizes for histograms</span>
+    <span class="c1"># TODO: get rid of seaborn dependency for despine</span>
+    <span class="c1"># TODO: add legend (if legend is True)</span>
+
+    <span class="n">samples_nd</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">_update</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Prepare samples</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="n">samples</span><span class="p">]</span>
+
+    <span class="c1"># Prepare points</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">points</span><span class="p">]</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+
+    <span class="c1"># Dimensions</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">num_samples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># TODO: add asserts checking compatiblity of dimensions</span>
+
+    <span class="c1"># Prepare labels</span>
+    <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[]</span> <span class="ow">or</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">labels_dim</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dim </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">labels_dim</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Prepare limits</span>
+    <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;limits&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[]</span> <span class="ow">or</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;limits&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+            <span class="nb">min</span> <span class="o">=</span> <span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="nb">max</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+                <span class="n">min_</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span> <span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+                <span class="nb">min</span> <span class="o">=</span> <span class="n">min_</span> <span class="k">if</span> <span class="n">min_</span> <span class="o">&lt;</span> <span class="nb">min</span> <span class="k">else</span> <span class="nb">min</span>
+                <span class="n">max_</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span> <span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="nb">max</span> <span class="o">=</span> <span class="n">max_</span> <span class="k">if</span> <span class="n">max_</span> <span class="o">&gt;</span> <span class="nb">max</span> <span class="k">else</span> <span class="nb">max</span>
+            <span class="n">limits</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;limits&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;limits&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">limits</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;limits&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Prepare ticks</span>
+    <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[]</span> <span class="ow">or</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ticks</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="p">[</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Prepare diag/upper/lower</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;diag&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;diag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;diag&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))]</span>
+    <span class="c1">#if type(opts[&#39;lower&#39;]) is not list:</span>
+    <span class="c1">#    opts[&#39;lower&#39;] = [opts[&#39;lower&#39;] for _ in range(len(samples))]</span>
+    <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Style</span>
+    <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dark&#39;</span><span class="p">,</span> <span class="s1">&#39;light&#39;</span><span class="p">]:</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+            <span class="s1">&#39;matplotlib_</span><span class="si">{}</span><span class="s1">.style&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">];</span>
+
+    <span class="c1"># Apply custom style as context</span>
+    <span class="k">with</span> <span class="n">mpl</span><span class="o">.</span><span class="n">rc_context</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">style</span><span class="p">):</span>
+
+        <span class="c1"># Figure out if we subset the plot</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;subset&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">subset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">dim</span>
+            <span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">subset</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;fig_size&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;subplots&#39;</span><span class="p">])</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># Style figure</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;fig_subplots_adjust&#39;</span><span class="p">])</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;title_format&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Style axes</span>
+        <span class="n">row_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">row_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">col_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">col_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">col</span><span class="p">:</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="s1">&#39;diag&#39;</span>
+                <span class="k">elif</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">col</span><span class="p">:</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="s1">&#39;upper&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">row_idx</span><span class="p">,</span> <span class="n">col_idx</span><span class="p">]</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+                <span class="c1"># Background color</span>
+                <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;fig_bg_colors&#39;</span><span class="p">]</span> <span class="ow">and</span> \
+                    <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;fig_bg_colors&#39;</span><span class="p">][</span><span class="n">current</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span>
+                        <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;fig_bg_colors&#39;</span><span class="p">][</span><span class="n">current</span><span class="p">])</span>
+
+                <span class="c1"># Axes</span>
+                <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Limits</span>
+                <span class="k">if</span> <span class="n">limits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;diag&#39;</span><span class="p">:</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+                <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+
+                <span class="c1"># Ticks</span>
+                <span class="k">if</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">ticks</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">ticks</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;diag&#39;</span><span class="p">:</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">ticks</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">ticks</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+
+                <span class="c1"># Despine</span>
+                <span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;despine&#39;</span><span class="p">])</span>
+
+                <span class="c1"># Formatting axes</span>
+                <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="s1">&#39;diag&#39;</span><span class="p">:</span>  <span class="c1"># off-diagnoals</span>
+                    <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">col</span> <span class="o">==</span> <span class="n">dim</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">_format_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xhide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">labels_dim</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+                            <span class="n">yhide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tickformatter</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;tickformatter&#39;</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_format_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xhide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">yhide</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># off-diagnoals</span>
+                    <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">dim</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">_format_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xhide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">labels_dim</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+                            <span class="n">yhide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tickformatter</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;tickformatter&#39;</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_format_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xhide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">yhide</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;tick_labels&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span>
+                        <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;tick_labels&#39;</span><span class="p">][</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;tick_labels&#39;</span><span class="p">][</span><span class="n">col</span><span class="p">][</span><span class="mi">1</span><span class="p">])))</span>
+
+                <span class="c1"># Diagonals</span>
+                <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="s1">&#39;diag&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;diag&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+                                <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+                                    <span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">],</span>
+                                    <span class="n">color</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;samples_colors&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">],</span>
+                                    <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;hist_diag&#39;</span><span class="p">]</span>
+                                <span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;diag&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;kde&#39;</span><span class="p">:</span>
+                                <span class="n">density</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span>
+                                    <span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">],</span>
+                                    <span class="n">bw_method</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;kde_diag&#39;</span><span class="p">][</span><span class="s1">&#39;bw_method&#39;</span><span class="p">])</span>
+                                <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;kde_diag&#39;</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">])</span>
+                                <span class="n">ys</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+                                <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span>
+                                    <span class="n">color</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;samples_colors&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">],</span>
+                                <span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">pass</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">extent</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+                        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+                            <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                                <span class="p">[</span><span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">],</span> <span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">]],</span>
+                                <span class="n">extent</span><span class="p">,</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;points_colors&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">],</span>
+                                <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;points_diag&#39;</span><span class="p">]</span>
+                            <span class="p">)</span>
+
+                <span class="c1"># Off-diagonals</span>
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span> <span class="ow">or</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;hist2d&#39;</span><span class="p">:</span>
+                                <span class="n">hist</span><span class="p">,</span> <span class="n">xedges</span><span class="p">,</span> <span class="n">yedges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram2d</span><span class="p">(</span>
+                                    <span class="n">v</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">],</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span>
+                                        <span class="p">[</span><span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">1</span><span class="p">]],</span>
+                                        <span class="p">[</span><span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">]]],</span>
+                                    <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;hist_offdiag&#39;</span><span class="p">])</span>
+                                <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hist</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                                    <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                                    <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">xedges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xedges</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">yedges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yedges</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
+                                    <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span>
+                                <span class="p">)</span>
+
+                            <span class="k">elif</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;kde&#39;</span><span class="p">,</span> <span class="s1">&#39;kde2d&#39;</span><span class="p">,</span> <span class="s1">&#39;contour&#39;</span><span class="p">,</span> <span class="s1">&#39;contourf&#39;</span><span class="p">]:</span>
+                                <span class="n">density</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span><span class="n">v</span><span class="p">[:,</span> <span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">bw_method</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;kde_offdiag&#39;</span><span class="p">][</span><span class="s1">&#39;bw_method&#39;</span><span class="p">])</span>
+                                <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;kde_offdiag&#39;</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">]),</span>
+                                                   <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;kde_offdiag&#39;</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">]))</span>
+                                <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+                                <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">density</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+                                <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;kde&#39;</span> <span class="ow">or</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;kde2d&#39;</span><span class="p">:</span>
+                                    <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span>
+                                        <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">]],</span>
+                                        <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                                        <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                                    <span class="p">)</span>
+                                <span class="k">elif</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;contour&#39;</span><span class="p">:</span>
+                                    <span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">Z</span> <span class="o">-</span> <span class="n">Z</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">/</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">Z</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+                                    <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span>
+                                        <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                                        <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="mi">1</span><span class="p">]],</span>
+                                        <span class="n">colors</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;samples_colors&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">],</span>
+                                        <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;contour_offdiag&#39;</span><span class="p">]</span>
+                                    <span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="k">pass</span>
+                            <span class="k">elif</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;scatter&#39;</span><span class="p">:</span>
+                                <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                                    <span class="n">v</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">],</span>
+                                    <span class="n">color</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;samples_colors&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">],</span>
+                                    <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;scatter_offdiag&#39;</span><span class="p">]</span>
+                                <span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">opts</span><span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;plot&#39;</span><span class="p">:</span>
+                                <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                                    <span class="n">v</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">],</span>
+                                    <span class="n">color</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;samples_colors&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">],</span>
+                                    <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;plot_offdiag&#39;</span><span class="p">]</span>
+                                <span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">pass</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+                            <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                                <span class="n">v</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">v</span><span class="p">[:,</span> <span class="n">row</span><span class="p">],</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;points_colors&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">],</span>
+                                <span class="o">**</span><span class="n">opts</span><span class="p">[</span><span class="s1">&#39;points_offdiag&#39;</span><span class="p">]</span>
+                            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)):</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+                <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+                <span class="n">text_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;fontsize&#39;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">2.</span><span class="p">}</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">8.</span><span class="p">,</span> <span class="p">(</span><span class="n">y0</span> <span class="o">+</span> <span class="n">y1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">text_kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">12.</span><span class="p">,</span> <span class="n">y0</span> <span class="o">-</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s1">&#39;...&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">45</span><span class="p">,</span> <span class="o">**</span><span class="n">text_kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span>
+</pre></div>
+</td></tr></table>
+
+</details>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../neuralnet/" title="Neural Networks" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Neural Networks
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../credits/" title="Credits" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Credits
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/mackelab/delfi" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.ac79c3b0.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
+      
+        <script src="../../static/katex.js"></script>
+      
+    
+  </body>
+</html>

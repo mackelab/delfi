@@ -1,0 +1,1052 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.3">
+    
+    
+      
+        <title>Quickstart - DELFI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.30686662.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.a8b3c06d.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#3f51b5">
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../../static/global.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#getting-started" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="DELFI" class="md-header-nav__button md-logo">
+          
+            <img src="../../static/logo.svg" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              DELFI
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Quickstart
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main" role="main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="DELFI" class="md-nav__button md-logo">
+      
+        <img src="../../static/logo.svg" width="48" height="48">
+      
+    </a>
+    DELFI
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="http://github.com/mackelab/delfi/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    mackelab/delfi
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../install/" title="Installation" class="md-nav__link">
+      Installation
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Quickstart
+      </label>
+    
+    <a href="./" title="Quickstart" class="md-nav__link md-nav__link--active">
+      Quickstart
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#simulator" class="md-nav__link">
+    Simulator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prior" class="md-nav__link">
+    Prior
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-statistics" class="md-nav__link">
+    Summary statistics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generator" class="md-nav__link">
+    Generator
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../reference/distributions/" title="Distributions" class="md-nav__link">
+      Distributions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../reference/generator/" title="Generator" class="md-nav__link">
+      Generator
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../reference/inference/" title="Inference" class="md-nav__link">
+      Inference
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../reference/neuralnet/" title="Neural Networks" class="md-nav__link">
+      Neural Networks
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../reference/utils/" title="Utilities" class="md-nav__link">
+      Utilities
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../credits/" title="Credits" class="md-nav__link">
+      Credits
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#simulator" class="md-nav__link">
+    Simulator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prior" class="md-nav__link">
+    Prior
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-statistics" class="md-nav__link">
+    Summary statistics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generator" class="md-nav__link">
+    Generator
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="http://github.com/mackelab/delfi/edit/master/docs/tutorials/quickstart.ipynb" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <h1 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
+<p>In this tutorial, we will do parameter inference on a simple statistical model. </p>
+<p>First off, let&rsquo;s see whether <code>delfi</code> is installed properly:</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">delfi</span>
+<span class="k">print</span><span class="p">(</span><span class="n">delfi</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>0.5.1
+</pre></div>
+
+
+<p>No error was raised, and we can continue.</p>
+<h2 id="simulator">Simulator<a class="headerlink" href="#simulator" title="Permanent link">&para;</a></h2>
+<p>For the purpose of this example, we will consider a very simple statistical model, with a single parameter <span class="arithmatex">\(\theta\)</span>. Depending on <span class="arithmatex">\(\theta\)</span>, data is generated according to: <span class="arithmatex">\(x|\mathbf{\theta} \sim 0.5 \mathcal{N}(x|\mu=\theta, \sigma^2=1) + 0.5 \mathcal{N}(x|\mu=\theta, \sigma^2=0.1)\)</span></p>
+<p>This model is implemented in <code>delfi.simulator</code>, we will import the model and create an instance:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">delfi.simulator</span> <span class="kn">import</span> <span class="n">GaussMixture</span>
+
+<span class="n">n_params</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">GaussMixture</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">n_params</span><span class="p">)</span>
+</pre></div>
+
+<h2 id="prior">Prior<a class="headerlink" href="#prior" title="Permanent link">&para;</a></h2>
+<p>Next, we will define a prior distribution over <span class="arithmatex">\(\theta\)</span> as <span class="arithmatex">\(\mathcal{U}(-10, 10)\)</span>:</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">delfi.distribution</span> <span class="kn">as</span> <span class="nn">dd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="n">upper</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+
+<h2 id="summary-statistics">Summary statistics<a class="headerlink" href="#summary-statistics" title="Permanent link">&para;</a></h2>
+<p>We will not reduce the dimensionality of our data, and instead just apply the identity:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">delfi.summarystats</span> <span class="kn">import</span> <span class="n">Identity</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Identity</span><span class="p">()</span>
+</pre></div>
+
+<h2 id="generator">Generator<a class="headerlink" href="#generator" title="Permanent link">&para;</a></h2>
+<p>Having defined the simulator, prior, and summary statistics, we instantiate a generator object:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">delfi.generator</span> <span class="kn">import</span> <span class="n">Default</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">Default</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+
+<p>Having specified the generator, we can draw parameters and data using the <code>gen()</code> method:</p>
+<div class="codehilite"><pre><span></span><span class="n">params</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>HBox(children=(IntProgress(value=0, max=500), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=500), HTML(value=&#39;&#39;)))
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\theta$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;x&#39;</span><span class="p">);</span>
+</pre></div>
+
+<p><img alt="png" src="output_20_0.png" /></p>
+<h1 id="inference">Inference<a class="headerlink" href="#inference" title="Permanent link">&para;</a></h1>
+<p>Say, we observed data <span class="arithmatex">\(x_\text{o}\)</span> and are interested in the posterior distribution <span class="arithmatex">\(p(\theta|x=x_\text{o})\)</span>. The likelihood-free inference (LFI) algorithms implemented in <code>delfi</code> allow doing so, without using the likelihood function: In most real world application, the likelihood function is not available. We aim to do inference by just generating examples, i.e., simulating the model. </p>
+<p>We choose the toy model such that the posterior is easily tractable analytically. This will allow us to judge the result against the ground truth. We will carry out inference for <span class="arithmatex">\(x_0 = 0\)</span>.</p>
+<div class="codehilite"><pre><span></span><span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">]])</span>
+</pre></div>
+
+<h2 id="basic-density-estimation-based-lfi">Basic density estimation based LFI<a class="headerlink" href="#basic-density-estimation-based-lfi" title="Permanent link">&para;</a></h2>
+<p>A simple algorithm to use density estimation for LFI looks as follows:</p>
+<p><img alt="" src="../algorithms/basic.svg" /></p>
+<p><span class="arithmatex">\(q_\phi\)</span> will be a mixture density network (MDN): The MDN is a neural network that maps from <span class="arithmatex">\(x\)</span> to a Gaussian mixture distribution. </p>
+<p>For our example, we will set <span class="arithmatex">\(K=2\)</span>, such that the resulting mixtures will have two components.</p>
+<p>To apply the above algorithm to the toy problem, create an instance of the inference algorithm specifying details:</p>
+<div class="codehilite"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="kn">from</span> <span class="nn">delfi.inference</span> <span class="kn">import</span> <span class="n">Basic</span>
+
+<span class="n">inf_basic</span> <span class="o">=</span> <span class="n">Basic</span><span class="p">(</span><span class="n">obs</span> <span class="o">=</span> <span class="n">x0</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+
+<p>We specified that we want K=2 components, and the neural network got a single hidden layer with 10 units. Additional entries in the list passed for <code>n_hiddens</code> would create additional layers.</p>
+<div class="codehilite"><pre><span></span><span class="n">log</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inf_basic</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">n_train</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>HBox(children=(IntProgress(value=0, max=5000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=5000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=500000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=5000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=5000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=500000), HTML(value=&#39;&#39;)))
+</pre></div>
+
+
+<p>We drew N=n_train training examples and ran the algorithm. We can plot the loss function, across training rounds of the neural network:</p>
+<div class="codehilite"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">)):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;loss&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Iteration&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Loss&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Round {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+<p><img alt="png" src="output_33_0.png" /></p>
+<p>Say we observed <span class="arithmatex">\(x_o = 0.\)</span> and want to predict the posterior <span class="arithmatex">\(\hat{p}(\theta | x=x_{\text{o}})\)</span>:</p>
+<div class="codehilite"><pre><span></span><span class="n">posterior</span> <span class="o">=</span> <span class="n">inf_basic</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+</pre></div>
+
+<p>The parameters of the predicted posterior are:</p>
+<div class="codehilite"><pre><span></span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;component {}: mixture weight = {:.2f}; mean = {:.2f}; variance = {:.2f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">posterior</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>component 1: mixture weight = 0.50; mean = -0.09; variance = 1.11
+component 2: mixture weight = 0.50; mean = 0.03; variance = 0.09
+</pre></div>
+
+
+<p>The correct posterior for this problem is known &ndash; since the prior is uniform it is simply: </p>
+<div class="arithmatex">\[p(\theta|x=x_{\text{o}}) = 0.5 \mathcal{N}(\theta|\mu=0, \sigma^2=1) + 0.5 \mathcal{N}(\theta|\mu=0, \sigma^2=0.1)\]</div>
+<div class="codehilite"><pre><span></span><span class="n">true_posterior</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">MoG</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">ms</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]],</span> <span class="n">Ss</span><span class="o">=</span><span class="p">[[[</span><span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">]]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-b&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;predicted posterior&#39;</span><span class="p">,</span> <span class="s1">&#39;true posterior&#39;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">);</span>
+</pre></div>
+
+<p><img alt="png" src="output_39_0.png" /></p>
+<h1 id="sequential-neural-posterior-estimation">Sequential Neural Posterior Estimation<a class="headerlink" href="#sequential-neural-posterior-estimation" title="Permanent link">&para;</a></h1>
+<p>For the problem we picked here, the basic inference algorithm does a good job. More complicated problems, however, may require more sophisticated algorithms. </p>
+<p>Instead of sampling all parameters from the prior, we can use our simulator more efficiently by drawin only a first sent of parameters from the prior and then switch to using a different distribution to sample from (a proposal distribution). Intuitively, the proposal distribution is chosen such that, when simulated, data is closer to <span class="arithmatex">\(x_o\)</span>. In order to get the correct posterior, we will need to account for the fact that we drew these samples from a different distribution. There are three inference methods impelemented in delfi, each with a different approaches to this problem.</p>
+<h2 id="snpe-a">SNPE-A<a class="headerlink" href="#snpe-a" title="Permanent link">&para;</a></h2>
+<p>SNPE-A, also known as Conditional Density Estimation Likelihood-Free Inference (CDELFI), implements an algorithm by Papamakarios and Murray (2016). Here the posterior is inferred as if the proposal had been the prior, and then a correction is calculated to the resulting probability distribution. For details see:
+<a href="https://arxiv.org/abs/1605.06376v3">Fast ε-free Inference of Simulation Models with Bayesian Conditional Density Estimation</a>.</p>
+<p>The use of SNPE-A is demonstrated below</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">delfi.inference</span> <span class="kn">import</span> <span class="n">SNPEA</span>
+<span class="n">g</span><span class="o">.</span><span class="n">proposal</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># may have been set to something else, e.g. Student&#39;s T mixture, above</span>
+<span class="n">inf_A</span> <span class="o">=</span> <span class="n">SNPEA</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+<span class="n">logs</span><span class="p">,</span> <span class="n">tds</span><span class="p">,</span> <span class="n">posteriors</span> <span class="o">=</span> <span class="n">inf_A</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">n_train</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span> <span class="n">n_rounds</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">posterior</span> <span class="o">=</span> <span class="n">posteriors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=2000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=2000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=200000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=100000), HTML(value=&#39;&#39;)))
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;component {}: mixture weight = {:.2f}; mean = {:.2f}; variance = {:.2f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">posterior</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">true_posterior</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">MoG</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">ms</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]],</span> <span class="n">Ss</span><span class="o">=</span><span class="p">[[[</span><span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">]]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-b&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;predicted posterior&#39;</span><span class="p">,</span> <span class="s1">&#39;true posterior&#39;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">);</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>component 1: mixture weight = 0.66; mean = -0.06; variance = 0.76
+component 2: mixture weight = 0.34; mean = -0.01; variance = 0.08
+</pre></div>
+
+
+<p><img alt="png" src="output_45_1.png" /></p>
+<h2 id="snpe-b">SNPE-B<a class="headerlink" href="#snpe-b" title="Permanent link">&para;</a></h2>
+<p>Another way to infer the true posteror while sampling from a proposal is by using an importance-weighted loss. This removes the need for a post-hoc correction and leads to the SNPE-B algorithm, as described in <a href="https://arxiv.org/abs/1605.06376v3">Flexible statistical inference for mechanistic models of neural dynamics</a> by Lueckemann et al.</p>
+<p><img alt="" src="../algorithms/snpeB.svg" /></p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">delfi.inference</span> <span class="kn">import</span> <span class="n">SNPEB</span>
+
+<span class="n">inf_B</span> <span class="o">=</span> <span class="n">SNPEB</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+<span class="n">logs</span><span class="p">,</span> <span class="n">tds</span><span class="p">,</span> <span class="n">posteriors</span> <span class="o">=</span> <span class="n">inf_B</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">n_train</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span> <span class="n">n_rounds</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">posterior</span> <span class="o">=</span> <span class="n">posteriors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=2000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=2000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=200000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=100000), HTML(value=&#39;&#39;)))
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;component {}: mixture weight = {:.2f}; mean = {:.2f}; variance = {:.2f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">posterior</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">true_posterior</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">MoG</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">ms</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]],</span> <span class="n">Ss</span><span class="o">=</span><span class="p">[[[</span><span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">]]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-b&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;predicted posterior&#39;</span><span class="p">,</span> <span class="s1">&#39;true posterior&#39;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">);</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>component 1: mixture weight = 0.80; mean = 0.15; variance = 0.50
+component 2: mixture weight = 0.20; mean = 0.02; variance = 0.05
+</pre></div>
+
+
+<p><img alt="png" src="output_48_1.png" /></p>
+<h2 id="automatic-posterior-transformation">Automatic posterior transformation<a class="headerlink" href="#automatic-posterior-transformation" title="Permanent link">&para;</a></h2>
+<p>Automatic posterior transformation (APT, sometimes referred to as SNPE-C) improves on SNPE-A and SNPE-B by adjusting for the difference between the proposal and prior during learing. This means that APT doesn&rsquo;t rely on post-hoc corrections or importance weights, which leads to more accurate inference than the previous two methods.</p>
+<p>This technique is described in &ldquo;Automatic Posterior Transformation for Likelihood-Free Inference,&rdquo; by Greenberg, Nonnenmacher and Macke, ICML 2019.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">delfi.inference</span> <span class="kn">import</span> <span class="n">APT</span>
+
+<span class="n">inf_APT</span> <span class="o">=</span> <span class="n">APT</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">x0</span><span class="p">)</span>
+<span class="n">logs</span><span class="p">,</span> <span class="n">tds</span><span class="p">,</span> <span class="n">posteriors</span> <span class="o">=</span> <span class="n">inf_APT</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">n_train</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span> <span class="n">n_rounds</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">posterior</span> <span class="o">=</span> <span class="n">posteriors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1900), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1900), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;component {}: mixture weight = {:.2f}; mean = {:.2f}; variance = {:.2f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">posterior</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">posterior</span><span class="o">.</span><span class="n">xs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">true_posterior</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">MoG</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">ms</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]],</span> <span class="n">Ss</span><span class="o">=</span><span class="p">[[[</span><span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">]]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-b&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="s1">&#39;-r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;predicted posterior&#39;</span><span class="p">,</span> <span class="s1">&#39;true posterior&#39;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">);</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>component 1: mixture weight = 0.54; mean = -0.00; variance = 0.11
+component 2: mixture weight = 0.46; mean = 0.10; variance = 0.88
+</pre></div>
+
+
+<p><img alt="png" src="output_52_1.png" /></p>
+<h2 id="atomic-apt">Atomic APT<a class="headerlink" href="#atomic-apt" title="Permanent link">&para;</a></h2>
+<p>We can also run APT with an atomic loss, where each point of training data consists of a multiple choice question. This allows us to use Masked Auto-regressive flows instead of Gaussian Mixtures as our conditional density estimators.</p>
+<div class="codehilite"><pre><span></span><span class="n">inf_APT_atomic</span> <span class="o">=</span> <span class="n">APT</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">n_hiddens</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="s1">&#39;maf&#39;</span><span class="p">,</span> <span class="n">n_mades</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">logs</span><span class="p">,</span> <span class="n">tds</span><span class="p">,</span> <span class="n">posteriors</span> <span class="o">=</span> <span class="n">inf_APT_atomic</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">n_train</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span> <span class="n">n_rounds</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">proposal</span><span class="o">=</span><span class="s1">&#39;atomic_comb&#39;</span><span class="p">,</span> <span class="n">train_on_all</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">posterior</span> <span class="o">=</span> <span class="n">posteriors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span>HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1900), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1900), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+
+
+
+
+
+
+HBox(children=(IntProgress(value=0, max=1000), HTML(value=&#39;&#39;)))
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="n">true_posterior</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">MoG</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">ms</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]],</span> <span class="n">Ss</span><span class="o">=</span><span class="p">[[[</span><span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">]]])</span>
+<span class="n">p_maf</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">p_maf</span> <span class="o">/=</span> <span class="n">p_maf</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># normalize, since atomic loss gives the posterior up to an unknown scale factor                       </span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_maf</span><span class="p">,</span> <span class="s1">&#39;-b&#39;</span><span class="p">)</span>
+<span class="n">p_true</span> <span class="o">=</span> <span class="n">true_posterior</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">p_true</span> <span class="o">/=</span> <span class="n">p_true</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="s1">&#39;-r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;predicted posterior&#39;</span><span class="p">,</span> <span class="s1">&#39;true posterior&#39;</span><span class="p">],</span> <span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">);</span>
+</pre></div>
+
+<p><img alt="png" src="output_55_0.png" /></p>
+<p>Note that for a simulator such as this one with 1D outputs, an MAF density estimator can only output Gaussian posteriors, and hence is not as accurate as the other methods considered above.</p>
+<p>In higher dimensions, however, it becomes considerably more flexible and can frequently outperform MoG density estimators by a large margin, especially for non-MoG posteriors.</p>
+<h2 id="adapting-to-other-problems">Adapting to other problems<a class="headerlink" href="#adapting-to-other-problems" title="Permanent link">&para;</a></h2>
+<p>In order to use <code>delfi</code> with a specific problem, you&rsquo;d need to implement a simulator class and possibly summary statistics.</p>
+<p>Simulators should inherit from a simulator base class. The base class for simulators specifies that each child needs to inherit a method called <code>gen_single()</code> &ndash; the function that forward simulates a single <span class="arithmatex">\(\theta\)</span> to data. It should return a dictionary that contains the result under a key called <code>data</code>. <a href="https://github.com/mackelab/delfi/blob/master/delfi/simulator/BaseSimulator.py">This is also detailled in the docstring of the base class</a>. For an actual implementation, you can see the code for the mixture model we used above: <a href="https://github.com/mackelab/delfi/blob/master/delfi/simulator/GaussMixture.py">https://github.com/mackelab/delfi/blob/master/delfi/simulator/GaussMixture.py</a>.</p>
+<p>For this example, we used the identity as a summary statistics. If you were to use summary statistics, consider the implementation of mean summary statistics for a basic example: <a href="https://github.com/mackelab/delfi/blob/master/delfi/summarystats/Mean.py">https://github.com/mackelab/delfi/blob/master/delfi/summarystats/Mean.py</a>, and again, there is a <a href="https://github.com/mackelab/delfi/blob/master/delfi/summarystats/BaseSummaryStats.py">base class specifying the interface</a>.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../install/" title="Installation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Installation
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../reference/distributions/" title="Distributions" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Distributions
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+  <div class="md-footer-social">
+    <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
+    
+      <a href="https://github.com/mackelab/delfi" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.ac79c3b0.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
+      
+        <script src="../../static/katex.js"></script>
+      
+    
+  </body>
+</html>
