@@ -5,19 +5,19 @@ from delfi.utils.meta import ABCMetaDoc
 
 
 class BaseDistribution(metaclass=ABCMetaDoc):
-    """Abstract base class for distributions
-
-    Distributions must at least implement abstract properties and methods of
-    this class.
-
-    Parameters
-    ----------
-    ndim : int
-        Number of ndimensions of the distribution
-    seed : int or None
-        If provided, random number generator will be seeded
-    """
     def __init__(self, ndim, seed=None):
+        """Abstract base class for distributions
+
+        Distributions must at least implement abstract properties and methods of
+        this class.
+
+        Parameters
+        ----------
+        ndim : int
+            Number of ndimensions of the distribution
+        seed : int or None
+            If provided, random number generator will be seeded
+        """
         self.ndim = ndim
 
         self.seed = seed
