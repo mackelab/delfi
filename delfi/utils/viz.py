@@ -4,6 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import six
 import time
 
 from scipy.stats import gaussian_kde
