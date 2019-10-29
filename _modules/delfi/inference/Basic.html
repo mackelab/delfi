@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>delfi.inference.Basic &mdash; delfi 0.7.5 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> delfi
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quickstart.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quickstart.html#Inference">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/quickstart.html#Sequential-Neural-Posterior-Estimation">Sequential Neural Posterior Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/mackelab/delfi">Github repo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../credits.html">Credits</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">delfi</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>delfi.inference.Basic</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for delfi.inference.Basic</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">theano.tensor</span> <span class="k">as</span> <span class="nn">tt</span>
+
+<span class="kn">from</span> <span class="nn">delfi.inference.BaseInference</span> <span class="k">import</span> <span class="n">BaseInference</span>
+<span class="kn">from</span> <span class="nn">delfi.neuralnet.Trainer</span> <span class="k">import</span> <span class="n">Trainer</span>
+<span class="kn">from</span> <span class="nn">delfi.neuralnet.loss.regularizer</span> <span class="k">import</span> <span class="n">svi_kl_init</span><span class="p">,</span> <span class="n">svi_kl_zero</span>
+
+
+<div class="viewcode-block" id="Basic"><a class="viewcode-back" href="../../../api.html#delfi.inference.Basic">[docs]</a><span class="k">class</span> <span class="nc">Basic</span><span class="p">(</span><span class="n">BaseInference</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prior_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pilot_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">reg_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Basic inference algorithm</span>
+
+<span class="sd">        Uses samples from the prior for density estimation LFI. Network can be</span>
+<span class="sd">        trained with SVI (optional).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        generator : generator instance</span>
+<span class="sd">            Generator instance</span>
+<span class="sd">        obs : array or None</span>
+<span class="sd">            Observation in the format the generator returns (1 x n_summary)</span>
+<span class="sd">        prior_norm : bool</span>
+<span class="sd">            If set to True, will z-transform params based on mean/std of prior</span>
+<span class="sd">        pilot_samples : None or int</span>
+<span class="sd">            If an integer is provided, a pilot run with the given number of</span>
+<span class="sd">            samples is run. The mean and std of the summary statistics of the</span>
+<span class="sd">            pilot samples will be subsequently used to z-transform summary</span>
+<span class="sd">            statistics.</span>
+<span class="sd">        reg_lambda : float</span>
+<span class="sd">            Precision parameter for weight regularizer if svi is True</span>
+<span class="sd">        seed : int or None</span>
+<span class="sd">            If provided, random number generator will be seeded</span>
+<span class="sd">        kwargs : additional keyword arguments</span>
+<span class="sd">            Additional arguments for the NeuralNet instance, including:</span>
+<span class="sd">                n_components : int</span>
+<span class="sd">                    Number of components of the mixture density</span>
+<span class="sd">                n_hiddens : list of ints</span>
+<span class="sd">                    Number of hidden units per layer of the neural network</span>
+<span class="sd">                svi : bool</span>
+<span class="sd">                    Whether to use SVI version of the network or not</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        observables : dict</span>
+<span class="sd">            Dictionary containing theano variables that can be monitored while</span>
+<span class="sd">            training the neural network.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">prior_norm</span><span class="o">=</span><span class="n">prior_norm</span><span class="p">,</span>
+                         <span class="n">pilot_samples</span><span class="o">=</span><span class="n">pilot_samples</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obs</span> <span class="o">=</span> <span class="n">obs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg_lambda</span> <span class="o">=</span> <span class="n">reg_lambda</span>
+
+<div class="viewcode-block" id="Basic.loss"><a class="viewcode-back" href="../../../api.html#delfi.inference.Basic.loss">[docs]</a>    <span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">round_cl</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loss function for training</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        N : int</span>
+<span class="sd">            Number of training samples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">tt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">lprobs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">svi</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">&lt;=</span> <span class="n">round_cl</span><span class="p">:</span>
+                <span class="c1"># weights close to zero-centered prior in the first round</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_lambda</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">kl</span><span class="p">,</span> <span class="n">imvs</span> <span class="o">=</span> <span class="n">svi_kl_zero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">mps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">sps</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">reg_lambda</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">kl</span><span class="p">,</span> <span class="n">imvs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># weights close to those of previous round</span>
+                <span class="n">kl</span><span class="p">,</span> <span class="n">imvs</span> <span class="o">=</span> <span class="n">svi_kl_init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">mps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">sps</span><span class="p">)</span>
+
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="n">N</span> <span class="o">*</span> <span class="n">kl</span>
+
+        <span class="k">return</span> <span class="n">loss</span></div>
+
+<div class="viewcode-block" id="Basic.run"><a class="viewcode-back" href="../../../api.html#delfi.inference.Basic.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_train</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_rounds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">round_cl</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stop_on_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run algorithm</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_train : int or list of ints</span>
+<span class="sd">            Number of data points drawn per round. If a list is passed, the</span>
+<span class="sd">            nth list element specifies the number of training examples in the</span>
+<span class="sd">            nth round. If there are fewer list elements than rounds, the last</span>
+<span class="sd">            list element is used.</span>
+<span class="sd">        n_rounds : int</span>
+<span class="sd">            Number of rounds</span>
+<span class="sd">        epochs : int</span>
+<span class="sd">            Number of epochs used for neural network training</span>
+<span class="sd">        minibatch : int</span>
+<span class="sd">            Size of the minibatches used for neural network training</span>
+<span class="sd">        monitor : list of str</span>
+<span class="sd">            Names of variables to record during training along with the value</span>
+<span class="sd">            of the loss function. The observables attribute contains all</span>
+<span class="sd">            possible variables that can be monitored</span>
+<span class="sd">        round_cl : int</span>
+<span class="sd">            Round after which to start continual learning</span>
+<span class="sd">        stop_on_nan : bool</span>
+<span class="sd">            If True, will halt if NaNs in the loss are encountered</span>
+<span class="sd">        kwargs : additional keyword arguments</span>
+<span class="sd">            Additional arguments for the Trainer instance</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        logs : list of dicts</span>
+<span class="sd">            Dictionaries contain information logged while training the networks</span>
+<span class="sd">        trn_datasets : list of (params, stats)</span>
+<span class="sd">            training datasets, z-transformed</span>
+<span class="sd">        posteriors : list of distributions</span>
+<span class="sd">            posterior after each round</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">trn_datasets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">posteriors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rounds</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># number of training examples for this round</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">n_train</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">n_train_round</span> <span class="o">=</span> <span class="n">n_train</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">n_train_round</span> <span class="o">=</span> <span class="n">n_train</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_train_round</span> <span class="o">=</span> <span class="n">n_train</span>
+
+            <span class="c1"># draw training data (z-transformed params and stats)</span>
+            <span class="n">verbose</span> <span class="o">=</span> <span class="s1">&#39;(round </span><span class="si">{}</span><span class="s1">) &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="n">trn_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">n_train_round</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+            <span class="n">n_train_round</span> <span class="o">=</span> <span class="n">trn_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">trn_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">trn_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trn_data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">trn_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">stats</span><span class="p">]</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="n">n_train_round</span><span class="p">,</span> <span class="n">round_cl</span><span class="o">=</span><span class="n">round_cl</span><span class="p">),</span>
+                        <span class="n">trn_data</span><span class="o">=</span><span class="n">trn_data</span><span class="p">,</span> <span class="n">trn_inputs</span><span class="o">=</span><span class="n">trn_inputs</span><span class="p">,</span>
+                        <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_newseed</span><span class="p">(),</span>
+                        <span class="n">monitor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">monitor_dict_from_names</span><span class="p">(</span><span class="n">monitor</span><span class="p">),</span>
+                        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">minibatch</span><span class="o">=</span><span class="n">minibatch</span><span class="p">,</span>
+                                <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">stop_on_nan</span><span class="o">=</span><span class="n">stop_on_nan</span><span class="p">))</span>
+            <span class="n">trn_datasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trn_data</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">obs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">posteriors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">posteriors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obs</span><span class="p">))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">posteriors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Posterior inference failed&#39;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">logs</span><span class="p">,</span> <span class="n">trn_datasets</span><span class="p">,</span> <span class="n">posteriors</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Mackelab
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
