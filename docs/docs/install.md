@@ -1,8 +1,7 @@
 # Installation
 
 !!! note
-    Importantly, this codebase is written for Python 3 and is not backwards compatible.
-
+    `delfi` is written for Python 3 and not compatible with older versions.
 
 You can install delfi by cloning from the github repository and using pip:
 

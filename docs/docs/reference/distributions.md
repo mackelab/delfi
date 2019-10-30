@@ -1,7 +1,5 @@
 # Distributions
 
-`delfi` includes a number of distributions, including:
-
 {!docs/autodoc/delfi.distribution.Discrete.md!}
 
 {!docs/autodoc/delfi.distribution.Gamma.md!}
