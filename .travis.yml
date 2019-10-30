@@ -40,4 +40,4 @@ after_success:
   - git config user.email "mail@jan-matthis.de"
   - git remote add gh-token "https://${GH_TOKEN}@github.com/mackelab/delfi.git";
   - git fetch gh-token && git fetch gh-token gh-pages:gh-pages;
-  - mkdocs gh-deploy -v --clean --remote-name gh-token;
+  - cd docs && mkdocs gh-deploy -v --clean --remote-name gh-token;
