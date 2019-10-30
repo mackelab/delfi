@@ -416,20 +416,20 @@
                 
                 
                 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code>delfi</code> is written for Python 3 and not compatible with older versions.</p>
-</div>
-<p>You can install delfi by cloning from the github repository and using pip:</p>
+<p>You can install <code>delfi</code> by cloning from the <a href="https://github.com/mackelab/delfi">GitHub repository</a> and using pip:</p>
 <div class="codehilite"><pre><span></span>git clone https://github.com/mackelab/delfi.git
 cd delfi
 pip install -r requirements.txt
 pip install -e .
 </pre></div>
 
-<p>Installing delfi as described above will automatically take care of the requirements.</p>
-<p>The installation requirements are specified in <code>setup.py</code>. Core dependencies are <code>theano</code> and <code>lasagne</code>. For lasagne, delfi relies on the development version of lasagne (0.2dev) rather than the stable version (0.1) that is available through pip.</p>
-<p>To use APT with Gaussian or Mixture-of-Gaussians proposals, you will likely need to make openblas available to theano. You can do this on Debian/Ubuntu using <code>sudo apt install libopenblas-dev</code>.</p>
+<p>Installing <code>delfi</code> as described above will automatically take care of the requirements.</p>
+<p>Core dependencies are the packages <code>theano</code> and <code>lasagne</code>. For <code>lasagne</code>, <code>delfi</code> relies on the development version of <code>lasagne</code> (0.2dev) rather than the stable version (0.1) that is available through pip.</p>
+<p>To use the APT inference algorithm with Gaussian or Mixture-of-Gaussians proposals, you will likely need to make openblas available for <code>theano</code>. On Debian/Ubuntu you can install it with <code>sudo apt install libopenblas-dev</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>delfi</code> is written for Python 3 and not compatible with older versions.</p>
+</div>
                 
                   
                 
