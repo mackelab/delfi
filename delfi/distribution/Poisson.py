@@ -36,6 +36,7 @@ class Poisson(BaseDistribution):
     @copy_ancestor_docstring
     def eval(self, x, ii=None, log=True):
         # univariate distribution only, i.e. ii=[0] in any case
+        assert ii is None, 'this is a univariate Poisson, ii must be None.'
 
         # x should have a second dim with length 1, not more
         x = np.atleast_2d(x)
