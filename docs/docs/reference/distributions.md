@@ -8,6 +8,8 @@
 
 {!docs/autodoc/delfi.distribution.Logistic.md!}
 
+{!docs/autodoc/delfi.distribution.Poisson.md!}
+
 {!docs/autodoc/delfi.distribution.StudentsT.md!}
 
 {!docs/autodoc/delfi.distribution.Uniform.md!}

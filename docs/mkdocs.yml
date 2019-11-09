@@ -1,4 +1,4 @@
-site_name: DELFI
+site_name: delfi
 
 nav:
   - Home: index.md
@@ -65,6 +65,7 @@ plugins:
 extra_javascript:
   - 'https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js'
   - 'static/katex.js'
+  - 'static/nav.js'
 
 extra_css:
   - 'https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css'
