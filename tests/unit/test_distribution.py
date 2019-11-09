@@ -47,6 +47,19 @@ def test_gaussian_3d():
     assert np.allclose(np.cov(samples, rowvar=False), S, atol=0.1)
 
 
+def test_poisson(): 
+    N = 50000
+    mu = 5.
+    offset = 1. 
+    dist = dd.Poisson(mu=mu, offset=offset)
+    samples = dist.gen(N)
+    logprobs = dist.eval(samples)
+    
+    assert samples.shape == (N, 1)
+    assert logprobs.shape == (N,)
+    assert np.allclose(np.mean(samples, axis=0), mu + offset, atol=0.1)
+     
+
 def test_studentst_1d():
     N = 100000
     m = [1.]
