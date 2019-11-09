@@ -36,7 +36,7 @@
     
     
       
-        <title>DELFI</title>
+        <title>delfi</title>
       
     
     
@@ -98,7 +98,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="." title="DELFI" class="md-header-nav__button md-logo">
+        <a href="." title="delfi" class="md-header-nav__button md-logo">
           
             <img src="static/logo.svg" width="24" height="24">
           
@@ -111,7 +111,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              DELFI
+              delfi
             </span>
             <span class="md-header-nav__topic">
               
@@ -190,12 +190,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="." title="DELFI" class="md-nav__button md-logo">
+    <a href="." title="delfi" class="md-nav__button md-logo">
       
         <img src="static/logo.svg" width="48" height="48">
       
     </a>
-    DELFI
+    delfi
   </label>
   
     <div class="md-nav__source">
@@ -253,8 +253,22 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#alternative-approaches" class="md-nav__link">
-    Alternative approaches
+  <a href="#motivation-and-approach" class="md-nav__link">
+    Motivation and approach
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publications" class="md-nav__link">
+    Publications
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    Alternatives
   </a>
   
 </li>
@@ -435,8 +449,22 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#alternative-approaches" class="md-nav__link">
-    Alternative approaches
+  <a href="#motivation-and-approach" class="md-nav__link">
+    Motivation and approach
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publications" class="md-nav__link">
+    Publications
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives" class="md-nav__link">
+    Alternatives
   </a>
   
 </li>
@@ -460,17 +488,37 @@
                   <a href="http://github.com/mackelab/delfi/edit/master/docs/index.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="delfi">DELFI<a class="headerlink" href="#delfi" title="Permanent link">&para;</a></h1>
-<p><a href="https://travis-ci.org/mackelab/delfi"><img alt="Build Status" src="https://travis-ci.org/mackelab/delfi.svg?branch=master" /></a> <a href="http://www.mackelab.org/delfi/"><img alt="Docs" src="https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat" /></a></p>
-<p><code>delfi</code> is a Python package for density estimation likelihood-free inference. It provides several algorithms for sequential neural posterior estimation (SNPE).</p>
-<p>Documentation including <a href="http://www.mackelab.org/delfi/installation.html">installation instructions</a> and a <a href="http://www.mackelab.org/delfi/notebooks/quickstart.html">guide on how to get started</a> is available at <a href="http://www.mackelab.org/delfi/">http://www.mackelab.org/delfi/</a>.</p>
-<p>More specifically, <code>delfi</code> includes:</p>
+                <h1 id="delfi"><code>delfi</code><a class="headerlink" href="#delfi" title="Permanent link">&para;</a></h1>
+<p><code>delfi</code> is a Python toolbox for density estimation likelihood-free inference. It provides several algorithms for sequential neural posterior estimation (SNPE).</p>
+<p>If you want to get started quickly, refer to the <a href="http://mackelab.org/delfi/install/">installation instructions</a> and <a href="http://mackelab.org/delfi/quickstart/">tutorials</a>. To learn more about the general motivation behind likelihood-free inference, and algorithms included in <code>delfi</code>, keep on reading.</p>
+<h2 id="motivation-and-approach">Motivation and approach<a class="headerlink" href="#motivation-and-approach" title="Permanent link">&para;</a></h2>
+<p>Many areas of science and engineering make extensive use of complex, stochastic, numerical simulations to describe the structure and dynamics of the processes being investigated. A key challenge in simulation-based science is linking simulation models to empirical data: Bayesian inference provides a general and powerful framework for identifying the set of parameters which are consistent both with empirical data and prior knowledge.</p>
+<p>One of the key quantities required for statistical inference, the likelihood of observed data given parameters, <span class="arithmatex">\(\mathcal{L}(\theta) = p(x_o|\theta)\)</span>, is typically intractable for
+simulation-based models, rendering conventional statistical approaches inapplicable.</p>
+<p>Sequential Neural Posterior Estimation (SNPE) is a powerful machine-learning technique to address this problem.</p>
+<p><img alt="" src="static/goal.png" /></p>
+<p><strong>Goal: Algorithmically identify mechanistic models which are consistent with data.</strong></p>
+<p>SNPE takes three inputs: A candidate mechanistic model, prior knowledge or constraints on model parameters, and data (or summary statistics). SNPE proceeds by:</p>
+<ol>
+<li>sampling parameters from the prior and simulating synthetic datasets from these parameters, and</li>
+<li>using a deep density estimation neural network to learn the (probabilistic) association between data (or data features) and underlying parameters, i.e. to learn statistical inference from simulated data.</li>
+<li>This density estimation network is then applied to empirical data to derive the full space of parameters consistent with the data and the prior, i.e. the posterior distribution. High posterior probability is assigned to parameters which are consistent with both the data and the prior, low probability to inconsistent parameters.</li>
+<li>If needed, an initial estimate of the posterior can be used to adaptively generate additional informative simulations.</li>
+</ol>
+<h2 id="publications">Publications<a class="headerlink" href="#publications" title="Permanent link">&para;</a></h2>
+<p>Algorithms included in <code>delfi</code> were published in the following papers, which provide additional information:</p>
 <ul>
-<li>The SNPE-A algorithm proposed in the paper <a href="https://papers.nips.cc/paper/6084-fast-free-inference-of-simulation-models-with-bayesian-conditional-density-estimation">Fast ε-free Inference of Simulation Models with Bayesian Conditional Density Estimation (Papamakarios &amp; Murray, 2016)</a></li>
-<li>SNPE-B, as proposed in the paper <a href="https://papers.nips.cc/paper/6728-flexible-statistical-inference-for-mechanistic-models-of-neural-dynamics">Flexible statistical inference for mechanistic models of neural dynamics (Lueckmann, Goncalves, Bassetto, Öcal, Nonnenmacher &amp; Macke, 2017)</a></li>
-<li>SNPE-C (APT) as proposed in <a href="https://arxiv.org/abs/1905.07488">Automatic posterior transformation for likelihood free inference (Greenberg, Nonnenmacher &amp; Macke, 2019)</a></li>
+<li>
+<p><strong>Fast ε-free Inference of Simulation Models with Bayesian Conditional Density Estimation</strong><br> by Papamakarios and Murray (NeurIPS 2016), <br><a href="https://papers.nips.cc/paper/6084-fast-free-inference-of-simulation-models-with-bayesian-conditional-density-estimation.pdf">[PDF]</a> <a href="https://papers.nips.cc/paper/6084-fast-free-inference-of-simulation-models-with-bayesian-conditional-density-estimation/bibtex">[BibTeX]</a> (SNPE-A)</p>
+</li>
+<li>
+<p><strong>Flexible statistical inference for mechanistic models of neural dynamics</strong> <br> by Lueckmann, Goncalves, Bassetto, Öcal, Nonnenmacher and Macke (NeurIPS 2017), <br><a href="https://papers.nips.cc/paper/6728-flexible-statistical-inference-for-mechanistic-models-of-neural-dynamics.pdf">[PDF]</a> <a href="https://papers.nips.cc/paper/6728-flexible-statistical-inference-for-mechanistic-models-of-neural-dynamics/bibtex">[BibTeX]</a> (SNPE-B)</p>
+</li>
+<li>
+<p><strong>Automatic posterior transformation for likelihood-free inference</strong><br>by Greenberg, Nonnenmacher &amp; Macke (ICML 2019), <br><a href="http://proceedings.mlr.press/v97/greenberg19a/greenberg19a.pdf">[PDF]</a> <a href="data:text/plain;charset=utf-8,%0A%0A%0A%0A%0A%0A%40InProceedings%7Bpmlr-v97-greenberg19a%2C%0A%20%20title%20%3D%20%09%20%7BAutomatic%20Posterior%20Transformation%20for%20Likelihood-Free%20Inference%7D%2C%0A%20%20author%20%3D%20%09%20%7BGreenberg%2C%20David%20and%20Nonnenmacher%2C%20Marcel%20and%20Macke%2C%20Jakob%7D%2C%0A%20%20booktitle%20%3D%20%09%20%7BProceedings%20of%20the%2036th%20International%20Conference%20on%20Machine%20Learning%7D%2C%0A%20%20pages%20%3D%20%09%20%7B2404--2414%7D%2C%0A%20%20year%20%3D%20%09%20%7B2019%7D%2C%0A%20%20editor%20%3D%20%09%20%7BChaudhuri%2C%20Kamalika%20and%20Salakhutdinov%2C%20Ruslan%7D%2C%0A%20%20volume%20%3D%20%09%20%7B97%7D%2C%0A%20%20series%20%3D%20%09%20%7BProceedings%20of%20Machine%20Learning%20Research%7D%2C%0A%20%20address%20%3D%20%09%20%7BLong%20Beach%2C%20California%2C%20USA%7D%2C%0A%20%20month%20%3D%20%09%20%7B09--15%20Jun%7D%2C%0A%20%20publisher%20%3D%20%09%20%7BPMLR%7D%2C%0A%20%20pdf%20%3D%20%09%20%7Bhttp%3A%2F%2Fproceedings.mlr.press%2Fv97%2Fgreenberg19a%2Fgreenberg19a.pdf%7D%2C%0A%20%20url%20%3D%20%09%20%7Bhttp%3A%2F%2Fproceedings.mlr.press%2Fv97%2Fgreenberg19a.html%7D%2C%0A%20%20abstract%20%3D%20%09%20%7BHow%20can%20one%20perform%20Bayesian%20inference%20on%20stochastic%20simulators%20with%20intractable%20likelihoods%3F%20A%20recent%20approach%20is%20to%20learn%20the%20posterior%20from%20adaptively%20proposed%20simulations%20using%20neural%20network-based%20conditional%20density%20estimators.%20However%2C%20existing%20methods%20are%20limited%20to%20a%20narrow%20range%20of%20proposal%20distributions%20or%20require%20importance%20weighting%20that%20can%20limit%20performance%20in%20practice.%20Here%20we%20present%20automatic%20posterior%20transformation%20(APT)%2C%20a%20new%20sequential%20neural%20posterior%20estimation%20method%20for%20simulation-based%20inference.%20APT%20can%20modify%20the%20posterior%20estimate%20using%20arbitrary%2C%20dynamically%20updated%20proposals%2C%20and%20is%20compatible%20with%20powerful%20flow-based%20density%20estimators.%20It%20is%20more%20flexible%2C%20scalable%20and%20efficient%20than%20previous%20simulation-based%20inference%20techniques.%20APT%20can%20operate%20directly%20on%20high-dimensional%20time%20series%20and%20image%20data%2C%20opening%20up%20new%20applications%20for%20likelihood-free%20inference.%7D%0A%7D%0A">[BibTeX]</a> (SNPE-C or APT)</p>
+</li>
 </ul>
-<h2 id="alternative-approaches">Alternative approaches<a class="headerlink" href="#alternative-approaches" title="Permanent link">&para;</a></h2>
+<h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
 <p>As an alternative to directly estimating the posterior on parameters given data, it is also possible to estimate the likelihood of data given parameters, and then subsequently draw posterior samples using MCMC. <a href="https://arxiv.org/abs/1805.07226">Sequential Neural Likelihood (Papamakarios, Sterratt &amp; Murray, 2018)</a> is a powerful technique employing this strategy. Depending on the problem, SNL can be more or less effective than SNPE techniques such as APT. Code for SNL is available from the <a href="https://github.com/gpapamak/snl">original repository</a> or as a <a href="https://github.com/mnonnenm/SNL_py3port/tree/master">python 3 package</a>.  </p>
                 
                   
@@ -541,6 +589,8 @@
         <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
       
         <script src="static/katex.js"></script>
+      
+        <script src="static/nav.js"></script>
       
     
   </body>

@@ -36,7 +36,7 @@
     
     
       
-        <title>Credits - DELFI</title>
+        <title>Credits - delfi</title>
       
     
     
@@ -98,7 +98,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="DELFI" class="md-header-nav__button md-logo">
+        <a href=".." title="delfi" class="md-header-nav__button md-logo">
           
             <img src="../static/logo.svg" width="24" height="24">
           
@@ -111,7 +111,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              DELFI
+              delfi
             </span>
             <span class="md-header-nav__topic">
               
@@ -190,12 +190,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href=".." title="DELFI" class="md-nav__button md-logo">
+    <a href=".." title="delfi" class="md-nav__button md-logo">
       
         <img src="../static/logo.svg" width="48" height="48">
       
     </a>
-    DELFI
+    delfi
   </label>
   
     <div class="md-nav__source">
@@ -378,9 +378,45 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Credits
+      </label>
+    
     <a href="./" title="Credits" class="md-nav__link md-nav__link--active">
       Credits
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#algorithms" class="md-nav__link">
+    Algorithms
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code" class="md-nav__link">
+    Code
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -402,6 +438,29 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#algorithms" class="md-nav__link">
+    Algorithms
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code" class="md-nav__link">
+    Code
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -416,12 +475,45 @@
                 
                 
                 <h1 id="credits">Credits<a class="headerlink" href="#credits" title="Permanent link">&para;</a></h1>
-<p><code>delfi.distribution</code> and <code>delfi.neuralnet</code> build on code written by George Papamakarios, the original versions of which can be found at:</p>
+<h2 id="algorithms">Algorithms<a class="headerlink" href="#algorithms" title="Permanent link">&para;</a></h2>
+<p><code>delfi</code> implements the algorithms from the following papers:</p>
 <ul>
-<li><a href="https://github.com/gpapamak/epsilon_free_inference">https://github.com/gpapamak/epsilon_free_inference</a></li>
-<li><a href="https://github.com/gpapamak/snl">https://github.com/gpapamak/snl</a></li>
+<li><a href="https://papers.nips.cc/paper/6084-fast-free-inference-of-simulation-models-with-bayesian-conditional-density-estimation">Fast ε-free Inference of Simulation Models with Bayesian Conditional Density Estimation (Papamakarios &amp; Murray, 2016)</a>, referred to as SNPE-A</li>
+<li><a href="https://papers.nips.cc/paper/6728-flexible-statistical-inference-for-mechanistic-models-of-neural-dynamics">Flexible statistical inference for mechanistic models of neural dynamics (Lueckmann, Goncalves, Bassetto, Öcal, Nonnenmacher &amp; Macke, 2017)</a>, referred to as SNPE-B</li>
+<li><a href="https://arxiv.org/abs/1905.07488">Automatic posterior transformation for likelihood free inference (Greenberg, Nonnenmacher &amp; Macke, 2019)</a>, referred to as APT or SNPE-C</li>
 </ul>
-<p>The separation of classes in <code>delfi</code> is partially inspired by the design of <a href="https://github.com/elfi-dev/elfi">ELFI: Engine for Likelihood-Free Inference</a>.</p>
+<h2 id="code">Code<a class="headerlink" href="#code" title="Permanent link">&para;</a></h2>
+<p><code>delfi.distribution</code> and <code>delfi.neuralnet</code> build on code written by <a href="https://github.com/gpapamak/">George Papamakarios</a>. The separation of classes in <code>delfi</code> is partially inspired by the design of <a href="https://github.com/elfi-dev/elfi">ELFI: Engine for Likelihood-Free Inference</a>.</p>
+<div class="codehilite"><pre><span></span>Modified work Copyright (c) 2019, David Greenberg, Marcel Nonnemacher, Jan-Matthis Lueckmann, Pedro J. Goncalves, Kaan Öcal, Jakob H. Macke
+Modified work Copyright (c) 2017, Jan-Matthis Lueckmann, Pedro J. Goncalves, Jakob H. Macke
+Original work Copyright (c) 2016, George Papamakarios
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those
+of the authors and should not be interpreted as representing official policies,
+either expressed or implied, of anybody else.
+</pre></div>
                 
                   
                 
@@ -491,6 +583,8 @@
         <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
       
         <script src="../static/katex.js"></script>
+      
+        <script src="../static/nav.js"></script>
       
     
   </body>

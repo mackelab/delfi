@@ -36,7 +36,7 @@
     
     
       
-        <title>Installation - DELFI</title>
+        <title>Installation - delfi</title>
       
     
     
@@ -98,7 +98,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="DELFI" class="md-header-nav__button md-logo">
+        <a href=".." title="delfi" class="md-header-nav__button md-logo">
           
             <img src="../static/logo.svg" width="24" height="24">
           
@@ -111,7 +111,7 @@
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
             <span class="md-header-nav__topic">
-              DELFI
+              delfi
             </span>
             <span class="md-header-nav__topic">
               
@@ -190,12 +190,12 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href=".." title="DELFI" class="md-nav__button md-logo">
+    <a href=".." title="delfi" class="md-nav__button md-logo">
       
         <img src="../static/logo.svg" width="48" height="48">
       
     </a>
-    DELFI
+    delfi
   </label>
   
     <div class="md-nav__source">
@@ -246,9 +246,38 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Installation
+      </label>
+    
     <a href="./" title="Installation" class="md-nav__link md-nav__link--active">
       Installation
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#small-print" class="md-nav__link">
+    Small print
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -402,6 +431,22 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#small-print" class="md-nav__link">
+    Small print
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -424,12 +469,10 @@ pip install -e .
 </pre></div>
 
 <p>Installing <code>delfi</code> as described above will automatically take care of the requirements.</p>
-<p>Core dependencies are the packages <code>theano</code> and <code>lasagne</code>. For <code>lasagne</code>, <code>delfi</code> relies on the development version of <code>lasagne</code> (0.2dev) rather than the stable version (0.1) that is available through pip.</p>
-<p>To use the APT inference algorithm with Gaussian or Mixture-of-Gaussians proposals, you will likely need to make openblas available for <code>theano</code>. On Debian/Ubuntu you can install it with <code>sudo apt install libopenblas-dev</code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<h2 id="small-print">Small print<a class="headerlink" href="#small-print" title="Permanent link">&para;</a></h2>
 <p><code>delfi</code> is written for Python 3 and not compatible with older versions.</p>
-</div>
+<p>Core dependencies are the packages <code>theano</code> and <code>lasagne</code>. For <code>lasagne</code>, <code>delfi</code> relies on the development version of <code>lasagne</code> (0.2dev) rather than the stable version (0.1) that is available through pip.</p>
+<p>To use the APT inference algorithm with Gaussian or Mixture-of-Gaussians proposals, you will likely need to make openblas available for <code>theano</code>. If openblas is missing on your system and you happen to use Debian/Ubuntu you can install it with <code>sudo apt install libopenblas-dev</code>.</p>
                 
                   
                 
@@ -513,6 +556,8 @@ pip install -e .
         <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
       
         <script src="../static/katex.js"></script>
+      
+        <script src="../static/nav.js"></script>
       
     
   </body>

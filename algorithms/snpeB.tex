@@ -1,0 +1,50 @@
+% SNPEB inference
+%
+% pdflatex basic.tex; pdf2svg basic.pdf basic.svg
+
+\documentclass{standalone}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{varwidth}
+
+% ALGORITHMS
+\usepackage[noend]{algorithm2e}
+\setlength{\interspacetitleruled}{4pt}
+\usepackage{listings}
+\usepackage{fancyvrb}
+\fvset{fontsize=\small}
+
+% MATH
+\input{preamble/preamble_math.tex}
+
+\begin{document}
+
+\begin{varwidth}{\linewidth}
+\par\noindent
+\begin{algorithm}[H]
+  \DontPrintSemicolon
+  %\BlankLine
+  initialise $\qphi$ with K components \\
+  initialise proposal prior $\ptilde^{(1)}$ with prior $\prior$ \\
+  \BlankLine
+  %\BlankLine
+  \Repeat{\textnormal{$\approxposteriorxo$ has converged}}{
+    \BlankLine
+    \For{$n = 1 \dots N$}{
+      sample $\btheta_n \sim \ptilde^{(r)}$ \\
+      sample $\bx_n \sim \likelihoodn$
+    }
+    \BlankLine
+    (re)train $\qphi$ with $\loss(\bphi) = - \frac{1}{N} \sum_n \frac{p(\btheta_n)}{\ptilden} \log q_{\phi}(\btheta_n|\bx_n)$ \\
+    \BlankLine
+    set $\approxposteriorxo^{(r)} := q_{\bphi}(\btheta|\bx_o)$ \\
+    \BlankLine
+    $\ptilde^{(r+1)} \leftarrow \approxposteriorxo^{(r)}$
+    \BlankLine
+  }
+\end{algorithm}
+\end{varwidth}
+
+\end{document}
+
