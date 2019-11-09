@@ -2,7 +2,7 @@
 
 `delfi` is a Python toolbox for density estimation likelihood-free inference. It provides several algorithms for sequential neural posterior estimation (SNPE).
 
-If you want to get started quickly, refer to the [installation instructions](http://mackelab.org/delfi/install/) and [tutorials](http://mackelab.org/delfi/quickstart/). To learn more about the general motivation behind likelihood-free inference, and algorithms included in `delfi`, keep on reading.
+If you want to get started quickly, refer to the [installation instructions](http://mackelab.org/delfi/install/) and [tutorials](http://mackelab.org/delfi/tutorials/quickstart/). To learn more about the general motivation behind likelihood-free inference, and algorithms included in `delfi`, keep on reading.
 
 
 ## Motivation and approach
