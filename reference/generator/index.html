@@ -976,12 +976,12 @@ a mixture)
 
 </details>
 <h3 data-toc-label="__init__" id="__init__"><em>MPGenerator</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">rej</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code></h3>
-<div class="codehilite"><pre><span></span>Generator supporting multiprocessing
+<div class="codehilite"><pre><span></span>Generator
 
 Parameters
 ----------
-models : List of simulator instances
-    Forward models
+model : Simulator instance
+    Forward model
 prior : Distribution or Mixture instance
     Prior over parameters
 summary : SummaryStats instance
