@@ -5,9 +5,9 @@
 
 
 ```
-Conditional density estimation likelihood-free inference (CDE-LFI)
+SNPE-A
 
-Implementation of algorithms 1 and 2 of Papamakarios and Murray, 2016.
+Implementation of Papamakarios & Murray (NeurIPS 2016)
 
 Parameters
 ----------

@@ -5,7 +5,9 @@
 
 
 ```
-Sequential neural posterior estimation with importance-weighted loss (SNPE-B)
+SNPE-B
+
+Implementation of Lueckmann, Goncalves, Bassetto, Öcal, Nonnenmacher & Macke (NeurIPS 2017)
 
 Parameters
 ----------

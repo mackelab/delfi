@@ -5,9 +5,9 @@
 
 
 ```
-APT
-Core idea is to parameterize the true posterior, and calculate the
-proposal posterior as needed on-the-fly.
+SNPE-C/APT
+
+Implementation of Greenberg, Nonnenmacher & Macke (ICML 2019)
 
 Parameters
 ----------
