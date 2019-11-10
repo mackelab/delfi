@@ -1402,9 +1402,9 @@ alters the MoG layers to produce the desired output distribution.
 </details>
 <h2 id="SNPEA"><strong>SNPEA</strong><code class="codehilite"><span class="k">class</span></code><a class="headerlink" href="#SNPEA" title="Permanent link">&para;</a></h2>
 <h3 data-toc-label="__init__" id="__init__"><em>SNPEA</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">prior_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pilot_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">reg_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code></h3>
-<div class="codehilite"><pre><span></span>Conditional density estimation likelihood-free inference (CDE-LFI)
+<div class="codehilite"><pre><span></span>SNPE-A
 
-Implementation of algorithms 1 and 2 of Papamakarios and Murray, 2016.
+Implementation of Papamakarios &amp; Murray (NeurIPS 2016)
 
 Parameters
 ----------
@@ -2378,7 +2378,9 @@ alters the MoG layers to produce the desired output distribution.
 </details>
 <h2 id="SNPEB"><strong>SNPEB</strong><code class="codehilite"><span class="k">class</span></code><a class="headerlink" href="#SNPEB" title="Permanent link">&para;</a></h2>
 <h3 data-toc-label="__init__" id="__init__"><em>SNPEB</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">prior_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pilot_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">convert_to_T</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">reg_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">prior_mixin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code></h3>
-<div class="codehilite"><pre><span></span>Sequential neural posterior estimation with importance-weighted loss (SNPE-B)
+<div class="codehilite"><pre><span></span>SNPE-B
+
+Implementation of Lueckmann, Goncalves, Bassetto, Öcal, Nonnenmacher &amp; Macke (NeurIPS 2017)
 
 Parameters
 ----------
@@ -3387,9 +3389,9 @@ alters the MoG layers to produce the desired output distribution.
 </details>
 <h2 id="SNPEC"><strong>SNPEC</strong><code class="codehilite"><span class="k">class</span></code><a class="headerlink" href="#SNPEC" title="Permanent link">&para;</a></h2>
 <h3 data-toc-label="__init__" id="__init__"><em>SNPEC</em>.<strong>__init__</strong><code class="codehilite"><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prior_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pilot_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">reg_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add_prior_precision</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Ptol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code></h3>
-<div class="codehilite"><pre><span></span>APT
-Core idea is to parameterize the true posterior, and calculate the
-proposal posterior as needed on-the-fly.
+<div class="codehilite"><pre><span></span>SNPE-C/APT
+
+Implementation of Greenberg, Nonnenmacher &amp; Macke (ICML 2019)
 
 Parameters
 ----------
