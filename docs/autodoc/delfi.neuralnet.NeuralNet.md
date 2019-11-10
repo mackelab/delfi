@@ -431,7 +431,7 @@ deterministic : bool
 	    self.dlprobs = self.lprobs  # svi not possible
 	
 	```
-### *NeuralNet*.**init\_mdn**`#!py3 (self, svi=False, n_components=1, rank=None, mdn_actfun=<function tanh at 0x12ef8b4d0>, homoscedastic=False, min_precisions=None, **unused_kwargs)` { #init\_mdn data-toc-label=init\_mdn }
+### *NeuralNet*.**init\_mdn**`#!py3 (self, svi=False, n_components=1, rank=None, mdn_actfun=<function tanh at 0x1270264d0>, homoscedastic=False, min_precisions=None, **unused_kwargs)` { #init\_mdn data-toc-label=init\_mdn }
 
 
 ```

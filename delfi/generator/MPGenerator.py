@@ -80,12 +80,12 @@ def default_MPGenerator_rej(x):
 
 class MPGenerator(Default):
     def __init__(self, models, prior, summary, rej=None, seed=None, verbose=False):
-        """Generator
+        """Generator supporting multiprocessing
 
         Parameters
         ----------
-        model : Simulator instance
-            Forward model
+        models : List of simulator instances
+            Forward models
         prior : Distribution or Mixture instance
             Prior over parameters
         summary : SummaryStats instance

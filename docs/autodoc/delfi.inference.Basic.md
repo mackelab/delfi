@@ -7,8 +7,8 @@
 ```
 Basic inference algorithm
 
-Uses samples from the prior for density estimation LFI. Network can be
-trained with SVI (optional).
+Uses samples from the prior for density estimation likelihood-free
+inference.
 
 Parameters
 ----------
