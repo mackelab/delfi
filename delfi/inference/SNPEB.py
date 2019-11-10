@@ -9,7 +9,9 @@ class SNPEB(BaseInference):
     def __init__(self, generator, obs, prior_norm=False, pilot_samples=100,
                  convert_to_T=3, reg_lambda=0.01, prior_mixin=0, kernel=None, seed=None, verbose=True,
                  **kwargs):
-        """Sequential neural posterior estimation with importance-weighted loss (SNPE-B)
+        """SNPE-B
+
+        Implementation of Lueckmann, Goncalves, Bassetto, Öcal, Nonnenmacher & Macke (NeurIPS 2017)
 
         Parameters
         ----------
