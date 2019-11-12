@@ -1,8 +1,13 @@
 # `delfi`
 
-`delfi` is a Python toolbox for density estimation likelihood-free inference. It provides several algorithms for sequential neural posterior estimation (SNPE).
+`delfi`: A Python toolbox to perform simulation-based inference using density-estimation approaches.
 
-If you want to get started quickly, refer to the [installation instructions](http://mackelab.org/delfi/install/) and [tutorials](http://mackelab.org/delfi/tutorials/quickstart/). To learn more about the general motivation behind likelihood-free inference, and algorithms included in `delfi`, keep on reading.
+The focus of `delfi` is _Sequential Neural Posterior Estimation_ (SNPE). In SNPE, a neural network is trained to perform Bayesian inference on simulated data.
+
+- To see illustrations of SNPE on canonical problems in neuroscience, read our preprint:
+[Training deep neural density estimators to identify mechanistic models of neural dynamics](https://www.biorxiv.org/content/10.1101/838383v1).
+- To get started quickly, refer to the [installation instructions](http://mackelab.org/delfi/install/) and [tutorials](http://mackelab.org/delfi/tutorials/quickstart/). More in-depth tutorials will be added soon.
+- To learn more about the general motivation behind simulation-based inference, and algorithms included in `delfi`, keep on reading.
 
 
 ## Motivation and approach
@@ -43,6 +48,6 @@ We refer to these algorithms as SNPE-A, SNPE-B, and SNPE-C/APT, respectively.
 
 As an alternative to directly estimating the posterior on parameters given data, it is also possible to estimate the likelihood of data given parameters, and then subsequently draw posterior samples using MCMC ([Papamakarios, Sterratt & Murray, 2019](http://proceedings.mlr.press/v89/papamakarios19a/papamakarios19a.pdf)[^1], [Lueckmann, Karaletsos, Bassetto, Macke, 2019](http://proceedings.mlr.press/v96/lueckmann19a/lueckmann19a.pdf)). Depending on the problem, approximating the likelihood can be more or less effective than SNPE techniques.
 
-See [Cranmer, Brehmer, Louppe (2019)](https://arxiv.org/abs/1911.01429) for a recent review on simulation-based inference.
+See [Cranmer, Brehmer, Louppe (2019)](https://arxiv.org/abs/1911.01429) for a recent review on simulation-based inference and our recent preprint [Training deep neural density estimators to identify mechanistic models of neural dynamics (Goncalves et al., 2019)](https://www.biorxiv.org/content/10.1101/838383v1) for applications to canonical problems in neuroscience.
 
 [^1]: Code for SNL is available from the [original repository](https://github.com/gpapamak/snl) or as a [python 3 package](https://github.com/mnonnenm/SNL_py3port/tree/master).
