@@ -9,7 +9,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-Installing `delfi` as described above will automatically take care of the requirements.
+Installing `delfi` as described above will automatically take care of the requirements. In total, this installation will typically take less than a minute.
 
 
 ## Small print
