@@ -3,8 +3,7 @@ site_name: delfi
 nav:
   - Home: index.md
   - Installation: install.md
-  - Tutorials:
-    - Quickstart: tutorials/quickstart.ipynb
+  - Tutorial: tutorials/quickstart.ipynb
   - Reference:
     - Distributions: reference/distributions.md
     - Generator: reference/generator.md
