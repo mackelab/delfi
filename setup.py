@@ -29,7 +29,6 @@ setup(
         "scipy",
         "theano",
         "tqdm",
-        "snl",
+        "snl @ git+ssh://git@github.com/mnonnenm/SNL_py3port@master#egg=snl",
     ],
-    dependency_links=["https://github.com/mnonnenm/SNL_py3port"],
 )
