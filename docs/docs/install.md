@@ -28,7 +28,7 @@ echo -e "\n[blas]\nldflags = -lopenblas\n" >> ~/.theanorc
 ```
 * Open a terminal, change to the base directory of the delfi repository, and run these commands:
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 pip install -e .
 ```
 
