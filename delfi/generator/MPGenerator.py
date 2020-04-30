@@ -106,6 +106,10 @@ class MPGenerator(Default):
         self.verbose = verbose
         self.models = models
 
+        self.workers = None
+        self.pipes = None
+        self.queue = None
+
     def reseed(self, seed):
         """Carries out the following operations, in order:
         1) Reseeds the master RNG for the generator object, using the input seed
@@ -136,7 +140,7 @@ class MPGenerator(Default):
         self.log("Done")
 
     def stop_workers(self):
-        if self.workers is None:
+        if not hasattr(self, "workers") or self.workers is None:
             return
 
         self.log("Closing")
