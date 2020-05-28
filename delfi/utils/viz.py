@@ -198,7 +198,7 @@ def plot_pdf(pdf1, lims=None, pdf2=None, gt=None, contours=False, levels=(0.68, 
         fig, ax = plt.subplots(1, 1, facecolor='white', figsize=figsize)
 
         if samples is not None:
-            ax.hist(samples[i, :], bins=100, normed=True,
+            ax.hist(samples[i, :], bins=100, density=True,
                     color=col1,
                     edgecolor=col1)
 
@@ -247,7 +247,7 @@ def plot_pdf(pdf1, lims=None, pdf2=None, gt=None, contours=False, levels=(0.68, 
 
                 if i == j:
                     if samples is not None:
-                        ax[i, j].hist(samples[i, :], bins=100, normed=True,
+                        ax[i, j].hist(samples[i, :], bins=100, density=True,
                                       color=col1,
                                       edgecolor=col1)
                     xx = np.linspace(lims[i, 0], lims[i, 1], resolution)
@@ -325,7 +325,7 @@ def plot_pdf(pdf1, lims=None, pdf2=None, gt=None, contours=False, levels=(0.68, 
                     if samples is not None:
                         H, xedges, yedges = np.histogram2d(
                             samples[i, :], samples[j, :], bins=30, range=[
-                            [lims[i, 0], lims[i, 1]], [lims[j, 0], lims[j, 1]]], normed=True)
+                            [lims[i, 0], lims[i, 1]], [lims[j, 0], lims[j, 1]]], density=True)
                         ax[i, j].imshow(H, origin='lower', extent=[
                                         yedges[0], yedges[-1], xedges[0], xedges[-1]])
 
@@ -375,7 +375,7 @@ def plot_hist_marginals(data, lims=None, gt=None):
 
     if data.ndim == 1:
         fig, ax = plt.subplots(1, 1, facecolor='white')
-        ax.hist(data, n_bins, normed=True)
+        ax.hist(data, n_bins, density=True)
         ax.set_ylim([0, ax.get_ylim()[1]])
         if lims is not None:
             ax.set_xlim(lims)
@@ -395,7 +395,7 @@ def plot_hist_marginals(data, lims=None, gt=None):
             for j in range(n_dim):
 
                 if i == j:
-                    ax[i, j].hist(data[:, i], n_bins, normed=True)
+                    ax[i, j].hist(data[:, i], n_bins, density=True)
                     ax[i, j].set_ylim([0, ax[i, j].get_ylim()[1]])
                     if lims is not None:
                         ax[i, j].set_xlim(lims[i])
